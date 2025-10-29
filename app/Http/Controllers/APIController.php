@@ -313,9 +313,14 @@ class APIController extends Controller
             }
             $pocket_month = [];
             for ($i = 0; $i < $pocket->month_count; $i++) {
+                $currentMonth = ($i + $pocket->start_month - 1) % count($months) + 1; // Convert to 1-based month
                 $pocket_month[] = $months[($i + $pocket->start_month - 1) % count($months)];
-                if(isset($invItemIdPayments[$i]->month)){
-                    $amountPayingList[] = $invItemIdPayments[$i]->amount;
+
+                // Find payment data for this specific month
+                $paymentForThisMonth = $invItemIdPayments->where('month', $currentMonth)->first();
+
+                if($paymentForThisMonth){
+                    $amountPayingList[] = $paymentForThisMonth->amount;
                 }else{
                     $amountPayingList[] = $ps->amount_paying;
                 }
