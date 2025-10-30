@@ -8,6 +8,7 @@ use App\Models\PollingUnit;
 use App\Models\Ward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Adashi\AdashiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,4 +92,15 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::post('remove/shopping/item', [APIController::class, 'removeShoppingItem']);
     Route::post('subscribe/shopping/item', [APIController::class, 'subscribeShoppingItem']);
     Route::post('payment/status/update', [APIController::class, 'changePaymentStatus']);
+
+    // Adashi endpoints
+    Route::prefix('adashi')->group(function () {
+        Route::post('/', [AdashiController::class, 'create']);
+        Route::get('{id}', [AdashiController::class, 'show']);
+        Route::post('{id}/join', [AdashiController::class, 'join']);
+        Route::get('{id}/records', [AdashiController::class, 'records']);
+        Route::post('{id}/next-cycle', [AdashiController::class, 'nextCycle']);
+        Route::get('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsIndex']);
+        Route::post('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsStore']);
+    });
 });
