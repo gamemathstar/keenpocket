@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\PushNotificationService;
 
 class Notification extends Model
 {
@@ -109,40 +110,15 @@ class Notification extends Model
 
     public static function sendPushNotification($recipient,$title,$body)
     {
-        if(is_array($recipient)){
-            $firebaseToken = User::whereIn('id',$recipient)->pluck('fcm_token')->all();
-        }else{
-            $firebaseToken = User::where('id',$recipient->id)->pluck('fcm_token')->all();
+        $service = app(PushNotificationService::class);
+
+        if (is_array($recipient)) {
+            $userIds = $recipient;
+        } else {
+            $userIds = [$recipient->id];
         }
 
-        $SERVER_API_KEY = 'AAAAZStNlkI:APA91bGpiIpsEme47RSgPEylLi_f0TWxh_-Uy1R0hanCjpWWljdDyHLCyKp9hfv52jjOpbMn0YoxD651NKELJhSQiYmuYBij2pQAXgCemYybScQ1d8ipVOYlXyEjzli2lMgvQ1yHos3E';
-
-        $data = [
-            "registration_ids" => $firebaseToken,
-            "notification" => [
-                "title" => $title,
-                "body" => $body,
-            ]
-        ];
-        $dataString = json_encode($data);
-
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-        $response = curl_exec($ch);
-        return ($response);
+        return $service->sendToUsers($userIds, $title, $body);
     }
 
 }
