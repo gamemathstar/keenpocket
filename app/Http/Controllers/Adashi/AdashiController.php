@@ -26,6 +26,7 @@ class AdashiController extends Controller
             'members.*' => 'integer|exists:users,id',
             'admin_id' => 'nullable|integer|exists:users,id',
         ]);
+        return $request->all();
 
         $admin = $data['admin_id'] ?? auth()->id();
         $members = $data['members'] ?? [];
