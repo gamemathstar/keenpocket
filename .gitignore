@@ -13,3 +13,6 @@ yarn-error.log
 /.idea
 /.vscode
 keen-pocket-6387f803efb6.json
+
+# Firebase service account
+keen-pocket-6387f803efb6.json
