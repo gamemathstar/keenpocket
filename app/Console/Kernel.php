@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         Commands\DemoCron::class,
+        Commands\AdashiScheduler::class,
     ];
     /**
      * Define the application's command schedule.
@@ -20,6 +21,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('demo:cron')
+            ->everyFiveMinutes();
+        
+        // Process Adashi auto-rotation, reminders, and notifications every 5 minutes
+        $schedule->command('adashi:process')
             ->everyFiveMinutes();
     }
 

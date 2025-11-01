@@ -96,10 +96,15 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     // Adashi endpoints
     Route::prefix('adashi')->group(function () {
         Route::post('/', [AdashiController::class, 'create']);
+        Route::get('dashboard', [AdashiController::class, 'dashboard']);
+        Route::get('search', [AdashiController::class, 'search']);
         Route::get('{id}', [AdashiController::class, 'show']);
         Route::post('{id}/join', [AdashiController::class, 'join']);
+        Route::post('{id}/contribute', [AdashiController::class, 'contribute']);
+        Route::post('{id}/reconcile', [AdashiController::class, 'reconcilePayments']);
         Route::get('{id}/records', [AdashiController::class, 'records']);
         Route::post('{id}/next-cycle', [AdashiController::class, 'nextCycle']);
+        Route::post('{id}/admin/override', [AdashiController::class, 'adminOverride']);
         Route::get('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsIndex']);
         Route::post('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsStore']);
     });

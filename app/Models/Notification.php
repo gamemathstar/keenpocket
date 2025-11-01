@@ -121,4 +121,59 @@ class Notification extends Model
         return $service->sendToUsers($userIds, $title, $body);
     }
 
+    // Adashi-specific notifications
+    public static function adashiInvoiceRaised(User $sender, User $recipient, Model $adashi, Model $record, $amount)
+    {
+        $title = "Adashi Invoice Raised";
+        $body = ucwords($sender->name) . " has raised an invoice for ₦" . number_format($amount) . " in Adashi [{$adashi->name}] - Cycle {$record->cycle_number}";
+        self::make($sender, $recipient, $adashi, $title, $body, self::PAYMENT_MADE);
+    }
+
+    public static function adashiPaymentReceived(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi Payment Received";
+        $amount = number_format($record->total_collected);
+        $body = "Congratulations! You have received ₦{$amount} from Adashi [{$adashi->name}] - Cycle {$record->cycle_number}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_RECEIVED);
+    }
+
+    public static function adashiNextReceiver(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: You're Next";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "You are the next receiver in Adashi [{$adashi->name}]. Expected payout date: {$dueDate}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiPaymentReminder24h(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Payment Due in 24 Hours";
+        $body = "Dear " . ucwords($recipient->name) . ", your payment of ₦" . number_format($adashi->amount_per_cycle) . " for Adashi [{$adashi->name}] - Cycle {$record->cycle_number} is due in 24 hours.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiReceiver30Percent(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Payment Notice (30% Time Remaining)";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "You will receive ₦" . number_format($record->total_collected ?: $adashi->amount_per_cycle * $adashi->total_members) . " from Adashi [{$adashi->name}] around {$dueDate}. 30% of cycle time remaining.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiReceiver24h(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: You Receive Payment Tomorrow";
+        $amount = number_format($record->total_collected ?: $adashi->amount_per_cycle * $adashi->total_members);
+        $body = "You will receive ₦{$amount} from Adashi [{$adashi->name}] tomorrow. Cycle {$record->cycle_number}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiOverdueAdminAlert(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Overdue Payment Alert";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "Adashi [{$adashi->name}] - Cycle {$record->cycle_number} payment is overdue (due: {$dueDate}). {$record->paid_members_count}/{$adashi->total_members} members have paid.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
 }
