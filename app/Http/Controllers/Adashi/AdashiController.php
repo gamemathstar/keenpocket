@@ -16,17 +16,17 @@ class AdashiController extends Controller
 {
     public function create(Request $request)
     {
-        // $data = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'amount_per_cycle' => 'required|integer|min:1',
-        //     'cycle_duration_days' => 'required|integer|min:1',
-        //     'start_date' => 'required|date',
-        //     'rotation_mode' => 'required|in:AUTO,MANUAL',
-        //     'members' => 'array',
-        //     'members.*' => 'integer|exists:users,id',
-        //     'admin_id' => 'nullable|integer|exists:users,id',
-        // ]);
-        return $request->all();
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'amount_per_cycle' => 'required|integer|min:1',
+            'cycle_duration_days' => 'required|integer|min:1',
+            'start_date' => 'required|date',
+            'rotation_mode' => 'required|in:AUTO,MANUAL',
+            'members' => 'array',
+            'members.*' => 'integer|exists:users,id',
+            'admin_id' => 'nullable|integer|exists:users,id',
+        ]);
+        // return $request->all();
 
         $admin = $data['admin_id'] ?? auth()->id();
         $members = $data['members'] ?? [];
