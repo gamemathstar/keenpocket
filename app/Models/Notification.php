@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\PushNotificationService;
 
 class Notification extends Model
 {
@@ -109,40 +110,70 @@ class Notification extends Model
 
     public static function sendPushNotification($recipient,$title,$body)
     {
-        if(is_array($recipient)){
-            $firebaseToken = User::whereIn('id',$recipient)->pluck('fcm_token')->all();
-        }else{
-            $firebaseToken = User::where('id',$recipient->id)->pluck('fcm_token')->all();
+        $service = app(PushNotificationService::class);
+
+        if (is_array($recipient)) {
+            $userIds = $recipient;
+        } else {
+            $userIds = [$recipient->id];
         }
 
-        $SERVER_API_KEY = 'AAAAZStNlkI:APA91bGpiIpsEme47RSgPEylLi_f0TWxh_-Uy1R0hanCjpWWljdDyHLCyKp9hfv52jjOpbMn0YoxD651NKELJhSQiYmuYBij2pQAXgCemYybScQ1d8ipVOYlXyEjzli2lMgvQ1yHos3E';
+        return $service->sendToUsers($userIds, $title, $body);
+    }
 
-        $data = [
-            "registration_ids" => $firebaseToken,
-            "notification" => [
-                "title" => $title,
-                "body" => $body,
-            ]
-        ];
-        $dataString = json_encode($data);
+    // Adashi-specific notifications
+    public static function adashiInvoiceRaised(User $sender, User $recipient, Model $adashi, Model $record, $amount)
+    {
+        $title = "Adashi Invoice Raised";
+        $body = ucwords($sender->name) . " has raised an invoice for ₦" . number_format($amount) . " in Adashi [{$adashi->name}] - Cycle {$record->cycle_number}";
+        self::make($sender, $recipient, $adashi, $title, $body, self::PAYMENT_MADE);
+    }
 
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
+    public static function adashiPaymentReceived(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi Payment Received";
+        $amount = number_format($record->total_collected);
+        $body = "Congratulations! You have received ₦{$amount} from Adashi [{$adashi->name}] - Cycle {$record->cycle_number}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_RECEIVED);
+    }
 
-        $ch = curl_init();
+    public static function adashiNextReceiver(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: You're Next";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "You are the next receiver in Adashi [{$adashi->name}]. Expected payout date: {$dueDate}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
 
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+    public static function adashiPaymentReminder24h(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Payment Due in 24 Hours";
+        $body = "Dear " . ucwords($recipient->name) . ", your payment of ₦" . number_format($adashi->amount_per_cycle) . " for Adashi [{$adashi->name}] - Cycle {$record->cycle_number} is due in 24 hours.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
 
-        $response = curl_exec($ch);
-        return ($response);
+    public static function adashiReceiver30Percent(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Payment Notice (30% Time Remaining)";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "You will receive ₦" . number_format($record->total_collected ?: $adashi->amount_per_cycle * $adashi->total_members) . " from Adashi [{$adashi->name}] around {$dueDate}. 30% of cycle time remaining.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiReceiver24h(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: You Receive Payment Tomorrow";
+        $amount = number_format($record->total_collected ?: $adashi->amount_per_cycle * $adashi->total_members);
+        $body = "You will receive ₦{$amount} from Adashi [{$adashi->name}] tomorrow. Cycle {$record->cycle_number}";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
+    }
+
+    public static function adashiOverdueAdminAlert(User $recipient, Model $adashi, Model $record)
+    {
+        $title = "Adashi: Overdue Payment Alert";
+        $dueDate = \Carbon\Carbon::parse($record->due_at)->format('F j, Y');
+        $body = "Adashi [{$adashi->name}] - Cycle {$record->cycle_number} payment is overdue (due: {$dueDate}). {$record->paid_members_count}/{$adashi->total_members} members have paid.";
+        self::make(null, $recipient, $adashi, $title, $body, self::PAYMENT_REMINDER);
     }
 
 }

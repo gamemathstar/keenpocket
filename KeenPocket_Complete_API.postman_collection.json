@@ -1,0 +1,1553 @@
+{
+	"info": {
+		"name": "KeenPocket - Complete API",
+		"description": "Complete Postman collection for KeenPocket API with all endpoints including Authentication, Users, Pockets, Invoices, Shopping Items, Posts, and Adashi (Rotational Contribution System). This is the unified collection with all KeenPocket and Adashi endpoints in one place.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "your_bearer_token_here",
+			"type": "string"
+		},
+		{
+			"key": "pocket_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "adashi_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "invoice_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "slot_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "adashi_record_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "adashi_member_id",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone_number\": \"+2348012345678\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": ["{{base_url}}"],
+							"path": ["register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"+2348012345678\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": ["{{base_url}}"],
+							"path": ["logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Search User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search-user?queryString=john&by=name",
+							"host": ["{{base_url}}"],
+							"path": ["search-user"],
+							"query": [
+								{
+									"key": "queryString",
+									"value": "john"
+								},
+								{
+									"key": "by",
+									"value": "name",
+									"description": "Options: name, phone_number"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Dashboard & General",
+			"item": [
+				{
+					"name": "Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard",
+							"host": ["{{base_url}}"],
+							"path": ["dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", ""]
+						}
+					}
+				},
+				{
+					"name": "Update Push Notification Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"fcm_token_here\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/push/notification/update",
+							"host": ["{{base_url}}"],
+							"path": ["push", "notification", "update"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Pockets",
+			"item": [
+				{
+					"name": "My Pockets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/my-pockets",
+							"host": ["{{base_url}}"],
+							"path": ["my-pockets"]
+						}
+					}
+				},
+				{
+					"name": "Search Pocket",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search-pocket?queryString=test&by=title",
+							"host": ["{{base_url}}"],
+							"path": ["search-pocket"],
+							"query": [
+								{
+									"key": "queryString",
+									"value": "test"
+								},
+								{
+									"key": "by",
+									"value": "title",
+									"description": "Options: title, phone_number"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Pocket",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/pocket?id={{pocket_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["pocket"],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{pocket_id}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Pocket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"My New Pocket\",\n    \"pocket_type\": \"Rotating\",\n    \"description\": \"A test pocket\",\n    \"year\": 2025,\n    \"start_month\": 1,\n    \"month_count\": 12,\n    \"max_keens\": 10,\n    \"amount_per_hand\": 50000,\n    \"per_hand_allowed\": 1,\n    \"hand_count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/create/pocket",
+							"host": ["{{base_url}}"],
+							"path": ["create", "pocket"]
+						}
+					}
+				},
+				{
+					"name": "Join Pocket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"hand_count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pocket/join",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "join"]
+						}
+					}
+				},
+				{
+					"name": "Add Bank Details",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"bank\": \"GTBank\",\n    \"nuban\": \"0123456789\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pocket/add/bank/detail",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "add", "bank", "detail"]
+						}
+					}
+				},
+				{
+					"name": "Pocket Switch (Activate/Deactivate)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"status\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pocket/switch",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "switch"]
+						}
+					}
+				},
+				{
+					"name": "Pocket Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/pocket/invoices?id={{pocket_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "invoices"],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{pocket_id}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Pocket Month Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/pocket/month/invoices/?id={{pocket_id}}&user_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "month", "invoices", ""],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{pocket_id}}"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"description": "Optional user_id"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Invite User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"phone_number\": \"+2348012345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invite/user",
+							"host": ["{{base_url}}"],
+							"path": ["invite", "user"]
+						}
+					}
+				},
+				{
+					"name": "Cancel Invitation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invitation/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["invitation", "cancel"]
+						}
+					}
+				},
+				{
+					"name": "Accept Join Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{slot_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/request/accept",
+							"host": ["{{base_url}}"],
+							"path": ["request", "accept"]
+						}
+					}
+				},
+				{
+					"name": "Add Keen (Member)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"name\": \"New User\",\n    \"phone_number\": \"+2348098765432\",\n    \"hand_count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pocket/members/add-keen",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "members", "add-keen"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "Get Invoice",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/invoice?id={{invoice_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["invoice"],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{invoice_id}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"user_id\": 1,\n    \"items\": [1, 2],\n    \"months\": [1, 2],\n    \"amounts\": [50000, 50000],\n    \"types\": [\"Paid\", \"Paid\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invoice/create",
+							"host": ["{{base_url}}"],
+							"path": ["invoice", "create"]
+						}
+					}
+				},
+				{
+					"name": "Update Payment Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{invoice_id}},\n    \"status\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/status/update",
+							"host": ["{{base_url}}"],
+							"path": ["payment", "status", "update"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Payment Items",
+			"item": [
+				{
+					"name": "Add Payment Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"items\": [1, 2, 3]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/add/payment/item",
+							"host": ["{{base_url}}"],
+							"path": ["add", "payment", "item"]
+						}
+					}
+				},
+				{
+					"name": "Remove Payment Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"items\": [1]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/remove/payment/item",
+							"host": ["{{base_url}}"],
+							"path": ["remove", "payment", "item"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Shopping Items",
+			"item": [
+				{
+					"name": "Open/Close Selection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"open_purchasing_item\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pocket/selection/switch",
+							"host": ["{{base_url}}"],
+							"path": ["pocket", "selection", "switch"]
+						}
+					}
+				},
+				{
+					"name": "Add Shopping Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"name\": \"Rice\",\n    \"description\": \"50kg bag\",\n    \"unit_price\": 25000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/add/shopping/item",
+							"host": ["{{base_url}}"],
+							"path": ["add", "shopping", "item"]
+						}
+					}
+				},
+				{
+					"name": "Remove Shopping Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"shoppingItems\": [1, 2]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/remove/shopping/item",
+							"host": ["{{base_url}}"],
+							"path": ["remove", "shopping", "item"]
+						}
+					}
+				},
+				{
+					"name": "Subscribe to Shopping Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{pocket_id}},\n    \"shoppingList\": [\n        {\n            \"purchasing_item_id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"purchasing_item_id\": 2,\n            \"quantity\": 1\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/subscribe/shopping/item",
+							"host": ["{{base_url}}"],
+							"path": ["subscribe", "shopping", "item"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Get All Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/posts/",
+							"host": ["{{base_url}}"],
+							"path": ["posts", ""]
+						}
+					}
+				},
+				{
+					"name": "Get Single Post",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/post/?id=1",
+							"host": ["{{base_url}}"],
+							"path": ["post", ""],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Adashi",
+			"item": [
+				{
+					"name": "Create Adashi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My Adashi Group\",\n    \"amount_per_cycle\": 100000,\n    \"cycle_duration_days\": 30,\n    \"start_date\": \"2025-01-01\",\n    \"rotation_mode\": \"AUTO\",\n    \"members\": [2, 3, 4],\n    \"admin_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", ""]
+						}
+					}
+				},
+				{
+					"name": "Adashi Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/dashboard",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "dashboard"]
+						},
+						"description": "Get dashboard with all Adashis the authenticated user is part of (as admin or member)"
+					}
+				},
+				{
+					"name": "Search Adashi by Name",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/search?query=MyAdashi&by=name",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "search"],
+							"query": [
+								{
+									"key": "query",
+									"value": "MyAdashi"
+								},
+								{
+									"key": "by",
+									"value": "name"
+								}
+							]
+						},
+						"description": "Search for active Adashis by name"
+					}
+				},
+				{
+					"name": "Search Adashi by Admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/search?query=+2348012345678&by=admin",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "search"],
+							"query": [
+								{
+									"key": "query",
+									"value": "+2348012345678"
+								},
+								{
+									"key": "by",
+									"value": "admin"
+								}
+							]
+						},
+						"description": "Search for active Adashis by admin phone number"
+					}
+				},
+				{
+					"name": "Get Adashi Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Join Adashi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/join",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "join"]
+						}
+					}
+				},
+				{
+					"name": "Contribute (Create Invoice)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"amount\": 50000,\n    \"adashi_record_id\": {{adashi_record_id}},\n    \"adashi_member_id\": {{adashi_member_id}},\n    \"invoice_items\": [\n        {\n            \"item_id\": 1,\n            \"amount\": 50000,\n            \"type\": \"Paid\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/contribute",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "contribute"]
+						},
+						"description": "Create an invoice for Adashi contribution. If admin creates this, it's automatically marked as 'Paid'. If participant creates it, admin is notified."
+					}
+				},
+				{
+					"name": "Reconcile Payments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/reconcile",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "reconcile"]
+						},
+						"description": "Reconcile payments for the current active record. Updates paid_members_count and total_collected. If all members paid and AUTO mode, automatically rotates to next cycle."
+					}
+				},
+				{
+					"name": "Get Adashi Records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/records",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "records"]
+						}
+					}
+				},
+				{
+					"name": "Next Cycle (Manual)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/next-cycle",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "next-cycle"]
+						}
+					}
+				},
+				{
+					"name": "Admin Override - Set Receiver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"SET_RECEIVER\",\n    \"record_id\": {{adashi_record_id}},\n    \"receiver_user_id\": 2,\n    \"note\": \"Manually setting receiver\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/admin/override",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "admin", "override"]
+						},
+						"description": "Admin override: Manually set the receiver for a specific record"
+					}
+				},
+				{
+					"name": "Admin Override - Mark Paid Out",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"MARK_PAID_OUT\",\n    \"record_id\": {{adashi_record_id}},\n    \"note\": \"All payments verified\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/admin/override",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "admin", "override"]
+						},
+						"description": "Admin override: Force mark a record as PAID_OUT. If AUTO mode, will trigger rotation."
+					}
+				},
+				{
+					"name": "Admin Override - Mark Dispute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"MARK_DISPUTE\",\n    \"record_id\": {{adashi_record_id}},\n    \"note\": \"Payment discrepancy\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/admin/override",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "admin", "override"]
+						},
+						"description": "Admin override: Mark a record as DISPUTE status"
+					}
+				},
+				{
+					"name": "Admin Override - Deactivate Member",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"DEACTIVATE_MEMBER\",\n    \"member_user_id\": 3,\n    \"note\": \"Member requested to leave\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/admin/override",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "admin", "override"]
+						},
+						"description": "Admin override: Deactivate a member from the Adashi"
+					}
+				},
+				{
+					"name": "Admin Override - Reactivate Member",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"REACTIVATE_MEMBER\",\n    \"member_user_id\": 3,\n    \"note\": \"Member rejoining\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/admin/override",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "admin", "override"]
+						},
+						"description": "Admin override: Reactivate a previously deactivated member"
+					}
+				},
+				{
+					"name": "Get Contributors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/members/{{adashi_member_id}}/contributors",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "members", "{{adashi_member_id}}", "contributors"]
+						}
+					}
+				},
+				{
+					"name": "Add Contributor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 2,\n    \"share_amount\": 25000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/adashi/{{adashi_id}}/members/{{adashi_member_id}}/contributors",
+							"host": ["{{base_url}}"],
+							"path": ["adashi", "{{adashi_id}}", "members", "{{adashi_member_id}}", "contributors"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
+
