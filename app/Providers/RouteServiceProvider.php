@@ -48,5 +48,15 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        // Tighter limit for unauthenticated auth endpoints (login/register/OTP),
+        // keyed by phone number + IP to slow credential stuffing and SMS abuse.
+        RateLimiter::for('auth', function (Request $request) {
+            $key = (string) ($request->input('phone_number') ?: $request->ip());
+            return [
+                Limit::perMinute(5)->by($key.'|'.$request->ip()),
+                Limit::perDay(100)->by($request->ip()),
+            ];
+        });
     }
 }

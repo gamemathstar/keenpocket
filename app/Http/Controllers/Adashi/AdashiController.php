@@ -114,6 +114,13 @@ class AdashiController extends Controller
         );
 
         $adashi->increment('total_members');
+
+        // Growth loop: a referred user joining an adashi qualifies their referral.
+        $joiner = User::find($data['user_id']);
+        if ($joiner) {
+            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($joiner);
+        }
+
         return response()->json(['success' => true, 'member' => $member]);
     }
 
@@ -334,6 +341,14 @@ class AdashiController extends Controller
         $receiverMember = AdashiMember::find($current->receiver_member_id);
         $receiverMember->has_received = true;
         $receiverMember->save();
+
+        // Automated disbursement of the pot (idempotent, no-op while disabled).
+        // Best-effort: a payout failure must not break rotation.
+        try {
+            app(\App\Services\Payouts\PayoutService::class)->attemptForRecord($current);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Adashi payout attempt failed for record '.$current->id.': '.$e->getMessage());
+        }
 
         // Notify receiver they received payment
         $receiverUser = User::find($receiverMember->user_id);

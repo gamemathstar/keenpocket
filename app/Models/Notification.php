@@ -19,7 +19,7 @@ class Notification extends Model
     const REQUEST_APPROVED = "Request Approved";
     const USER_JOINED = "User Joined";
 
-    public static function make(User $sender,User $recipient,Model $model,$title,$body,$type,$do=1)
+    public static function make(User $sender,User $recipient,Model $model,$title,$body,$type,$do=1,$sms=false)
     {
         $notification = new Notification();
         $notification->user_id = $recipient->id;
@@ -33,6 +33,11 @@ class Notification extends Model
 
         if($do){
             self::sendPushNotification($recipient,$title,$body);
+        }
+
+        // Reminders go multi-channel: also deliver over SMS (when SMS is enabled).
+        if($sms || $type === self::PAYMENT_REMINDER){
+            self::sendSms($recipient,$body);
         }
 
     }
@@ -110,15 +115,50 @@ class Notification extends Model
 
     public static function sendPushNotification($recipient,$title,$body)
     {
-        $service = app(PushNotificationService::class);
+        // Push delivery is best-effort: a Firebase/network failure must never
+        // break (or roll back) the surrounding business operation, e.g. an
+        // invoice/contribution running inside a database transaction.
+        try {
+            $service = app(PushNotificationService::class);
 
-        if (is_array($recipient)) {
-            $userIds = $recipient;
-        } else {
-            $userIds = [$recipient->id];
+            if (is_array($recipient)) {
+                $userIds = $recipient;
+            } else {
+                $userIds = [$recipient->id];
+            }
+
+            return $service->sendToUsers($userIds, $title, $body);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Push notification failed: '.$e->getMessage());
+
+            return ['success' => 0, 'failure' => 0, 'errors' => [$e->getMessage()]];
         }
+    }
 
-        return $service->sendToUsers($userIds, $title, $body);
+    /**
+     * Best-effort SMS delivery for a recipient (or array of user ids). No-op when
+     * the SMS channel is disabled; never throws (must not break the caller).
+     */
+    public static function sendSms($recipient,$message)
+    {
+        try {
+            $sms = app(\App\Services\Sms\SmsSender::class);
+            if (!$sms->enabled()) {
+                return;
+            }
+
+            if (is_array($recipient)) {
+                $phones = User::whereIn('id', $recipient)->whereNotNull('phone_number')->pluck('phone_number');
+            } else {
+                $phones = $recipient && $recipient->phone_number ? [$recipient->phone_number] : [];
+            }
+
+            foreach ($phones as $phone) {
+                $sms->send($phone, $message);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('SMS notification failed: '.$e->getMessage());
+        }
     }
 
     // Adashi-specific notifications

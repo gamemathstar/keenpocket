@@ -24,7 +24,11 @@ class User extends Authenticatable
         'password',
         'phone_number',
         'username',
-        'fcm_token'
+        'fcm_token',
+        'referral_code',
+        'payout_bank_name',
+        'payout_bank_code',
+        'payout_account_number',
     ];
 
     /**

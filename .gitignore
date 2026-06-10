@@ -4,7 +4,8 @@
 /storage/*.key
 /vendor
 .env
-.env.backup
+.env.*
+!.env.example
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -12,10 +13,15 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-keen-pocket-6387f803efb6.json
+
+# OS cruft
+.DS_Store
+
+# Database dumps / backups (may contain real user data and secrets)
+*.sql
+*.sqlite
+*.bak
 
 # Firebase service account
-keen-pocket-6387f803efb6.json
-
-# Firebase service account
-keen-pocket-6387f803efb6.json
+keen-pocket-*.json
+*firebase*credentials*.json

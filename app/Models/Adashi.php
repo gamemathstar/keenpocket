@@ -9,7 +9,15 @@ class Adashi extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name', 'amount_per_cycle', 'total_members', 'start_date',
+        'cycle_duration_days', 'current_cycle_number', 'admin_id',
+        'rotation_mode', 'status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+    ];
 
     public function members()
     {

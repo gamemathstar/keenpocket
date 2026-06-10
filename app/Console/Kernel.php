@@ -10,6 +10,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\DemoCron::class,
         Commands\AdashiScheduler::class,
+        Commands\PocketReminder::class,
     ];
     /**
      * Define the application's command schedule.
@@ -26,6 +27,10 @@ class Kernel extends ConsoleKernel
         // Process Adashi auto-rotation, reminders, and notifications every 5 minutes
         $schedule->command('adashi:process')
             ->everyFiveMinutes();
+
+        // Weekly nudge to pocket members with unpaid invoices (push + SMS).
+        $schedule->command('pockets:remind')
+            ->weeklyOn(1, '9:00'); // Mondays 09:00
     }
 
     /**

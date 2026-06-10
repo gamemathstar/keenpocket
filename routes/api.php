@@ -3,6 +3,12 @@
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DirectoryController;
+use App\Http\Controllers\OtpController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PayoutController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\ReputationController;
 use App\Models\Lga;
 use App\Models\PollingUnit;
 use App\Models\Ward;
@@ -20,10 +26,27 @@ use App\Http\Controllers\Adashi\AdashiController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//Public Routes
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+//Public Routes — auth endpoints are rate limited to slow brute-force / spam.
+Route::middleware('throttle:auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    // Phone OTP verification (no-op while OTP_ENABLED=false — see config/otp.php).
+    Route::get('otp/status', [OtpController::class, 'status']);
+    Route::post('otp/request', [OtpController::class, 'request']);
+    Route::post('otp/verify', [OtpController::class, 'verify']);
+});
+
+// Payment gateway webhook — public (gateways are unauthenticated callers), but
+// the request signature is verified inside PaymentService before any settlement.
+Route::post('payments/webhook/{provider}', [PaymentController::class, 'webhook']);
+
+// Payout (transfer) webhook — public, signature-verified inside PayoutService.
+Route::post('payouts/webhook/{provider}', [PayoutController::class, 'webhook']);
+
+// Legacy one-off polling-unit importer. Unauthenticated bulk-write: local only.
 Route::get('test', function (Request $request) {
+    abort_unless(app()->environment('local'), 404);
     $arr = [];
     foreach ($request[0]['records'] as $record) {
         $state_id = 36;
@@ -92,6 +115,25 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::post('remove/shopping/item', [APIController::class, 'removeShoppingItem']);
     Route::post('subscribe/shopping/item', [APIController::class, 'subscribeShoppingItem']);
     Route::post('payment/status/update', [APIController::class, 'changePaymentStatus']);
+
+    // Online payments (no-op while PAYMENTS_ENABLED=false — see config/payments.php).
+    Route::get('payments/status', [PaymentController::class, 'status']);
+    Route::post('payments/initialize', [PaymentController::class, 'initialize']);
+    Route::get('payments/verify', [PaymentController::class, 'verify']);
+
+    // Automated payouts (no-op while PAYOUTS_ENABLED=false — see config/payouts.php).
+    Route::get('payouts/status', [PayoutController::class, 'status']);
+    Route::post('payouts/bank-account', [PayoutController::class, 'saveBankAccount']);
+    Route::post('adashi/{id}/payout', [PayoutController::class, 'initiate']);
+
+    // Referral / WhatsApp invite growth loop (see config/referrals.php).
+    Route::get('referrals/me', [ReferralController::class, 'me']);
+    Route::get('referrals', [ReferralController::class, 'index']);
+
+    // Discovery: member reputation + public directory of joinable pockets.
+    Route::get('reputation/me', [ReputationController::class, 'me']);
+    Route::get('users/{id}/reputation', [ReputationController::class, 'show']);
+    Route::get('directory/pockets', [DirectoryController::class, 'pockets']);
 
     // Adashi endpoints
     Route::prefix('adashi')->group(function () {
