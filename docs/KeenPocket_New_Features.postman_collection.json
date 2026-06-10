@@ -1,0 +1,564 @@
+{
+  "info": {
+    "name": "Keen Pocket — New Features",
+    "description": "New backend endpoints (auth additions, OTP, referrals, reputation, ratings, gamification, directory, KYC, payments, wallet, payouts, adashi additions). Companion to API_REFERENCE.md.\n\nSet `base_url`. Run Auth > Login first — it captures `token` and `refresh_token` into collection variables automatically. Config-gated features return {\"enabled\": false} until switched on server-side.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://keenpocket.quize-e.online/api" },
+    { "key": "token", "value": "" },
+    { "key": "refresh_token", "value": "" },
+    { "key": "user_id", "value": "3" },
+    { "key": "pocket_id", "value": "1" },
+    { "key": "adashi_id", "value": "1" },
+    { "key": "invoice_id", "value": "10" },
+    { "key": "reference", "value": "" },
+    { "key": "reset_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.token) { pm.collectionVariables.set('token', j.token); }",
+                  "if (j.refresh_token) { pm.collectionVariables.set('refresh_token', j.refresh_token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "phone_number", "value": "09087654321", "type": "text" },
+                { "key": "password", "value": "mySecretPass", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "Test User", "type": "text" },
+                { "key": "email", "value": "user@example.com", "type": "text" },
+                { "key": "phone_number", "value": "09087654321", "type": "text" },
+                { "key": "password", "value": "mySecretPass", "type": "text" },
+                { "key": "password_confirmation", "value": "mySecretPass", "type": "text" },
+                { "key": "referral_code", "value": "", "type": "text", "description": "optional" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] }
+          }
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "refresh_token", "value": "{{refresh_token}}", "type": "text" } ]
+            },
+            "url": { "raw": "{{base_url}}/refresh-token", "host": ["{{base_url}}"], "path": ["refresh-token"] }
+          }
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "old_password", "value": "mySecretPass", "type": "text" },
+                { "key": "new_password", "value": "newSecret456", "type": "text" },
+                { "key": "password_confirmation", "value": "newSecret456", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/change-password", "host": ["{{base_url}}"], "path": ["change-password"] }
+          }
+        },
+        {
+          "name": "Request token (email)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "url": {
+              "raw": "{{base_url}}/request-token?email=user@example.com",
+              "host": ["{{base_url}}"], "path": ["request-token"],
+              "query": [ { "key": "email", "value": "user@example.com" } ]
+            }
+          }
+        },
+        {
+          "name": "Verify token",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "token", "value": "{{reset_token}}", "type": "text" } ]
+            },
+            "url": { "raw": "{{base_url}}/verify-token", "host": ["{{base_url}}"], "path": ["verify-token"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTP (gated)",
+      "item": [
+        {
+          "name": "OTP status",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "url": { "raw": "{{base_url}}/otp/status", "host": ["{{base_url}}"], "path": ["otp", "status"] }
+          }
+        },
+        {
+          "name": "OTP request",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "phone_number", "value": "09087654321", "type": "text" },
+                { "key": "purpose", "value": "verify", "type": "text", "description": "verify|login|reset" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/otp/request", "host": ["{{base_url}}"], "path": ["otp", "request"] }
+          }
+        },
+        {
+          "name": "OTP verify",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Accept", "value": "application/json" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "phone_number", "value": "09087654321", "type": "text" },
+                { "key": "code", "value": "123456", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/otp/verify", "host": ["{{base_url}}"], "path": ["otp", "verify"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Referrals",
+      "item": [
+        {
+          "name": "My referral (code + WhatsApp link)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/referrals/me", "host": ["{{base_url}}"], "path": ["referrals", "me"] }
+          }
+        },
+        {
+          "name": "My invitees",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/referrals", "host": ["{{base_url}}"], "path": ["referrals"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reputation",
+      "item": [
+        {
+          "name": "My reputation",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/reputation/me", "host": ["{{base_url}}"], "path": ["reputation", "me"] }
+          }
+        },
+        {
+          "name": "User reputation",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/users/{{user_id}}/reputation", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}", "reputation"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ratings",
+      "item": [
+        {
+          "name": "Rate organizer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"context_type\": \"pocket\",\n  \"context_id\": {{pocket_id}},\n  \"stars\": 5,\n  \"comment\": \"Great organizer\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/ratings", "host": ["{{base_url}}"], "path": ["ratings"] }
+          }
+        },
+        {
+          "name": "User ratings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/users/{{user_id}}/ratings", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}", "ratings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gamification",
+      "item": [
+        {
+          "name": "My gamification profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/gamification/me", "host": ["{{base_url}}"], "path": ["gamification", "me"] }
+          }
+        },
+        {
+          "name": "User badges",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/users/{{user_id}}/badges", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}", "badges"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Directory",
+      "item": [
+        {
+          "name": "Open pockets",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/directory/pockets?q=&page=1",
+              "host": ["{{base_url}}"], "path": ["directory", "pockets"],
+              "query": [ { "key": "q", "value": "" }, { "key": "page", "value": "1" } ]
+            }
+          }
+        },
+        {
+          "name": "Open adashis",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/directory/adashi?q=&page=1",
+              "host": ["{{base_url}}"], "path": ["directory", "adashi"],
+              "query": [ { "key": "q", "value": "" }, { "key": "page", "value": "1" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "KYC (gated)",
+      "item": [
+        {
+          "name": "KYC status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/kyc/status", "host": ["{{base_url}}"], "path": ["kyc", "status"] }
+          }
+        },
+        {
+          "name": "KYC submit",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "type", "value": "BVN", "type": "text", "description": "BVN|NIN" },
+                { "key": "id_number", "value": "22212345678", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/kyc/submit", "host": ["{{base_url}}"], "path": ["kyc", "submit"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments (gated)",
+      "item": [
+        {
+          "name": "Payments status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/payments/status", "host": ["{{base_url}}"], "path": ["payments", "status"] }
+          }
+        },
+        {
+          "name": "Initialize payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.reference) { pm.collectionVariables.set('reference', j.reference); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "invoice_id", "value": "{{invoice_id}}", "type": "text" } ]
+            },
+            "url": { "raw": "{{base_url}}/payments/initialize", "host": ["{{base_url}}"], "path": ["payments", "initialize"] }
+          }
+        },
+        {
+          "name": "Verify payment",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/payments/verify?reference={{reference}}",
+              "host": ["{{base_url}}"], "path": ["payments", "verify"],
+              "query": [ { "key": "reference", "value": "{{reference}}" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet (gated)",
+      "item": [
+        {
+          "name": "Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/wallet", "host": ["{{base_url}}"], "path": ["wallet"] }
+          }
+        },
+        {
+          "name": "History",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/wallet/history", "host": ["{{base_url}}"], "path": ["wallet", "history"] }
+          }
+        },
+        {
+          "name": "Top up",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "amount", "value": "10000", "type": "text" } ]
+            },
+            "url": { "raw": "{{base_url}}/wallet/topup", "host": ["{{base_url}}"], "path": ["wallet", "topup"] }
+          }
+        },
+        {
+          "name": "Pay invoice from wallet",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "invoice_id", "value": "{{invoice_id}}", "type": "text" } ]
+            },
+            "url": { "raw": "{{base_url}}/wallet/pay-invoice", "host": ["{{base_url}}"], "path": ["wallet", "pay-invoice"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payouts (gated)",
+      "item": [
+        {
+          "name": "Payouts status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/payouts/status", "host": ["{{base_url}}"], "path": ["payouts", "status"] }
+          }
+        },
+        {
+          "name": "Save payout bank account",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "bank_name", "value": "GTBank", "type": "text" },
+                { "key": "bank_code", "value": "058", "type": "text" },
+                { "key": "account_number", "value": "0123456789", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/payouts/bank-account", "host": ["{{base_url}}"], "path": ["payouts", "bank-account"] }
+          }
+        },
+        {
+          "name": "Initiate adashi payout (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/adashi/{{adashi_id}}/payout", "host": ["{{base_url}}"], "path": ["adashi", "{{adashi_id}}", "payout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Adashi additions",
+      "item": [
+        {
+          "name": "Create adashi (with is_public, lowercase rotation_mode)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Family Adashi\",\n  \"amount_per_cycle\": \"50000\",\n  \"cycle_duration_days\": 30,\n  \"start_date\": \"2026-01-01\",\n  \"rotation_mode\": \"manual\",\n  \"members\": [],\n  \"is_public\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/adashi", "host": ["{{base_url}}"], "path": ["adashi"] }
+          }
+        },
+        {
+          "name": "Auto-rotate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/adashi/{{adashi_id}}/auto-rotate", "host": ["{{base_url}}"], "path": ["adashi", "{{adashi_id}}", "auto-rotate"] }
+          }
+        },
+        {
+          "name": "Set visibility (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"is_public\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/adashi/{{adashi_id}}/visibility", "host": ["{{base_url}}"], "path": ["adashi", "{{adashi_id}}", "visibility"] }
+          }
+        }
+      ]
+    }
+  ]
+}
