@@ -35,9 +35,10 @@ class Notification extends Model
             self::sendPushNotification($recipient,$title,$body);
         }
 
-        // Reminders go multi-channel: also deliver over SMS (when SMS is enabled).
+        // Reminders go multi-channel: also deliver over SMS + WhatsApp (when enabled).
         if($sms || $type === self::PAYMENT_REMINDER){
             self::sendSms($recipient,$body);
+            self::sendWhatsApp($recipient,$body);
         }
 
     }
@@ -158,6 +159,32 @@ class Notification extends Model
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('SMS notification failed: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Best-effort WhatsApp template delivery (reminder channel). No-op when the
+     * WhatsApp channel is disabled; never throws.
+     */
+    public static function sendWhatsApp($recipient,$body,$templateKey='payment_reminder')
+    {
+        try {
+            $whatsapp = app(\App\Services\WhatsApp\WhatsAppSender::class);
+            if (!$whatsapp->enabled()) {
+                return;
+            }
+
+            if (is_array($recipient)) {
+                $phones = User::whereIn('id', $recipient)->whereNotNull('phone_number')->pluck('phone_number');
+            } else {
+                $phones = $recipient && $recipient->phone_number ? [$recipient->phone_number] : [];
+            }
+
+            foreach ($phones as $phone) {
+                $whatsapp->send($phone, $templateKey, [$body]);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('WhatsApp notification failed: '.$e->getMessage());
         }
     }
 

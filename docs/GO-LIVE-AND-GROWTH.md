@@ -126,9 +126,9 @@ and **(b) frictionless money movement**, then **(c) viral invite loops**.
   **Flutterwave** instead of "mark as Paid". Converts a tracking app into a savings *platform*.
 - **Automated payouts** — *scaffolded (dormant), see §9*: disburse a collected Adashi pot to the
   receiver's bank automatically when a cycle closes (the disbursement half of the money platform).
-- **In-app wallet** with auto-debit / standing orders for recurring contributions and streak protection.
-- **Automated, multi-channel reminders** — *implemented, see §8*: push + SMS reminders off the scheduler.
-  (WhatsApp template messages still to add.)
+- **In-app wallet** — *implemented (dormant), see §13*: members fund once and pay contributions straight
+  from balance. (Auto-debit / standing orders still to add.)
+- **Automated, multi-channel reminders** — *implemented, see §8 (push + SMS) and §14 (WhatsApp)*.
 
 ### 3.4 Engagement & retention
 - **Savings streaks + badges** — *implemented, see §12.* (Leaderboards still to expand.)
@@ -276,7 +276,7 @@ verified on seeded sqlite (active+unpaid reminded; paid and inactive skipped); f
 notification creation in `tests/Feature/ReminderTest.php` (PHP 8.1–8.3).
 
 **To turn on SMS:** set `SMS_ENABLED=true` and `SMS_PROVIDER` + the provider keys (same as OTP). Reminders
-immediately start sending SMS in addition to push.
+immediately start sending SMS in addition to push. WhatsApp template reminders are in §14.
 
 ---
 
@@ -395,3 +395,51 @@ slots and adashi memberships. **Total contributed** = sum of their Paid invoices
 **Verified:** `evaluateBadges()` is pure and unit-tested (`tests/Unit/GamificationBadgeTest.php`, any PHP);
 full profile (streak=2, total=₦5,000, `first_pocket`) verified on seeded sqlite; endpoint coverage in
 `tests/Feature/GamificationTest.php` (PHP 8.1–8.3).
+
+---
+
+## 13. In-app wallet (implemented — dormant)
+
+Members fund a balance once and pay contributions straight from it — no card re-entry each cycle.
+**Ships OFF** (`WALLET_ENABLED=false`); it's money handling. See [config/wallet.php](../config/wallet.php).
+
+**Ledger safety:** `App\Services\Wallet\WalletService` mutations are **atomic + row-locked**
+(`SELECT … FOR UPDATE`), write a `wallet_transactions` row with the **running balance**, and credits are
+**idempotent on `reference`** (a repeated gateway callback funds once). Debits throw
+`InsufficientFundsException` — never overdraw.
+
+**Pieces:** `Wallet` + `WalletTransaction` models, migration `2026_06_11_000006`,
+`App\Http\Controllers\WalletController`.
+
+**Endpoints:**
+- `GET  /api/wallet` — `{ balance, currency }`
+- `GET  /api/wallet/history` — paginated ledger
+- `POST /api/wallet/topup` — `{ amount }` (credits immediately under the dev `log` payment provider;
+  production funding goes through the gateway + a credit on webhook — a documented follow-up)
+- `POST /api/wallet/pay-invoice` — `{ invoice_id }`: **debit + settle in one transaction**
+  (`MarkInvoicePaid`, `paid_through = Wallet`); insufficient balance → 422 and the invoice stays unpaid.
+
+**Verified:** idempotent credit + overdraft block verified on seeded sqlite; full top-up → pay-invoice →
+insufficient → authorization flow in `tests/Feature/WalletTest.php` (PHP 8.1–8.3).
+
+**Follow-ups:** gateway-funded top-ups (purpose-tagged payment → webhook credit), auto-debit / standing
+orders for recurring contributions, and routing Adashi payouts to the wallet as an option.
+
+---
+
+## 14. WhatsApp template reminders (implemented — dormant)
+
+WhatsApp is the dominant channel in Nigeria, so reminders can also go out as WhatsApp **template**
+messages via the Meta Cloud API. **Ships OFF** (`WHATSAPP_ENABLED=false`); reminders still send push/SMS.
+See [config/whatsapp.php](../config/whatsapp.php).
+
+**Pieces:** `App\Services\WhatsApp\WhatsAppSender` (`log`/`meta` drivers). Wired into the same reminder
+path as SMS — `Notification::make()` calls `sendWhatsApp()` (best-effort, never throws) for any
+`PAYMENT_REMINDER`, so the existing Adashi + pocket reminders gain a WhatsApp channel with no scheduler
+change. Body text is passed as template parameter `{{1}}`.
+
+**Verified:** `WhatsAppSender` unit-tested (`tests/Unit/WhatsAppSenderTest.php`, any PHP).
+
+**To turn on:** create + get approval for a `payment_reminder` template in WhatsApp Business, then set
+`WHATSAPP_ENABLED=true`, `WHATSAPP_PROVIDER=meta`, `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, and
+`WHATSAPP_TEMPLATE_PAYMENT_REMINDER` to the approved template name.

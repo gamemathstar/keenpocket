@@ -14,7 +14,7 @@ class AdashiContributor extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active' => 'integer', // 0/1 for the mobile client
         'joined_at' => 'datetime',
     ];
 }

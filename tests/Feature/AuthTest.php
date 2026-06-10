@@ -64,8 +64,8 @@ class AuthTest extends TestCase
             'password' => 'wrong-password',
         ]);
 
-        $response->assertJson(['message' => 'Invalid Credentials']);
-        $this->assertNull($response->json('token'));
+        $response->assertJson(['status' => 0, 'message' => 'Invalid Credentials']);
+        $this->assertEmpty($response->json('token'));
     }
 
     public function test_login_with_unknown_phone_does_not_leak_existence()

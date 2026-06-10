@@ -15,8 +15,9 @@ class AdashiMember extends Model
     ];
 
     protected $casts = [
-        'has_received' => 'boolean',
-        'is_active' => 'boolean',
+        // Integers (0/1), not booleans — the mobile client expects 0/1 (see API_REFERENCE §5).
+        'has_received' => 'integer',
+        'is_active' => 'integer',
         'joined_at' => 'datetime',
         'next_receiver_date' => 'datetime',
     ];

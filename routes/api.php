@@ -12,6 +12,7 @@ use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReputationController;
+use App\Http\Controllers\WalletController;
 use App\Models\Lga;
 use App\Models\PollingUnit;
 use App\Models\Ward;
@@ -33,6 +34,11 @@ use App\Http\Controllers\Adashi\AdashiController;
 Route::middleware('throttle:auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+
+    // Token flows used by the mobile client (API_REFERENCE §2.3, §2.5, §2.6).
+    Route::post('refresh-token', [AuthController::class, 'refreshToken']);
+    Route::get('request-token', [AuthController::class, 'requestToken']);
+    Route::post('verify-token', [AuthController::class, 'verifyToken']);
 
     // Phone OTP verification (no-op while OTP_ENABLED=false — see config/otp.php).
     Route::get('otp/status', [OtpController::class, 'status']);
@@ -87,6 +93,7 @@ Route::get('test', function (Request $request) {
 Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::get('users', [Controller::class, 'index']);
     Route::get('logout', [AuthController::class, 'logout']);
+    Route::post('change-password', [AuthController::class, 'changePassword']);
 
     Route::get('dashboard', [APIController::class, 'dashboard']);
     Route::get('invoice', [APIController::class, 'invoice']);
@@ -151,6 +158,12 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::get('gamification/me', [GamificationController::class, 'me']);
     Route::get('users/{id}/badges', [GamificationController::class, 'badges']);
 
+    // In-app wallet (no-op while WALLET_ENABLED=false — see config/wallet.php).
+    Route::get('wallet', [WalletController::class, 'balance']);
+    Route::get('wallet/history', [WalletController::class, 'history']);
+    Route::post('wallet/topup', [WalletController::class, 'topup']);
+    Route::post('wallet/pay-invoice', [WalletController::class, 'payInvoice']);
+
     // Adashi endpoints
     Route::prefix('adashi')->group(function () {
         Route::post('/', [AdashiController::class, 'create']);
@@ -162,6 +175,7 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
         Route::post('{id}/reconcile', [AdashiController::class, 'reconcilePayments']);
         Route::get('{id}/records', [AdashiController::class, 'records']);
         Route::post('{id}/next-cycle', [AdashiController::class, 'nextCycle']);
+        Route::post('{id}/auto-rotate', [AdashiController::class, 'rotate']);
         Route::post('{id}/visibility', [AdashiController::class, 'setVisibility']);
         Route::post('{id}/admin/override', [AdashiController::class, 'adminOverride']);
         Route::get('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsIndex']);

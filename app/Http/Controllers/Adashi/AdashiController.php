@@ -25,7 +25,7 @@ class AdashiController extends Controller
             'amount_per_cycle' => 'required|integer|min:1',
             'cycle_duration_days' => 'required|integer|min:1',
             'start_date' => 'required|date',
-            'rotation_mode' => 'required|in:AUTO,MANUAL',
+            'rotation_mode' => 'required|in:AUTO,MANUAL,auto,manual',
             'members' => 'array',
             'members.*' => 'integer|exists:users,id',
             'admin_id' => 'nullable|integer|exists:users,id',
@@ -46,7 +46,7 @@ class AdashiController extends Controller
                 'cycle_duration_days' => $data['cycle_duration_days'],
                 'current_cycle_number' => 1,
                 'admin_id' => $admin,
-                'rotation_mode' => $data['rotation_mode'],
+                'rotation_mode' => strtoupper($data['rotation_mode']), // normalize; scheduler compares 'AUTO'
                 'status' => 'ACTIVE',
                 'is_public' => (bool) ($data['is_public'] ?? false),
             ]);
@@ -156,6 +156,15 @@ class AdashiController extends Controller
         $adashi->save();
 
         return response()->json(['success' => true, 'is_public' => $adashi->is_public]);
+    }
+
+    /**
+     * Client-triggered rotation (API_REFERENCE §5.6). Reconciles the current
+     * cycle and, when fully collected, closes it and rotates to the next.
+     */
+    public function rotate($id)
+    {
+        return $this->reconcilePayments($id);
     }
 
     public function contributorsIndex($id, $memberId)

@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\Otp\OtpService;
 use App\Services\Referral\ReferralService;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -63,7 +66,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('keen_-_pocket')->plainTextToken;
 
-        return response(compact('user', 'token'), 200);
+        // Shape per API_REFERENCE §2.2: message=null on success, optional keens.
+        return response(['user' => $user, 'token' => $token, 'message' => null, 'keens' => []], 200);
     }
 
     public function login(Request $request)
@@ -79,14 +83,16 @@ class AuthController extends Controller
 
         $user = User::where('phone_number', $fields['phone_number'])->first();
         if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response(['message' => 'Invalid Credentials'], 200);
+            // Shape per API_REFERENCE §2.1 error example (status 0, empty token).
+            return response(['status' => 0, 'token' => '', 'message' => 'Invalid Credentials'], 200);
         }
 
         $user->tokens()->delete();
-        $token = $user->createToken('keen_-_pocket')->plainTextToken;
+        $token = $user->createToken('access')->plainTextToken;
+        $refresh_token = $user->createToken('refresh')->plainTextToken;
         $status = 1;
 
-        return response(compact('status', 'token'), 200);
+        return response(compact('status', 'token', 'refresh_token'), 200);
     }
 
     public function logout()
@@ -94,5 +100,88 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
 
         return true;
+    }
+
+    /**
+     * Exchange a refresh token for a fresh access/refresh pair.
+     */
+    public function refreshToken(Request $request)
+    {
+        $data = $request->validate(['refresh_token' => 'required|string']);
+
+        $token = PersonalAccessToken::findToken($data['refresh_token']);
+        if (!$token || $token->name !== 'refresh') {
+            return response(['status' => 0, 'token' => '', 'message' => 'Invalid refresh token'], 200);
+        }
+
+        $user = $token->tokenable;
+        $user->tokens()->delete(); // rotate the whole pair
+
+        return response([
+            'status' => 1,
+            'token' => $user->createToken('access')->plainTextToken,
+            'refresh_token' => $user->createToken('refresh')->plainTextToken,
+        ], 200);
+    }
+
+    /**
+     * Change the authenticated user's password. Returns a boolean (client contract).
+     */
+    public function changePassword(Request $request)
+    {
+        $data = $request->validate([
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6',
+            'password_confirmation' => 'required|string',
+        ]);
+
+        if ($data['new_password'] !== $data['password_confirmation']) {
+            return response(false, 200);
+        }
+
+        $user = $request->user();
+        if (!Hash::check($data['old_password'], $user->password)) {
+            return response(false, 200);
+        }
+
+        $user->password = bcrypt($data['new_password']);
+        $user->save();
+
+        return response(true, 200);
+    }
+
+    /**
+     * Email-based reset/verification token request. Returns true regardless of
+     * whether the email exists (no account enumeration). Token is delivered via
+     * the log channel in dev — wire to mail/SMS for production.
+     */
+    public function requestToken(Request $request)
+    {
+        $data = $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $data['email'])->first();
+        if ($user) {
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            DB::table('password_resets')->updateOrInsert(
+                ['email' => $data['email']],
+                ['token' => $code, 'created_at' => now()]
+            );
+            Log::info("[reset-token] {$data['email']}: {$code}");
+        }
+
+        return response(true, 200);
+    }
+
+    /**
+     * Verify a previously issued email token (valid for 30 minutes).
+     */
+    public function verifyToken(Request $request)
+    {
+        $data = $request->validate(['token' => 'required|string']);
+
+        $row = DB::table('password_resets')->where('token', $data['token'])->first();
+        $valid = $row && Carbon::parse($row->created_at)->gt(now()->subMinutes(30));
+
+        return response((bool) $valid, 200);
     }
 }
