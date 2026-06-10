@@ -109,12 +109,13 @@ and **(b) frictionless money movement**, then **(c) viral invite loops**.
    use. (Pair with app universal links so the link opens straight to the join screen.)
 3. **Shareable pocket/adashi cards** — a generated image (group name, target, members, payout schedule)
    users post to status/groups. Social proof + curiosity → installs.
-4. **Public directory of open pockets** — *implemented, see §7.* People can browse and join open
-   pockets. Turns a closed tool into a marketplace. (Adashi directory + KYC gating still to come.)
+4. **Public directory** — *implemented, see §7.* People can browse and join open **pockets and adashis**
+   (KYC-gated when KYC is on). Turns a closed tool into a marketplace.
 
 ### 3.2 Trust & safety (required to scale past friends)
 - **Phone OTP** — scaffolded here; turn on once an SMS provider is funded.
-- **KYC**: BVN / NIN verification for organizers (and optionally members) before money moves.
+- **KYC** — *scaffolded (dormant), see §10*: BVN / NIN verification; when on, the public directory only
+  lists verified organizers.
 - **Escrow + automated payout schedule** so members trust the organizer can't run off with the pot.
 - **Member reputation** — *implemented, see §7*: on-time-payment score + activity, surfaced before
   joining. (User-to-user ratings still to come.)
@@ -130,7 +131,7 @@ and **(b) frictionless money movement**, then **(c) viral invite loops**.
   (WhatsApp template messages still to add.)
 
 ### 3.4 Engagement & retention
-- **Savings streaks, badges, leaderboards** (a contributor leaderboard already exists — expand it).
+- **Savings streaks + badges** — *implemented, see §12.* (Leaderboards still to expand.)
 - **Goal visualization** (progress bars toward target_amount; "you're 60% to Sallah").
 - **Organizer analytics**: collection rate, defaulters, projected payout dates.
 
@@ -237,9 +238,16 @@ activity, **no new tables**:
   invitation-only). Full pockets are excluded via a portable correlated subquery (verified on sqlite).
 - Organizer phone is masked in the directory (it was previously exposed raw by `search`).
 
-**Follow-ups:** an **adashi** directory (needs an explicit "open/visible" flag on adashi — there's no
-join-by-discovery concept there yet), KYC gating before listing, and caching reputation if directory
-traffic grows. Tests: `tests/Unit/ReputationScoreTest.php` (runs anywhere) +
+**Adashi directory** (added): `GET /api/directory/adashi` lists adashis that are `is_public` + `ACTIVE`,
+KYC-gated on the admin, admin phone masked. Adashis are **private by default** (`adashis.is_public`,
+guarded migration `2026_06_11_000004`); the admin toggles listing via `POST /api/adashi/{id}/visibility`,
+and can set it at creation (`is_public` on `POST /api/adashi`). Joining is now privacy-aware: **private
+adashis are admin-only**, public ones allow **self-join only** (and the long-standing
+`total_members` double-count on re-join was fixed). Tests: `tests/Feature/AdashiDirectoryTest.php`
+(PHP 8.1–8.3); listing verified on seeded sqlite.
+
+**Follow-ups:** KYC gating also on pocket/adashi creation, user-to-user ratings, and caching reputation if
+directory traffic grows. Discovery tests: `tests/Unit/ReputationScoreTest.php` (runs anywhere) +
 `tests/Feature/DiscoveryTest.php` (PHP 8.1–8.3).
 
 ---
@@ -309,3 +317,81 @@ Tests: `tests/Unit/PayoutSignatureTest.php` (signature + double-pay guard, any P
 
 **To turn on:** `PAYOUTS_ENABLED=true`, `PAYOUTS_PROVIDER=paystack|flutterwave`, ensure Transfers is enabled
 on the provider account, and point the provider's transfer webhook at `/api/payouts/webhook/{provider}`.
+
+---
+
+## 10. KYC identity verification (implemented — dormant)
+
+Identity verification (BVN / NIN) — the trust gate for letting strangers transact. **Ships OFF**
+(`KYC_ENABLED=false`); while off nothing is verified and no flow requires it. See
+[config/kyc.php](../config/kyc.php).
+
+**Privacy-first:** the raw BVN/NIN is sent to the provider for the check and then **discarded** — only the
+**last 4 digits** (for the user's reference) and the provider's verification reference are stored
+(`users.kyc_*`, guarded migration `2026_06_11_000003`).
+
+**Pieces:** `App\Services\Kyc\KycService` (drivers `log` (dev, simulates) / `dojah`),
+`App\Http\Controllers\KycController`, fields on `users`.
+
+**Endpoints:**
+- `GET  /api/kyc/status` — `{ enabled, status, type, id_last4, verified_at }`
+- `POST /api/kyc/submit` — `{ type: BVN|NIN, id_number }` (rate-limited; raw number never persisted)
+
+**Trust gate:** when `KYC_ENABLED=true` and `KYC_GATE_DIRECTORY=true`, the public directory (§7) only lists
+pockets whose **organizer is KYC-verified**. Verified on seeded sqlite: KYC off → all organizers shown;
+KYC on → unverified organizers hidden.
+
+**Follow-ups:** also gate **payout** and **pocket/adashi creation** on verified status; add a name/DOB match
+step; webhook for async provider results. Tests: `tests/Unit/KycServiceTest.php` (any PHP) +
+`tests/Feature/KycTest.php` (submit + directory gating, PHP 8.1–8.3).
+
+**To turn on:** `KYC_ENABLED=true`, `KYC_PROVIDER=dojah` + `DOJAH_APP_ID`/`DOJAH_SECRET_KEY`.
+
+---
+
+## 11. Peer trust ratings (implemented)
+
+Members rate the organizer (1–5★) of a pocket/adashi they belong to — capturing trustworthiness that
+payment data alone can't (did the organizer disburse, communicate, run it well?). Ships ON; no money.
+
+**Pieces:** `App\Services\Rating\RatingService`, `App\Http\Controllers\RatingController`,
+`App\Models\Rating`, migration `2026_06_11_000005` (`ratings` table, **one rating per rater per group**,
+updatable).
+
+**Endpoints:**
+- `POST /api/ratings` — `{ context_type: pocket|adashi, context_id, stars: 1–5, comment? }`
+- `GET  /api/users/{id}/ratings` — `{ summary: { average, count }, ratings: [...] }`
+
+**Authorization:** the rater must be an **active member** of the pocket/adashi; the ratee is its
+**organizer** (pocket owner / adashi admin); you cannot rate yourself; re-rating updates your existing
+rating. Verified on seeded sqlite (non-member→403, self→422, invalid context→422, average math).
+
+**Reputation integration:** `ReputationService::forUser()` now also returns `rating_average` /
+`rating_count`, so a member's trust profile combines **payment reliability + activity + peer ratings**.
+(The 0–100 score formula is unchanged; rating is surfaced alongside it for now.) Tests:
+`tests/Feature/RatingTest.php` (PHP 8.1–8.3).
+
+---
+
+## 12. Gamification: streaks + badges (implemented)
+
+Engagement layer, computed on the fly from existing activity — **no new mutable state**, so it can never
+drift from reality. Ships ON; no money. Thresholds are tunable in [config/gamification.php](../config/gamification.php).
+
+**Pieces:** `App\Services\Gamification\GamificationService`, `App\Http\Controllers\GamificationController`.
+
+**Endpoints:**
+- `GET /api/gamification/me` — `{ streak, total_contributed, badges: [...], metrics }`
+- `GET /api/users/{id}/badges` — earned badges only (public profile)
+
+**Streak** = current run of consecutive **Paid** invoices (newest backwards), across the member's pocket
+slots and adashi memberships. **Total contributed** = sum of their Paid invoices.
+
+**Badges** (each returned with an `earned` flag so clients show locked + unlocked):
+`first_pocket`, `adashi_member`, `reliable_payer` (≥3 invoices & ≥90% reliability), `cycle_champion`
+(received an adashi payout), `top_organizer` (≥3 ratings & ≥4.5★), `recruiter` (≥3 qualified referrals),
+`verified` (KYC), `big_saver` (≥₦100k contributed). Reuses reputation/rating/referral/KYC data.
+
+**Verified:** `evaluateBadges()` is pure and unit-tested (`tests/Unit/GamificationBadgeTest.php`, any PHP);
+full profile (streak=2, total=₦5,000, `first_pocket`) verified on seeded sqlite; endpoint coverage in
+`tests/Feature/GamificationTest.php` (PHP 8.1–8.3).

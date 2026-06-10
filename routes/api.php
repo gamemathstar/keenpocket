@@ -4,9 +4,12 @@ use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DirectoryController;
+use App\Http\Controllers\GamificationController;
+use App\Http\Controllers\KycController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PayoutController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReputationController;
 use App\Models\Lga;
@@ -130,10 +133,23 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::get('referrals/me', [ReferralController::class, 'me']);
     Route::get('referrals', [ReferralController::class, 'index']);
 
+    // Identity verification (no-op while KYC_ENABLED=false — see config/kyc.php).
+    Route::get('kyc/status', [KycController::class, 'status']);
+    Route::post('kyc/submit', [KycController::class, 'submit'])->middleware('throttle:auth');
+
     // Discovery: member reputation + public directory of joinable pockets.
     Route::get('reputation/me', [ReputationController::class, 'me']);
     Route::get('users/{id}/reputation', [ReputationController::class, 'show']);
     Route::get('directory/pockets', [DirectoryController::class, 'pockets']);
+    Route::get('directory/adashi', [DirectoryController::class, 'adashi']);
+
+    // Peer trust ratings.
+    Route::post('ratings', [RatingController::class, 'store']);
+    Route::get('users/{id}/ratings', [RatingController::class, 'forUser']);
+
+    // Gamification: streaks + achievement badges.
+    Route::get('gamification/me', [GamificationController::class, 'me']);
+    Route::get('users/{id}/badges', [GamificationController::class, 'badges']);
 
     // Adashi endpoints
     Route::prefix('adashi')->group(function () {
@@ -146,6 +162,7 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
         Route::post('{id}/reconcile', [AdashiController::class, 'reconcilePayments']);
         Route::get('{id}/records', [AdashiController::class, 'records']);
         Route::post('{id}/next-cycle', [AdashiController::class, 'nextCycle']);
+        Route::post('{id}/visibility', [AdashiController::class, 'setVisibility']);
         Route::post('{id}/admin/override', [AdashiController::class, 'adminOverride']);
         Route::get('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsIndex']);
         Route::post('{id}/members/{memberId}/contributors', [AdashiController::class, 'contributorsStore']);

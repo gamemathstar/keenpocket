@@ -12,11 +12,12 @@ class Adashi extends Model
     protected $fillable = [
         'name', 'amount_per_cycle', 'total_members', 'start_date',
         'cycle_duration_days', 'current_cycle_number', 'admin_id',
-        'rotation_mode', 'status',
+        'rotation_mode', 'status', 'is_public',
     ];
 
     protected $casts = [
         'start_date' => 'date',
+        'is_public' => 'boolean',
     ];
 
     public function members()

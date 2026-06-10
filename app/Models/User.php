@@ -29,6 +29,11 @@ class User extends Authenticatable
         'payout_bank_name',
         'payout_bank_code',
         'payout_account_number',
+        'kyc_status',
+        'kyc_type',
+        'kyc_id_last4',
+        'kyc_reference',
+        'kyc_verified_at',
     ];
 
     /**

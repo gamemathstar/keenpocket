@@ -6,6 +6,7 @@ use App\Models\AdashiMember;
 use App\Models\AdashiRecord;
 use App\Models\Invoice;
 use App\Models\PocketSlot;
+use App\Models\Rating;
 
 /**
  * Member reputation, computed on the fly from existing activity (no new tables).
@@ -38,6 +39,9 @@ class ReputationService
         $hasHistory = $totalInvoices > 0 || $activity > 0;
         $score = self::score($reliability ?? 0, $activity);
 
+        $ratingCount = Rating::where('ratee_id', $userId)->count();
+        $ratingAvg = $ratingCount ? round((float) Rating::where('ratee_id', $userId)->avg('stars'), 2) : null;
+
         return [
             'score' => $score,
             'band' => self::band($score, $hasHistory),
@@ -47,6 +51,8 @@ class ReputationService
             'pockets_joined' => $pocketsJoined,
             'adashis_joined' => $adashisJoined,
             'cycles_completed' => $cyclesCompleted,
+            'rating_average' => $ratingAvg, // peer trust rating (null if none)
+            'rating_count' => $ratingCount,
         ];
     }
 

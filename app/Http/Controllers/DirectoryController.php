@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adashi;
 use App\Models\Pocket;
 use Illuminate\Http\Request;
 
@@ -47,6 +48,11 @@ class DirectoryController extends Controller
             $query->where('pockets.title', 'LIKE', '%'.$term.'%');
         }
 
+        // Trust gate: when KYC is enabled, only surface verified organizers.
+        if (config('kyc.enabled', false) && config('kyc.gate_directory', true)) {
+            $query->where('users.kyc_status', 'verified');
+        }
+
         $page = $query->paginate($perPage);
 
         $page->getCollection()->transform(function ($p) {
@@ -58,6 +64,50 @@ class DirectoryController extends Controller
             unset($p->phone_number, $p->user_id);
 
             return $p;
+        });
+
+        return response($page);
+    }
+
+    /**
+     * Public directory of adashis open to join (`is_public`, status ACTIVE).
+     * Adashi has no member cap, so there is no "full" filter. KYC-gated on the
+     * admin when enabled. An optional `q` filters by name.
+     */
+    public function adashi(Request $request)
+    {
+        if (!config('discovery.enabled', true)) {
+            return response(['enabled' => false], 200);
+        }
+
+        $query = Adashi::query()
+            ->where('adashis.is_public', true)
+            ->where('adashis.status', 'ACTIVE')
+            ->join('users', 'users.id', '=', 'adashis.admin_id')
+            ->select([
+                'adashis.id', 'adashis.name', 'adashis.amount_per_cycle',
+                'adashis.cycle_duration_days', 'adashis.total_members',
+                'adashis.current_cycle_number', 'adashis.rotation_mode',
+                'adashis.admin_id', 'users.name as admin', 'users.phone_number',
+            ])
+            ->orderByDesc('adashis.id');
+
+        if ($term = trim((string) $request->query('q', ''))) {
+            $query->where('adashis.name', 'LIKE', '%'.$term.'%');
+        }
+
+        if (config('kyc.enabled', false) && config('kyc.gate_directory', true)) {
+            $query->where('users.kyc_status', 'verified');
+        }
+
+        $page = $query->paginate((int) config('discovery.per_page', 20));
+
+        $page->getCollection()->transform(function ($a) {
+            $a->admin_id_ref = $a->admin_id;
+            $a->admin_phone = $this->maskPhone($a->phone_number);
+            unset($a->phone_number, $a->admin_id);
+
+            return $a;
         });
 
         return response($page);

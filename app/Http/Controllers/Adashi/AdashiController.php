@@ -29,6 +29,7 @@ class AdashiController extends Controller
             'members' => 'array',
             'members.*' => 'integer|exists:users,id',
             'admin_id' => 'nullable|integer|exists:users,id',
+            'is_public' => 'nullable|boolean',
         ]);
         // return $request->all();
 
@@ -47,6 +48,7 @@ class AdashiController extends Controller
                 'admin_id' => $admin,
                 'rotation_mode' => $data['rotation_mode'],
                 'status' => 'ACTIVE',
+                'is_public' => (bool) ($data['is_public'] ?? false),
             ]);
 
             // create members (admin first position)
@@ -107,21 +109,53 @@ class AdashiController extends Controller
         $data = $request->validate(['user_id' => 'required|integer|exists:users,id']);
 
         $adashi = Adashi::findOrFail($id);
+
+        // Privacy: private adashis are admin-managed; public ones allow self-join only.
+        $authId = $request->user()->id;
+        $isAdmin = $adashi->admin_id == $authId;
+        $isSelf = $data['user_id'] == $authId;
+        if (!$adashi->is_public && !$isAdmin) {
+            return response()->json(['message' => 'This adashi is private; only the admin can add members.'], 403);
+        }
+        if ($adashi->is_public && !$isAdmin && !$isSelf) {
+            return response()->json(['message' => 'You can only add yourself to a public adashi.'], 403);
+        }
+
         $maxPos = AdashiMember::where('adashi_id', $adashi->id)->max('position') ?? 0;
         $member = AdashiMember::firstOrCreate(
             ['adashi_id' => $adashi->id, 'user_id' => $data['user_id']],
             ['position' => $maxPos + 1, 'has_received' => false, 'joined_at' => now(), 'is_active' => true]
         );
 
-        $adashi->increment('total_members');
+        // Only count / qualify a genuinely new membership (re-join is a no-op).
+        if ($member->wasRecentlyCreated) {
+            $adashi->increment('total_members');
 
-        // Growth loop: a referred user joining an adashi qualifies their referral.
-        $joiner = User::find($data['user_id']);
-        if ($joiner) {
-            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($joiner);
+            $joiner = User::find($data['user_id']);
+            if ($joiner) {
+                app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($joiner);
+            }
         }
 
         return response()->json(['success' => true, 'member' => $member]);
+    }
+
+    /**
+     * Admin toggles whether the adashi appears in the public directory.
+     */
+    public function setVisibility($id, Request $request)
+    {
+        $data = $request->validate(['is_public' => 'required|boolean']);
+
+        $adashi = Adashi::findOrFail($id);
+        if ($adashi->admin_id != $request->user()->id) {
+            return response()->json(['message' => 'Only the admin can change visibility.'], 403);
+        }
+
+        $adashi->is_public = $data['is_public'];
+        $adashi->save();
+
+        return response()->json(['success' => true, 'is_public' => $adashi->is_public]);
     }
 
     public function contributorsIndex($id, $memberId)
