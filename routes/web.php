@@ -45,7 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets', [PocketController::class, 'store'])->name('pockets.store');
     Route::get('/pockets/{id}', [PocketController::class, 'show'])->name('pockets.show');
     Route::post('/pockets/{id}/join', [PocketController::class, 'join'])->name('pockets.join');
+    Route::get('/search', [\App\Http\Controllers\Web\SearchController::class, 'index'])->name('search');
     Route::get('/pockets/{id}/manage', [PocketController::class, 'manage'])->name('pockets.manage');
+    Route::get('/pockets/{id}/invoices/export', [PocketController::class, 'exportInvoices'])->name('pockets.invoices.export');
     Route::post('/pockets/{id}/members', [PocketController::class, 'addMember'])->name('pockets.addMember');
     Route::post('/pockets/{id}/toggle', [PocketController::class, 'toggleStatus'])->name('pockets.toggleStatus');
 
@@ -55,20 +57,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoices/{id}/mark-paid', [InvoiceController::class, 'markPaid'])->name('invoices.markPaid');
     Route::post('/invoices/{id}/pay-wallet', [InvoiceController::class, 'payWallet'])->name('invoices.payWallet');
 
+    // Pocket shopping list (group buying)
+    Route::post('/pockets/{id}/shopping', [\App\Http\Controllers\Web\ShoppingController::class, 'store'])->name('shopping.store');
+    Route::post('/shopping/{id}/delete', [\App\Http\Controllers\Web\ShoppingController::class, 'destroy'])->name('shopping.destroy');
+
     Route::get('/adashi', [AdashiWebController::class, 'index'])->name('adashi.index');
     Route::get('/adashi/create', [AdashiWebController::class, 'create'])->name('adashi.create');
     Route::post('/adashi', [AdashiWebController::class, 'store'])->name('adashi.store');
     Route::get('/adashi/{id}', [AdashiWebController::class, 'show'])->name('adashi.show');
     Route::post('/adashi/{id}/contribute', [AdashiWebController::class, 'contribute'])->name('adashi.contribute');
     Route::post('/adashi/{id}/reconcile', [AdashiWebController::class, 'reconcile'])->name('adashi.reconcile');
+    Route::get('/adashi/{id}/records/export', [AdashiWebController::class, 'exportRecords'])->name('adashi.records.export');
     Route::get('/adashi/{id}/members', [AdashiWebController::class, 'membersForm'])->name('adashi.members');
     Route::post('/adashi/{id}/members', [AdashiWebController::class, 'addMember'])->name('adashi.members.store');
     Route::post('/adashi/{id}/admin', [AdashiWebController::class, 'adminAction'])->name('adashi.admin');
 
     Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
+    Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'index'])->name('leaderboard');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'readOne'])->name('notifications.readOne');
 
     Route::get('/payouts', [PayoutsController::class, 'index'])->name('payouts.index');
     Route::post('/payouts/bank-account', [PayoutsController::class, 'saveBankAccount'])->name('payouts.saveBank');

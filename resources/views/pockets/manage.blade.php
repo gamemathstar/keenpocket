@@ -10,12 +10,15 @@
             <div class="font-semibold">{{ $pocket->title }}</div>
             <div class="text-sm text-slate-500">{{ $pocket->status ? 'Open — anyone can join' : 'Closed — invitation only' }}</div>
         </div>
-        <form method="POST" action="{{ route('pockets.toggleStatus', $pocket->id) }}">
-            @csrf
-            <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
-                {{ $pocket->status ? 'Close pocket' : 'Open pocket' }}
-            </button>
-        </form>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('pockets.invoices.export', $pocket->id) }}" class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">⬇ Export invoices (CSV)</a>
+            <form method="POST" action="{{ route('pockets.toggleStatus', $pocket->id) }}">
+                @csrf
+                <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
+                    {{ $pocket->status ? 'Close pocket' : 'Open pocket' }}
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="grid lg:grid-cols-3 gap-6 mt-6 max-w-5xl">

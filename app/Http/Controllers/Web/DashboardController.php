@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adashi;
+use App\Models\AdashiMember;
+use App\Models\Invoice;
 use App\Models\Pocket;
 use App\Models\PocketSlot;
 use App\Services\Gamification\GamificationService;
 use App\Services\Reputation\ReputationService;
 use App\Services\Wallet\WalletService;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -38,6 +41,32 @@ class DashboardController extends Controller
 
         $ownedPockets = Pocket::where('user_id', $user->id)->count();
 
-        return view('dashboard', compact('user', 'pockets', 'adashis', 'rep', 'profile', 'walletBalance', 'ownedPockets'));
+        // Contribution trend — paid amounts per month over the last 6 months.
+        $slotIds = PocketSlot::where('user_id', $user->id)->pluck('id')->all();
+        $memberIds = AdashiMember::where('user_id', $user->id)->pluck('id')->all();
+        $paid = Invoice::where('payment_status', 'Paid')
+            ->where(fn ($q) => $q->whereIn('pocket_slot_id', $slotIds)->orWhereIn('adashi_member_id', $memberIds))
+            ->get(['amount', 'payment_date', 'created_at']);
+
+        $buckets = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $m = Carbon::now()->startOfMonth()->subMonths($i);
+            $buckets[$m->format('Y-m')] = ['label' => $m->format('M'), 'total' => 0];
+        }
+        foreach ($paid as $inv) {
+            $date = $inv->payment_date ?? $inv->created_at;
+            if (!$date) {
+                continue;
+            }
+            $key = Carbon::parse($date)->format('Y-m');
+            if (isset($buckets[$key])) {
+                $buckets[$key]['total'] += (int) $inv->amount;
+            }
+        }
+        $chartLabels = array_column($buckets, 'label');
+        $chartData = array_column($buckets, 'total');
+        $totalSaved = (int) $paid->sum('amount');
+
+        return view('dashboard', compact('user', 'pockets', 'adashis', 'rep', 'profile', 'walletBalance', 'ownedPockets', 'chartLabels', 'chartData', 'totalSaved'));
     }
 }

@@ -3,7 +3,10 @@
 @section('heading', 'Manage members')
 
 @section('content')
-    <a href="{{ route('adashi.show', $adashi->id) }}" class="text-sm text-brand-dark hover:underline">← Back to {{ $adashi->name }}</a>
+    <div class="flex items-center justify-between">
+        <a href="{{ route('adashi.show', $adashi->id) }}" class="text-sm text-brand-dark hover:underline">← Back to {{ $adashi->name }}</a>
+        <a href="{{ route('adashi.records.export', $adashi->id) }}" class="text-sm rounded-lg border border-slate-300 hover:bg-slate-50 px-3 py-1.5">⬇ Export records (CSV)</a>
+    </div>
 
     {{-- Admin controls for the current cycle --}}
     @if ($currentRecord)

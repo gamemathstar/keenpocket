@@ -19,11 +19,16 @@
     {{-- Current cycle + actions --}}
     @if ($currentRecord)
         <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+            @php
+                $cycleTarget = (int) $adashi->amount_per_cycle * (int) $adashi->total_members;
+                $cyclePct = $cycleTarget > 0 ? (int) round($currentRecord->total_collected / $cycleTarget * 100) : 0;
+            @endphp
             <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
+                <div class="min-w-[240px] flex-1">
                     <div class="text-sm text-slate-500">Current cycle {{ $currentRecord->cycle_number }} · {{ ucfirst(strtolower($currentRecord->status)) }}</div>
-                    <div class="text-lg font-semibold mt-0.5">Collected ₦{{ number_format($currentRecord->total_collected) }} · {{ $currentRecord->paid_members_count }}/{{ $adashi->total_members }} paid</div>
-                    <div class="text-xs text-slate-400 mt-0.5">Receiver this cycle: member #{{ optional($members->firstWhere('position', $adashi->current_cycle_number))->name ?? '—' }}</div>
+                    <div class="text-lg font-semibold mt-0.5">{{ $currentRecord->paid_members_count }}/{{ $adashi->total_members }} members paid</div>
+                    <div class="text-xs text-slate-400 mt-0.5 mb-2">Receiver this cycle: member #{{ optional($members->firstWhere('position', $adashi->current_cycle_number))->name ?? '—' }}</div>
+                    <x-progress-bar :percent="$cyclePct" label="Cycle collected" :current="(int) $currentRecord->total_collected" :target="$cycleTarget" />
                 </div>
                 <div class="flex items-end gap-2">
                     @if ($myMember)
@@ -81,5 +86,9 @@
                 @endforelse
             </ul>
         </div>
+    </div>
+
+    <div class="mt-6 max-w-xl">
+        <x-mini-leaderboard :rows="$contributors" title="Top contributors" />
     </div>
 @endsection

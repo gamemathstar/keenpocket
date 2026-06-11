@@ -11,7 +11,7 @@
         </div>
     @else
         <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mb-6">
-            <div class="bg-gradient-to-r from-brand to-emerald-600 text-white rounded-xl p-6">
+            <div class="bg-gradient-to-r from-brand to-blue-500 text-white rounded-xl p-6">
                 <div class="text-sm opacity-90">Available balance</div>
                 <div class="text-4xl font-bold mt-1">₦{{ number_format($balance) }}</div>
             </div>

@@ -13,10 +13,9 @@
                     <div class="text-sm text-slate-500">{{ $user->phone_number }}</div>
                 </div>
             </div>
-            <div class="rounded-lg bg-slate-50 p-4 text-center">
-                <div class="text-3xl font-bold text-brand-dark">{{ $rep['score'] }}</div>
-                <div class="text-xs text-slate-500">reputation score</div>
-                <span class="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-brand-light text-brand-dark font-medium">{{ $rep['band'] }}</span>
+            <div class="flex flex-col items-center py-2">
+                <x-progress-ring :percent="$rep['score']" :label="$rep['score']" sublabel="reputation" />
+                <span class="inline-block mt-3 text-xs px-3 py-1 rounded-full bg-brand-light text-brand-dark font-bold uppercase tracking-wide">{{ $rep['band'] }}</span>
             </div>
             <dl class="mt-4 space-y-2 text-sm">
                 <div class="flex justify-between"><dt class="text-slate-500">Payment reliability</dt><dd>{{ is_null($rep['payment_reliability']) ? '—' : $rep['payment_reliability'].'%' }}</dd></div>

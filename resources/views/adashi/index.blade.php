@@ -16,8 +16,10 @@
                 <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · every {{ $a->cycle_duration_days }} days</div>
             </a>
         @empty
-            <div class="col-span-full text-sm text-slate-500 bg-white border border-dashed border-slate-300 rounded-xl p-8 text-center">
-                No adashi groups yet. <a href="{{ route('adashi.create') }}" class="text-brand-dark font-medium">Start one →</a>
+            <div class="col-span-full">
+                <x-empty-state title="No adashi groups yet"
+                    message="Start a rotating savings group and invite your circle."
+                    :action="route('adashi.create')" actionLabel="Start an adashi" />
             </div>
         @endforelse
     </div>

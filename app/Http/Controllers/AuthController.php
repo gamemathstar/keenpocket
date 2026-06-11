@@ -99,7 +99,7 @@ class AuthController extends Controller
     {
         auth()->user()->tokens()->delete();
 
-        return true;
+        return response()->json(true);
     }
 
     /**
@@ -136,18 +136,18 @@ class AuthController extends Controller
         ]);
 
         if ($data['new_password'] !== $data['password_confirmation']) {
-            return response(false, 200);
+            return response()->json(false);
         }
 
         $user = $request->user();
         if (!Hash::check($data['old_password'], $user->password)) {
-            return response(false, 200);
+            return response()->json(false);
         }
 
         $user->password = bcrypt($data['new_password']);
         $user->save();
 
-        return response(true, 200);
+        return response()->json(true);
     }
 
     /**
@@ -169,7 +169,7 @@ class AuthController extends Controller
             Log::info("[reset-token] {$data['email']}: {$code}");
         }
 
-        return response(true, 200);
+        return response()->json(true);
     }
 
     /**
@@ -182,6 +182,6 @@ class AuthController extends Controller
         $row = DB::table('password_resets')->where('token', $data['token'])->first();
         $valid = $row && Carbon::parse($row->created_at)->gt(now()->subMinutes(30));
 
-        return response((bool) $valid, 200);
+        return response()->json((bool) $valid);
     }
 }

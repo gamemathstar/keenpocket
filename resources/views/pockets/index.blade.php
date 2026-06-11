@@ -21,9 +21,10 @@
                 <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>
             </a>
         @empty
-            <div class="col-span-full text-sm text-slate-500 bg-white border border-dashed border-slate-300 rounded-xl p-8 text-center">
-                No pockets yet. <a href="{{ route('discover') }}" class="text-brand-dark font-medium">Discover one</a> or
-                <a href="{{ route('pockets.create') }}" class="text-brand-dark font-medium">create your own</a>.
+            <div class="col-span-full">
+                <x-empty-state title="No pockets yet"
+                    message="Discover an open pocket to join, or create your own."
+                    :action="route('pockets.create')" actionLabel="Create a pocket" />
             </div>
         @endforelse
     </div>

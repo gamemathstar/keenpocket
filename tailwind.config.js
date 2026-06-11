@@ -8,10 +8,13 @@ export default {
         extend: {
             colors: {
                 brand: {
-                    DEFAULT: '#059669',
-                    dark: '#047857',
-                    light: '#d1fae5',
+                    DEFAULT: '#1cb0f6',
+                    dark: '#1899d6',
+                    light: '#ddf4ff',
                 },
+            },
+            fontFamily: {
+                sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
         },
     },

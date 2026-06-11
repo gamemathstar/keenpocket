@@ -3,40 +3,74 @@
 @section('heading', 'Dashboard')
 
 @section('content')
-    <div class="mb-6">
-        <h2 class="text-2xl font-semibold">Hello, {{ explode(' ', $user->name)[0] }} 👋</h2>
-        <p class="text-slate-500 text-sm">Here's your savings at a glance.</p>
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div>
+            <h2 class="text-2xl font-semibold">Hello, {{ explode(' ', $user->name)[0] }} 👋</h2>
+            <p class="text-slate-500 text-sm">Here's your savings at a glance.</p>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-500">Total saved</div>
+            <div class="text-3xl font-bold text-brand-dark">₦{{ number_format($totalSaved) }}</div>
+        </div>
     </div>
 
-    {{-- Stat cards --}}
+    {{-- Stat tiles --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        @php
-            $cards = [
-                ['Active pockets', $pockets->count(), '👛'],
-                ['Adashi groups', $adashis->count(), '🔄'],
-                ['Reputation', ($rep['band'] ?? 'New'), '⭐'],
-                ['Wallet', is_null($walletBalance) ? '—' : '₦'.number_format($walletBalance), '💳'],
-            ];
-        @endphp
-        @foreach ($cards as [$label, $value, $icon])
-            <div class="bg-white rounded-xl border border-slate-200 p-4">
-                <div class="text-2xl mb-1">{{ $icon }}</div>
-                <div class="text-2xl font-semibold">{{ $value }}</div>
-                <div class="text-xs text-slate-500">{{ $label }}</div>
-            </div>
-        @endforeach
+        <x-stat-tile icon="👛" :value="$pockets->count()" label="Active pockets" tone="blue" />
+        <x-stat-tile icon="🔄" :value="$adashis->count()" label="Adashi groups" tone="purple" />
+        <x-stat-tile icon="⭐" :value="$rep['band'] ?? 'New'" label="Reputation" tone="amber" />
+        <x-stat-tile icon="💳" :value="is_null($walletBalance) ? '—' : '₦'.number_format($walletBalance)" label="Wallet" tone="green" />
+    </div>
+
+    {{-- Contribution trend --}}
+    <div class="bg-white rounded-xl border border-slate-200 p-5 mb-8">
+        <h3 class="font-semibold mb-3">Contributions (last 6 months)</h3>
+        @if (array_sum($chartData) > 0)
+            <canvas id="contribChart" height="90"></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+            <script>
+                (function () {
+                    var ctx = document.getElementById('contribChart');
+                    if (!ctx || !window.Chart) return;
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: @json($chartLabels),
+                            datasets: [{
+                                label: 'Paid (₦)',
+                                data: @json($chartData),
+                                backgroundColor: '#1cb0f6',
+                                borderRadius: 6,
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true, ticks: { callback: function (v) { return '₦' + v.toLocaleString(); } } } }
+                        }
+                    });
+                })();
+            </script>
+        @else
+            <p class="text-sm text-slate-500">No contributions recorded yet — they'll appear here as you pay.</p>
+        @endif
     </div>
 
     @if ($profile)
-        <div class="bg-gradient-to-r from-brand to-emerald-600 text-white rounded-xl p-5 mb-8 flex items-center justify-between">
-            <div>
-                <div class="text-sm opacity-90">Savings streak</div>
-                <div class="text-3xl font-bold">{{ $profile['streak'] }} 🔥</div>
-            </div>
-            <div class="flex flex-wrap gap-2 justify-end max-w-md">
-                @foreach (collect($profile['badges'])->where('earned', true)->take(5) as $b)
-                    <span class="bg-white/20 rounded-full px-3 py-1 text-xs font-medium">{{ $b['label'] }}</span>
-                @endforeach
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8 flex flex-wrap items-center gap-6">
+            <x-progress-ring :percent="$rep['score']" :label="$rep['score']" sublabel="reputation" />
+            <div class="flex-1 min-w-[200px]">
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wide">Savings streak</div>
+                <div class="text-3xl font-extrabold">{{ $profile['streak'] }} 🔥</div>
+                @php $earned = collect($profile['badges'])->where('earned', true); @endphp
+                @if ($earned->count())
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        @foreach ($earned->take(6) as $b)
+                            <span class="bg-brand-light text-brand-dark rounded-full px-3 py-1 text-xs font-bold">🏅 {{ $b['label'] }}</span>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-slate-500 mt-2">Earn badges by joining and paying on time.</p>
+                @endif
             </div>
         </div>
     @endif
@@ -58,8 +92,10 @@
                 <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>
             </a>
         @empty
-            <div class="col-span-full text-sm text-slate-500 bg-white border border-dashed border-slate-300 rounded-xl p-6 text-center">
-                You haven't joined any pockets yet. <a href="{{ route('discover') }}" class="text-brand-dark font-medium">Discover one →</a>
+            <div class="col-span-full">
+                <x-empty-state title="No pockets yet"
+                    message="Join an open pocket or start your own to begin saving with your circle."
+                    :action="route('discover')" actionLabel="Discover pockets" />
             </div>
         @endforelse
     </div>
@@ -77,8 +113,10 @@
                 <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · {{ ucfirst(strtolower($a->status)) }}</div>
             </a>
         @empty
-            <div class="col-span-full text-sm text-slate-500 bg-white border border-dashed border-slate-300 rounded-xl p-6 text-center">
-                No adashi groups yet. <a href="{{ route('adashi.create') }}" class="text-brand-dark font-medium">Start one →</a>
+            <div class="col-span-full">
+                <x-empty-state title="No adashi groups yet"
+                    message="Create a rotating savings group and invite your people."
+                    :action="route('adashi.create')" actionLabel="Start an adashi" />
             </div>
         @endforelse
     </div>

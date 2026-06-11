@@ -69,7 +69,7 @@ class InvoiceController extends Controller
             $markPaid->execute($invoice, 'Manual');
         }
 
-        return back()->with('status', 'Payment approved.');
+        return back()->with('status', 'Payment approved.')->with('celebrate', true);
     }
 
     /** Member pays their own invoice from wallet balance. */
@@ -98,7 +98,7 @@ class InvoiceController extends Controller
             return back()->withErrors(['wallet' => 'Insufficient wallet balance.']);
         }
 
-        return back()->with('status', 'Invoice paid from wallet.');
+        return back()->with('status', 'Invoice paid from wallet.')->with('celebrate', true);
     }
 
     private function activeSlot($pocketId, $userId): ?PocketSlot

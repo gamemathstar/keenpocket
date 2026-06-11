@@ -19,7 +19,7 @@ class Notification extends Model
     const REQUEST_APPROVED = "Request Approved";
     const USER_JOINED = "User Joined";
 
-    public static function make(User $sender,User $recipient,Model $model,$title,$body,$type,$do=1,$sms=false)
+    public static function make(?User $sender,User $recipient,Model $model,$title,$body,$type,$do=1,$sms=false)
     {
         $notification = new Notification();
         $notification->user_id = $recipient->id;

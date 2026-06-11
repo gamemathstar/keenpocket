@@ -43,8 +43,9 @@ class AdashiWebController extends Controller
         ]);
 
         $user = auth()->user();
+        $isPublic = $request->boolean('is_public');
 
-        $adashi = DB::transaction(function () use ($data, $user) {
+        $adashi = DB::transaction(function () use ($data, $user, $isPublic) {
             $adashi = Adashi::create([
                 'name' => $data['name'],
                 'amount_per_cycle' => $data['amount_per_cycle'],
@@ -55,7 +56,7 @@ class AdashiWebController extends Controller
                 'admin_id' => $user->id,
                 'rotation_mode' => strtoupper($data['rotation_mode']),
                 'status' => 'ACTIVE',
-                'is_public' => $request->boolean('is_public'),
+                'is_public' => $isPublic,
             ]);
 
             $member = AdashiMember::create([
@@ -91,7 +92,16 @@ class AdashiWebController extends Controller
         $isAdmin = $adashi->admin_id == auth()->id();
         $myMember = AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => auth()->id(), 'is_active' => 1])->first();
 
-        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember'));
+        $contributors = \App\Models\Invoice::query()
+            ->where('invoices.payment_status', 'Paid')
+            ->join('adashi_members', 'adashi_members.id', '=', 'invoices.adashi_member_id')
+            ->join('users', 'users.id', '=', 'adashi_members.user_id')
+            ->where('adashi_members.adashi_id', $adashi->id)
+            ->groupBy('adashi_members.user_id', 'users.name')
+            ->selectRaw('users.name as name, SUM(invoices.amount) as total')
+            ->orderByDesc('total')->limit(10)->get();
+
+        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors'));
     }
 
     /** A member records a contribution for the current cycle. */
@@ -132,7 +142,7 @@ class AdashiWebController extends Controller
         } catch (\Throwable $e) {
         }
 
-        return back()->with('status', 'Contribution recorded.');
+        return back()->with('status', 'Contribution recorded.')->with('celebrate', true);
     }
 
     /** Admin: manage members screen. */
@@ -217,6 +227,30 @@ class AdashiWebController extends Controller
         }
 
         return redirect()->route('adashi.members', $adashi->id)->with('status', $user->name.' added to the adashi.');
+    }
+
+    /** Admin exports the adashi's cycle records as CSV. */
+    public function exportRecords($id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can export records.');
+
+        $records = AdashiRecord::query()
+            ->leftJoin('users', 'users.id', '=', 'adashi_records.receiver_user_id')
+            ->where('adashi_records.adashi_id', $adashi->id)
+            ->orderBy('adashi_records.cycle_number')
+            ->get(['adashi_records.cycle_number', 'adashi_records.due_at', 'adashi_records.total_collected', 'users.name as receiver', 'adashi_records.paid_members_count', 'adashi_records.status']);
+
+        $filename = 'adashi-'.$adashi->id.'-records.csv';
+
+        return response()->streamDownload(function () use ($records) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['Cycle', 'Due', 'Collected', 'Receiver', 'Paid members', 'Status']);
+            foreach ($records as $r) {
+                fputcsv($out, [$r->cycle_number, $r->due_at, $r->total_collected, $r->receiver, $r->paid_members_count, $r->status]);
+            }
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv']);
     }
 
     /** Admin reconciles the current cycle (closes + rotates when fully collected). */

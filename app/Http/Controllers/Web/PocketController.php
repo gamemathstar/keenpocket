@@ -106,8 +106,25 @@ class PocketController extends Controller
 
         $owner = User::find($pocket->user_id);
         $walletEnabled = app(\App\Services\Wallet\WalletService::class)->enabled();
+        $shoppingItems = \App\Models\ShoppingItem::where('pocket_id', $pocket->id)->orderBy('id')->get();
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled'));
+        // The viewing member's contribution progress toward their target.
+        $mySlot = PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $user->id, 'status' => 1])->first();
+        $contributed = (int) $invoices->where('payment_status', 'Paid')->sum('amount');
+        $target = $mySlot ? (int) $mySlot->hand_count * (int) $pocket->month_count * (int) $pocket->amount_per_hand : 0;
+        $progress = $target > 0 ? (int) round($contributed / $target * 100) : 0;
+
+        // Per-pocket top contributors.
+        $contributors = Invoice::query()
+            ->where('invoices.payment_status', 'Paid')
+            ->join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
+            ->join('users', 'users.id', '=', 'pocket_slots.user_id')
+            ->where('pocket_slots.pocket_id', $pocket->id)
+            ->groupBy('pocket_slots.user_id', 'users.name')
+            ->selectRaw('users.name as name, SUM(invoices.amount) as total')
+            ->orderByDesc('total')->limit(10)->get();
+
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors'));
     }
 
     public function join(Request $request, $id)
@@ -137,7 +154,7 @@ class PocketController extends Controller
         } catch (\Throwable $e) {
         }
 
-        return redirect()->route('pockets.show', $pocket->id)->with('status', 'You joined this pocket.');
+        return redirect()->route('pockets.show', $pocket->id)->with('status', 'You joined this pocket.')->with('celebrate', true);
     }
 
     /** Owner: manage members + open/close. */
@@ -193,6 +210,31 @@ class PocketController extends Controller
         $slot->save();
 
         return redirect()->route('pockets.manage', $pocket->id)->with('status', $user->name.' added to the pocket.');
+    }
+
+    /** Owner exports all of the pocket's invoices as CSV. */
+    public function exportInvoices($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can export invoices.');
+
+        $rows = Invoice::query()
+            ->join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
+            ->join('users', 'users.id', '=', 'pocket_slots.user_id')
+            ->where('pocket_slots.pocket_id', $pocket->id)
+            ->orderByDesc('invoices.id')
+            ->get(['invoices.invoice_no', 'users.name', 'invoices.amount', 'invoices.payment_status', 'invoices.paid_through', 'invoices.payment_date']);
+
+        $filename = 'pocket-'.$pocket->id.'-invoices.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['Invoice No', 'Member', 'Amount', 'Status', 'Paid Through', 'Payment Date']);
+            foreach ($rows as $r) {
+                fputcsv($out, [$r->invoice_no, $r->name, $r->amount, $r->payment_status, $r->paid_through, $r->payment_date]);
+            }
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv']);
     }
 
     /** Owner toggles the pocket open/closed (open = others can join). */

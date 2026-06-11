@@ -22,6 +22,12 @@
             </div>
         </div>
 
+        @if ($isMember && $target > 0)
+            <div class="mt-5 border-t border-slate-100 pt-4">
+                <x-progress-bar :percent="$progress" label="My contribution goal" :current="$contributed" :target="$target" />
+            </div>
+        @endif
+
         @unless ($isMember)
             <form method="POST" action="{{ route('pockets.join', $pocket->id) }}" class="mt-5 flex items-end gap-3 border-t border-slate-100 pt-4">
                 @csrf
@@ -90,5 +96,69 @@
                 @endforelse
             </ul>
         </div>
+    </div>
+
+    <div class="mt-6">
+        <x-mini-leaderboard :rows="$contributors" title="Top contributors" />
+    </div>
+
+    {{-- Shopping list (group buying) --}}
+    <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+        <h3 class="font-semibold mb-3">🛒 Shopping list</h3>
+        @if ($shoppingItems->isNotEmpty())
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-slate-400 text-xs">
+                        <tr class="text-left border-b border-slate-100">
+                            <th class="py-2">Item</th><th>Unit price</th><th>People</th><th>Total</th>
+                            @if ($isOwner)<th></th>@endif
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach ($shoppingItems as $item)
+                            <tr>
+                                <td class="py-2">{{ $item->name }} @if($item->category)<span class="text-xs text-slate-400">· {{ $item->category }}</span>@endif</td>
+                                <td>₦{{ number_format($item->unit_price) }}</td>
+                                <td>{{ $item->person_count }}</td>
+                                <td class="font-medium">₦{{ number_format($item->unit_price * $item->person_count) }}</td>
+                                @if ($isOwner)
+                                    <td class="text-right">
+                                        <form method="POST" action="{{ route('shopping.destroy', $item->id) }}">@csrf<button class="text-xs text-red-500 hover:underline">remove</button></form>
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t border-slate-200 font-semibold">
+                            <td class="py-2" colspan="3">Estimated total</td>
+                            <td>₦{{ number_format($shoppingItems->sum(fn ($i) => $i->unit_price * $i->person_count)) }}</td>
+                            @if ($isOwner)<td></td>@endif
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        @else
+            <p class="text-sm text-slate-500">No items on the shopping list yet.</p>
+        @endif
+
+        @if ($isOwner)
+            <form method="POST" action="{{ route('shopping.store', $pocket->id) }}" class="mt-4 grid sm:grid-cols-5 gap-2 items-end border-t border-slate-100 pt-4">
+                @csrf
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-medium mb-1">Item</label>
+                    <input name="name" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Rice (50kg)">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium mb-1">Unit price (₦)</label>
+                    <input type="number" name="unit_price" value="0" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium mb-1">People</label>
+                    <input type="number" name="person_count" value="1" min="1" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+                </div>
+                <button class="rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium px-4 py-2">Add</button>
+            </form>
+        @endif
     </div>
 @endsection
