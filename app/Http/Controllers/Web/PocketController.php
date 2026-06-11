@@ -121,7 +121,7 @@ class PocketController extends Controller
             ->join('users', 'users.id', '=', 'pocket_slots.user_id')
             ->where('pocket_slots.pocket_id', $pocket->id)
             ->groupBy('pocket_slots.user_id', 'users.name')
-            ->selectRaw('users.name as name, SUM(invoices.amount) as total')
+            ->selectRaw('users.name as name, COUNT(*) as total') // count of contributions, not amount
             ->orderByDesc('total')->limit(10)->get();
 
         return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors'));

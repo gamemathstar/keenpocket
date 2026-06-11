@@ -3,13 +3,22 @@
 @section('heading', 'Leaderboard')
 
 @section('content')
-    <p class="text-slate-500 text-sm mb-5">Top savers by total contributions. Keep paying on time to climb! 🏆</p>
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4 max-w-2xl">
+        <div class="inline-flex rounded-xl border border-slate-200 bg-white p-0.5 text-sm font-bold">
+            <a href="{{ route('leaderboard', ['period' => 'week']) }}" class="px-4 py-1.5 rounded-lg {{ $period === 'week' ? 'bg-brand-light text-brand-dark' : 'text-slate-500' }}">This week</a>
+            <a href="{{ route('leaderboard', ['period' => 'all']) }}" class="px-4 py-1.5 rounded-lg {{ $period === 'all' ? 'bg-brand-light text-brand-dark' : 'text-slate-500' }}">All time</a>
+        </div>
+        @if ($period === 'week')
+            <span class="text-xs text-slate-400 font-bold uppercase tracking-wide">🔄 Resets every Monday</span>
+        @endif
+    </div>
+    <p class="text-slate-500 text-sm mb-5">Most consistent savers, ranked by number of contributions. Keep paying on time to climb! 🏆 <span class="text-slate-400">(amounts stay private)</span></p>
 
     @if (count($rows))
         @if ($myStanding && $myStanding['rank'] > 20)
             <div class="bg-brand-light border border-brand/30 rounded-2xl p-4 mb-5 flex items-center justify-between max-w-2xl">
                 <span class="font-extrabold text-brand-dark">Your rank: #{{ $myStanding['rank'] }}</span>
-                <span class="font-extrabold">₦{{ number_format($myStanding['total']) }}</span>
+                <span class="font-extrabold">{{ number_format($myStanding['total']) }} contributions</span>
             </div>
         @endif
 
@@ -28,7 +37,7 @@
                         <a href="{{ route('users.show', $r['user_id']) }}" class="font-bold truncate hover:underline">{{ $r['name'] }}</a>
                         @if ($r['is_me'])<span class="text-xs text-brand-dark font-bold ml-1">(you)</span>@endif
                     </div>
-                    <span class="font-extrabold">₦{{ number_format($r['total']) }}</span>
+                    <span class="font-extrabold text-brand-dark">{{ number_format($r['total']) }} <span class="text-xs text-slate-400 font-bold">pts</span></span>
                 </div>
             @endforeach
         </div>

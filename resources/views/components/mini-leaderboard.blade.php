@@ -9,7 +9,7 @@
                         <span class="w-6 text-center font-extrabold">{{ ['🥇', '🥈', '🥉'][$i] ?? ($i + 1) }}</span>
                         <span class="font-bold">{{ $r->name }}</span>
                     </span>
-                    <span class="font-extrabold text-brand-dark">₦{{ number_format($r->total) }}</span>
+                    <span class="font-extrabold text-brand-dark">{{ number_format($r->total) }} <span class="text-xs text-slate-400 font-bold">pts</span></span>
                 </li>
             @endforeach
         </ul>

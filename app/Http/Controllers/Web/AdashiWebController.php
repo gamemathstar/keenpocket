@@ -98,7 +98,7 @@ class AdashiWebController extends Controller
             ->join('users', 'users.id', '=', 'adashi_members.user_id')
             ->where('adashi_members.adashi_id', $adashi->id)
             ->groupBy('adashi_members.user_id', 'users.name')
-            ->selectRaw('users.name as name, SUM(invoices.amount) as total')
+            ->selectRaw('users.name as name, COUNT(*) as total') // count of contributions, not amount
             ->orderByDesc('total')->limit(10)->get();
 
         return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors'));
