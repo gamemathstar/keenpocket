@@ -10,37 +10,44 @@
 <body class="h-full text-slate-800">
 <div class="min-h-full md:flex">
     {{-- Sidebar --}}
-    <aside class="md:w-64 md:flex md:flex-col bg-white border-r border-slate-200">
-        <div class="px-6 py-5 flex items-center gap-2 border-b border-slate-100">
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white font-bold">K</span>
-            <span class="font-semibold text-lg">KeenPocket</span>
+    <aside class="md:w-64 md:flex md:flex-col bg-white border-b md:border-b-0 md:border-r border-slate-200">
+        <div class="px-5 py-4 flex items-center justify-between border-b border-slate-100">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white font-bold">K</span>
+                <span class="font-semibold text-lg">KeenPocket</span>
+            </a>
+            <button type="button" onclick="document.getElementById('navPanel').classList.toggle('hidden')"
+                    class="md:hidden h-9 w-9 inline-flex items-center justify-center rounded-lg hover:bg-slate-100 text-xl" aria-label="Toggle menu">☰</button>
         </div>
-        <nav class="p-3 md:flex-1 flex md:block gap-1 overflow-x-auto">
-            @php
-                $nav = [
-                    ['dashboard', 'Dashboard', '🏠'],
-                    ['pockets.index', 'My Pockets', '👛'],
-                    ['adashi.index', 'Adashi', '🔄'],
-                    ['discover', 'Discover', '🧭'],
-                    ['wallet.index', 'Wallet', '💳'],
-                    ['payouts.index', 'Payouts & Bank', '🏦'],
-                    ['referrals.index', 'Referrals', '🎁'],
-                    ['profile', 'Profile', '⭐'],
-                ];
-            @endphp
-            @foreach ($nav as [$route, $label, $icon])
-                @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*'); @endphp
-                <a href="{{ route($route) }}"
-                   class="whitespace-nowrap flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ $active ? 'bg-brand-light text-brand-dark' : 'text-slate-600 hover:bg-slate-100' }}">
-                    <span>{{ $icon }}</span><span>{{ $label }}</span>
-                </a>
-            @endforeach
-        </nav>
-        <div class="hidden md:block p-3 border-t border-slate-100">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100">↩︎ Log out</button>
-            </form>
+
+        <div id="navPanel" class="hidden md:flex md:flex-col md:flex-1">
+            <nav class="p-3 md:flex-1 space-y-1">
+                @php
+                    $nav = [
+                        ['dashboard', 'Dashboard', '🏠'],
+                        ['pockets.index', 'My Pockets', '👛'],
+                        ['adashi.index', 'Adashi', '🔄'],
+                        ['discover', 'Discover', '🧭'],
+                        ['wallet.index', 'Wallet', '💳'],
+                        ['payouts.index', 'Payouts & Bank', '🏦'],
+                        ['referrals.index', 'Referrals', '🎁'],
+                        ['profile', 'Profile', '⭐'],
+                    ];
+                @endphp
+                @foreach ($nav as [$route, $label, $icon])
+                    @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*'); @endphp
+                    <a href="{{ route($route) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ $active ? 'bg-brand-light text-brand-dark' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <span>{{ $icon }}</span><span>{{ $label }}</span>
+                    </a>
+                @endforeach
+            </nav>
+            <div class="p-3 border-t border-slate-100">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100">↩︎ Log out</button>
+                </form>
+            </div>
         </div>
     </aside>
 

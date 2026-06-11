@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\AuthController as WebAuth;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DiscoverController;
 use App\Http\Controllers\Web\InvoiceController;
+use App\Http\Controllers\Web\KycWebController;
 use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\PayoutsController;
 use App\Http\Controllers\Web\PocketController;
@@ -69,8 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets/{id}/bank', [PayoutsController::class, 'savePocketBank'])->name('payouts.savePocketBank');
 
     Route::get('/wallet', [WalletWebController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/topup', [WalletWebController::class, 'topup'])->name('wallet.topup');
     Route::get('/referrals', [ReferralWebController::class, 'index'])->name('referrals.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/kyc', [KycWebController::class, 'submit'])->name('kyc.submit');
 });
 
 /*

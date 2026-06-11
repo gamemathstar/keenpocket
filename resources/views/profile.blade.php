@@ -24,8 +24,27 @@
                 <div class="flex justify-between"><dt class="text-slate-500">Adashi joined</dt><dd>{{ $rep['adashis_joined'] }}</dd></div>
                 <div class="flex justify-between"><dt class="text-slate-500">Cycles completed</dt><dd>{{ $rep['cycles_completed'] }}</dd></div>
                 <div class="flex justify-between"><dt class="text-slate-500">Rating</dt><dd>{{ $rep['rating_average'] ? $rep['rating_average'].' ★ ('.$rep['rating_count'].')' : '—' }}</dd></div>
-                <div class="flex justify-between"><dt class="text-slate-500">Identity (KYC)</dt><dd class="capitalize">{{ $kyc['status'] }}</dd></div>
+                <div class="flex justify-between"><dt class="text-slate-500">Identity (KYC)</dt><dd class="capitalize">{{ $kyc['enabled'] ? $kyc['status'] : 'not required' }}</dd></div>
             </dl>
+
+            @if ($kyc['enabled'] && $kyc['status'] !== 'verified')
+                <div class="mt-4 border-t border-slate-100 pt-4">
+                    <h4 class="text-sm font-semibold mb-2">Verify your identity</h4>
+                    <form method="POST" action="{{ route('kyc.submit') }}" class="space-y-2">
+                        @csrf
+                        <div class="flex gap-2">
+                            <select name="type" class="rounded-lg border border-slate-300 px-2 py-2 text-sm focus:border-brand focus:ring-brand">
+                                <option value="BVN">BVN</option><option value="NIN">NIN</option>
+                            </select>
+                            <input name="id_number" required placeholder="ID number" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+                        </div>
+                        <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium py-2">Verify</button>
+                    </form>
+                    <p class="text-[11px] text-slate-400 mt-1">We only store the last 4 digits.</p>
+                </div>
+            @elseif ($kyc['status'] === 'verified')
+                <div class="mt-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">✓ Identity verified</div>
+            @endif
         </div>
 
         {{-- Badges --}}

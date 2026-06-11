@@ -10,9 +10,23 @@
             <p class="text-slate-500 text-sm mt-1">In-app wallet isn't enabled yet. Once on, you'll be able to fund a balance and pay contributions in one tap.</p>
         </div>
     @else
-        <div class="bg-gradient-to-r from-brand to-emerald-600 text-white rounded-xl p-6 mb-6 max-w-lg">
-            <div class="text-sm opacity-90">Available balance</div>
-            <div class="text-4xl font-bold mt-1">₦{{ number_format($balance) }}</div>
+        <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mb-6">
+            <div class="bg-gradient-to-r from-brand to-emerald-600 text-white rounded-xl p-6">
+                <div class="text-sm opacity-90">Available balance</div>
+                <div class="text-4xl font-bold mt-1">₦{{ number_format($balance) }}</div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 p-5">
+                <h3 class="font-semibold mb-1">Top up</h3>
+                <p class="text-xs text-slate-500 mb-3">Add funds to pay contributions in one tap.</p>
+                <form method="POST" action="{{ route('wallet.topup') }}" class="flex items-end gap-2">
+                    @csrf
+                    <div class="flex-1">
+                        <label class="block text-xs font-medium mb-1">Amount (₦)</label>
+                        <input type="number" name="amount" value="5000" min="1" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                    </div>
+                    <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-4 py-2">Add</button>
+                </form>
+            </div>
         </div>
 
         <h3 class="font-semibold mb-3">Recent activity</h3>
