@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/adashi/{id}/reconcile', [AdashiWebController::class, 'reconcile'])->name('adashi.reconcile');
     Route::get('/adashi/{id}/members', [AdashiWebController::class, 'membersForm'])->name('adashi.members');
     Route::post('/adashi/{id}/members', [AdashiWebController::class, 'addMember'])->name('adashi.members.store');
+    Route::post('/adashi/{id}/admin', [AdashiWebController::class, 'adminAction'])->name('adashi.admin');
 
     Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
 
@@ -77,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/wallet/topup', [WalletWebController::class, 'topup'])->name('wallet.topup');
     Route::get('/referrals', [ReferralWebController::class, 'index'])->name('referrals.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/users/{id}', [\App\Http\Controllers\Web\PublicProfileController::class, 'show'])->name('users.show');
     Route::post('/kyc', [KycWebController::class, 'submit'])->name('kyc.submit');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');

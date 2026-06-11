@@ -144,10 +144,33 @@ class AdashiWebController extends Controller
         $members = AdashiMember::query()
             ->join('users', 'users.id', '=', 'adashi_members.user_id')
             ->where('adashi_members.adashi_id', $adashi->id)
-            ->select(['adashi_members.position', 'adashi_members.is_active', 'users.name', 'users.phone_number'])
+            ->select(['adashi_members.user_id', 'adashi_members.position', 'adashi_members.is_active', 'users.name', 'users.phone_number'])
             ->orderBy('adashi_members.position')->get();
 
-        return view('adashi.members', compact('adashi', 'members'));
+        $currentRecord = AdashiRecord::where('adashi_id', $adashi->id)->orderByDesc('cycle_number')->first();
+
+        return view('adashi.members', compact('adashi', 'members', 'currentRecord'));
+    }
+
+    /**
+     * Admin override actions (set receiver, mark paid out / dispute, de/reactivate
+     * member). Routed through the existing tested AdashiController::adminOverride.
+     */
+    public function adminAction(Request $request, $id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can perform this action.');
+
+        $params = $request->only(['action', 'record_id', 'receiver_user_id', 'member_user_id', 'note']);
+        $apiRequest = \Illuminate\Http\Request::create('/', 'POST', $params);
+
+        try {
+            app(\App\Http\Controllers\Adashi\AdashiController::class)->adminOverride($id, $apiRequest);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['action' => 'Could not apply that action — check your selection.']);
+        }
+
+        return back()->with('status', 'Admin action applied.');
     }
 
     /** Admin adds a member by phone (creating a placeholder account if needed). */

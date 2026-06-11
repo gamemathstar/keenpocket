@@ -8,6 +8,7 @@
             <h2 class="text-2xl font-semibold">{{ $adashi->name }}</h2>
             <p class="text-slate-500 text-sm mt-1">{{ $adashi->total_members }} members · every {{ $adashi->cycle_duration_days }} days · {{ ucfirst(strtolower($adashi->rotation_mode)) }} rotation</p>
             <p class="text-xs text-slate-400 mt-2">Cycle {{ $adashi->current_cycle_number }} · {{ ucfirst(strtolower($adashi->status)) }}@if($isAdmin) · You are the admin @endif</p>
+            <a href="{{ route('users.show', $adashi->admin_id) }}" class="text-xs text-brand-dark hover:underline">View organiser →</a>
         </div>
         <div class="text-right">
             <div class="text-2xl font-semibold">₦{{ number_format($adashi->amount_per_cycle) }}</div>

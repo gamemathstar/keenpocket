@@ -9,7 +9,9 @@
                 <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">{{ $pocket->pocket_type }}</span>
                 <h2 class="text-2xl font-semibold mt-2">{{ $pocket->title }}</h2>
                 <p class="text-slate-500 text-sm mt-1">{{ $pocket->description ?: 'No description.' }}</p>
-                <p class="text-xs text-slate-400 mt-2">Organised by {{ $owner->name ?? '—' }} · {{ $pocket->month_count }} months · {{ $pocket->year }}</p>
+                <p class="text-xs text-slate-400 mt-2">Organised by
+                    @if ($owner)<a href="{{ route('users.show', $owner->id) }}" class="text-brand-dark hover:underline">{{ $owner->name }}</a>@else — @endif
+                    · {{ $pocket->month_count }} months · {{ $pocket->year }}</p>
             </div>
             <div class="text-right">
                 <div class="text-2xl font-semibold">₦{{ number_format($pocket->amount_per_hand) }}</div>
