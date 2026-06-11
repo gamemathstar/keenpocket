@@ -3,6 +3,21 @@
 @section('heading', 'Settings')
 
 @section('content')
+    {{-- Profile photo --}}
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 max-w-4xl">
+        <h3 class="font-semibold mb-3">Profile photo</h3>
+        <form method="POST" action="{{ route('settings.avatar') }}" enctype="multipart/form-data" class="flex items-center gap-4">
+            @csrf
+            <x-avatar :user="$user" :size="72" />
+            <div class="flex-1">
+                <input type="file" name="avatar" accept="image/*" required
+                       class="block w-full text-sm text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-light file:px-4 file:py-2 file:text-brand-dark file:font-bold">
+                <p class="text-xs text-slate-400 mt-1">JPG/PNG, up to 2&nbsp;MB.</p>
+            </div>
+            <button class="bg-brand text-white rounded-xl px-5 py-2.5">Upload</button>
+        </form>
+    </div>
+
     <div class="grid lg:grid-cols-2 gap-6 max-w-4xl">
         {{-- Account info --}}
         <div class="bg-white rounded-xl border border-slate-200 p-6">

@@ -32,7 +32,7 @@
                         @else <span class="text-slate-400">{{ $r['rank'] }}</span>
                         @endif
                     </div>
-                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 font-bold shrink-0">{{ strtoupper(substr($r['name'], 0, 1)) }}</span>
+                    <x-avatar :user="$r['name']" :size="36" />
                     <div class="flex-1 min-w-0">
                         <a href="{{ route('users.show', $r['user_id']) }}" class="font-bold truncate hover:underline">{{ $r['name'] }}</a>
                         @if ($r['is_me'])<span class="text-xs text-brand-dark font-bold ml-1">(you)</span>@endif

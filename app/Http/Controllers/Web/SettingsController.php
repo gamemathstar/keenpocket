@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class SettingsController extends Controller
@@ -46,4 +47,22 @@ class SettingsController extends Controller
 
         return back()->with('status', 'Password changed.');
     }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate(['avatar' => 'required|image|max:2048']); // ≤ 2 MB
+
+        $user = $request->user();
+
+        // Remove the previous upload (ignore external URLs).
+        if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->avatar = $request->file('avatar')->store('avatars', 'public');
+        $user->save();
+
+        return back()->with('status', 'Profile photo updated.');
+    }
 }
+

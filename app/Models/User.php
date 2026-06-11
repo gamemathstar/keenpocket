@@ -34,6 +34,7 @@ class User extends Authenticatable
         'kyc_id_last4',
         'kyc_reference',
         'kyc_verified_at',
+        'avatar',
     ];
 
     /**

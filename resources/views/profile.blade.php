@@ -7,7 +7,7 @@
         {{-- Identity + reputation --}}
         <div class="bg-white rounded-xl border border-slate-200 p-6">
             <div class="flex items-center gap-3 mb-4">
-                <span class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-light text-brand-dark text-xl font-semibold">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                <x-avatar :user="$user" :size="56" />
                 <div>
                     <div class="font-semibold text-lg">{{ $user->name }}</div>
                     <div class="text-sm text-slate-500">{{ $user->phone_number }}</div>

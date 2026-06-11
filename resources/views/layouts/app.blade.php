@@ -70,9 +70,7 @@
                 </a>
                 <a href="{{ route('settings') }}" class="text-xl" title="Settings">⚙️</a>
                 <span class="text-slate-500 hidden sm:inline">{{ auth()->user()->name ?? '' }}</span>
-                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-light text-brand-dark font-semibold">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                </span>
+                <a href="{{ route('settings') }}"><x-avatar :user="auth()->user()" :size="32" /></a>
             </div>
         </header>
 

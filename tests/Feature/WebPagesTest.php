@@ -6,6 +6,8 @@ use App\Models\Adashi;
 use App\Models\Pocket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
@@ -56,5 +58,20 @@ class WebPagesTest extends TestCase
         $this->get("/pockets/{$pocket->id}/manage")->assertStatus(200);
         $this->get("/adashi/{$adashi->id}")->assertStatus(200);           // cycle progress bar
         $this->get("/adashi/{$adashi->id}/members")->assertStatus(200);   // admin controls
+    }
+
+    public function test_user_can_upload_avatar()
+    {
+        Storage::fake('public');
+        $user = $this->user();
+        $this->actingAs($user);
+
+        $this->post('/settings/avatar', [
+            'avatar' => UploadedFile::fake()->create('me.png', 60, 'image/png'),
+        ])->assertRedirect();
+
+        $user->refresh();
+        $this->assertNotNull($user->avatar);
+        Storage::disk('public')->assertExists($user->avatar);
     }
 }
