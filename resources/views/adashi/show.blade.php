@@ -48,7 +48,12 @@
 
     <div class="grid lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl border border-slate-200 p-5">
-            <h3 class="font-semibold mb-3">Members &amp; rotation order</h3>
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">Members &amp; rotation order</h3>
+                @if ($isAdmin)
+                    <a href="{{ route('adashi.members', $adashi->id) }}" class="text-sm text-brand-dark hover:underline">Manage →</a>
+                @endif
+            </div>
             <ul class="divide-y divide-slate-100">
                 @foreach ($members as $m)
                     <li class="py-2 flex items-center justify-between text-sm">

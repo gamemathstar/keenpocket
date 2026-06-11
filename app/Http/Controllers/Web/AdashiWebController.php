@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Adashi;
 use App\Models\AdashiMember;
 use App\Models\AdashiRecord;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AdashiWebController extends Controller
 {
@@ -131,6 +133,67 @@ class AdashiWebController extends Controller
         }
 
         return back()->with('status', 'Contribution recorded.');
+    }
+
+    /** Admin: manage members screen. */
+    public function membersForm($id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can manage members.');
+
+        $members = AdashiMember::query()
+            ->join('users', 'users.id', '=', 'adashi_members.user_id')
+            ->where('adashi_members.adashi_id', $adashi->id)
+            ->select(['adashi_members.position', 'adashi_members.is_active', 'users.name', 'users.phone_number'])
+            ->orderBy('adashi_members.position')->get();
+
+        return view('adashi.members', compact('adashi', 'members'));
+    }
+
+    /** Admin adds a member by phone (creating a placeholder account if needed). */
+    public function addMember(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'phone_number' => 'required|string|max:20',
+        ]);
+
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can add members.');
+
+        $user = User::where('phone_number', $data['phone_number'])->first();
+        if (!$user) {
+            if (empty($data['name'])) {
+                return back()->withErrors(['name' => 'Enter a name for the new member (they are not on KeenPocket yet).'])->withInput();
+            }
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['phone_number'],          // placeholder — claimed on signup
+                'username' => $data['phone_number'],
+                'phone_number' => $data['phone_number'],
+                'password' => bcrypt(Str::random(16)),
+            ]);
+        }
+
+        if (AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => $user->id])->exists()) {
+            return back()->with('status', $user->name.' is already a member.');
+        }
+
+        DB::transaction(function () use ($adashi, $user) {
+            $maxPos = AdashiMember::where('adashi_id', $adashi->id)->max('position') ?? 0;
+            AdashiMember::create([
+                'adashi_id' => $adashi->id, 'user_id' => $user->id, 'position' => $maxPos + 1,
+                'has_received' => false, 'joined_at' => now(), 'is_active' => true,
+            ]);
+            $adashi->increment('total_members');
+        });
+
+        try {
+            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($user);
+        } catch (\Throwable $e) {
+        }
+
+        return redirect()->route('adashi.members', $adashi->id)->with('status', $user->name.' added to the adashi.');
     }
 
     /** Admin reconciles the current cycle (closes + rotates when fully collected). */

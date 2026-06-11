@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/adashi/{id}', [AdashiWebController::class, 'show'])->name('adashi.show');
     Route::post('/adashi/{id}/contribute', [AdashiWebController::class, 'contribute'])->name('adashi.contribute');
     Route::post('/adashi/{id}/reconcile', [AdashiWebController::class, 'reconcile'])->name('adashi.reconcile');
+    Route::get('/adashi/{id}/members', [AdashiWebController::class, 'membersForm'])->name('adashi.members');
+    Route::post('/adashi/{id}/members', [AdashiWebController::class, 'addMember'])->name('adashi.members.store');
 
     Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
 
