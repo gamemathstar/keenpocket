@@ -2,24 +2,73 @@
 
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\FirebaseController;
+use App\Http\Controllers\Web\AdashiWebController;
+use App\Http\Controllers\Web\AuthController as WebAuth;
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\DiscoverController;
+use App\Http\Controllers\Web\InvoiceController;
+use App\Http\Controllers\Web\NotificationController;
+use App\Http\Controllers\Web\PayoutsController;
+use App\Http\Controllers\Web\PocketController;
+use App\Http\Controllers\Web\ProfileController;
+use App\Http\Controllers\Web\ReferralWebController;
+use App\Http\Controllers\Web\WalletWebController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes — KeenPocket Blade interface (session auth)
 |--------------------------------------------------------------------------
-|
-| KeenPocket is an API-first application (the mobile client talks to
-| routes/api.php). The web surface is intentionally minimal in production.
-|
 */
 
-// Public health check / landing.
-Route::get('/', function () {
-    return response()->json([
-        'app' => config('app.name'),
-        'status' => 'ok',
-    ]);
+// Landing → app or login.
+Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'login'));
+
+// Guest (session) auth.
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [WebAuth::class, 'showLogin'])->name('login');
+    Route::post('/login', [WebAuth::class, 'login']);
+    Route::get('/register', [WebAuth::class, 'showRegister'])->name('register');
+    Route::post('/register', [WebAuth::class, 'register']);
+});
+
+// Authenticated app.
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [WebAuth::class, 'logout'])->name('logout');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/pockets', [PocketController::class, 'index'])->name('pockets.index');
+    Route::get('/pockets/create', [PocketController::class, 'create'])->name('pockets.create');
+    Route::post('/pockets', [PocketController::class, 'store'])->name('pockets.store');
+    Route::get('/pockets/{id}', [PocketController::class, 'show'])->name('pockets.show');
+    Route::post('/pockets/{id}/join', [PocketController::class, 'join'])->name('pockets.join');
+
+    // Invoices / contributions
+    Route::get('/pockets/{id}/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/pockets/{id}/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+    Route::post('/invoices/{id}/mark-paid', [InvoiceController::class, 'markPaid'])->name('invoices.markPaid');
+    Route::post('/invoices/{id}/pay-wallet', [InvoiceController::class, 'payWallet'])->name('invoices.payWallet');
+
+    Route::get('/adashi', [AdashiWebController::class, 'index'])->name('adashi.index');
+    Route::get('/adashi/create', [AdashiWebController::class, 'create'])->name('adashi.create');
+    Route::post('/adashi', [AdashiWebController::class, 'store'])->name('adashi.store');
+    Route::get('/adashi/{id}', [AdashiWebController::class, 'show'])->name('adashi.show');
+    Route::post('/adashi/{id}/contribute', [AdashiWebController::class, 'contribute'])->name('adashi.contribute');
+    Route::post('/adashi/{id}/reconcile', [AdashiWebController::class, 'reconcile'])->name('adashi.reconcile');
+
+    Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
+
+    Route::get('/payouts', [PayoutsController::class, 'index'])->name('payouts.index');
+    Route::post('/payouts/bank-account', [PayoutsController::class, 'saveBankAccount'])->name('payouts.saveBank');
+    Route::post('/pockets/{id}/bank', [PayoutsController::class, 'savePocketBank'])->name('payouts.savePocketBank');
+
+    Route::get('/wallet', [WalletWebController::class, 'index'])->name('wallet.index');
+    Route::get('/referrals', [ReferralWebController::class, 'index'])->name('referrals.index');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
 
 /*

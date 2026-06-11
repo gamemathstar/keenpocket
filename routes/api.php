@@ -91,7 +91,6 @@ Route::get('test', function (Request $request) {
 
 //Protected Routes
 Route::group(["middleware" => ['auth:sanctum']], function () {
-    Route::get('users', [Controller::class, 'index']);
     Route::get('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
 
