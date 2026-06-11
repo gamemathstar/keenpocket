@@ -63,6 +63,7 @@
                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-none rounded-full px-1.5 py-0.5">{{ $unread > 9 ? '9+' : $unread }}</span>
                     @endif
                 </a>
+                <a href="{{ route('settings') }}" class="text-xl" title="Settings">⚙️</a>
                 <span class="text-slate-500 hidden sm:inline">{{ auth()->user()->name ?? '' }}</span>
                 <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-light text-brand-dark font-semibold">
                     {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}

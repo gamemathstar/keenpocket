@@ -14,6 +14,9 @@
             <div class="text-right">
                 <div class="text-2xl font-semibold">₦{{ number_format($pocket->amount_per_hand) }}</div>
                 <div class="text-xs text-slate-400">per hand</div>
+                @if ($isOwner)
+                    <a href="{{ route('pockets.manage', $pocket->id) }}" class="inline-block mt-2 text-sm text-brand-dark hover:underline">Manage →</a>
+                @endif
             </div>
         </div>
 

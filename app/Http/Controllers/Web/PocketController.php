@@ -10,6 +10,7 @@ use App\Models\PocketSlot;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PocketController extends Controller
 {
@@ -137,5 +138,72 @@ class PocketController extends Controller
         }
 
         return redirect()->route('pockets.show', $pocket->id)->with('status', 'You joined this pocket.');
+    }
+
+    /** Owner: manage members + open/close. */
+    public function manage($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can manage it.');
+
+        $members = PocketSlot::query()
+            ->join('users', 'users.id', '=', 'pocket_slots.user_id')
+            ->where('pocket_slots.pocket_id', $pocket->id)
+            ->select(['pocket_slots.hand_count', 'pocket_slots.status', 'users.name', 'users.phone_number'])
+            ->orderByDesc('pocket_slots.status')->get();
+
+        return view('pockets.manage', compact('pocket', 'members'));
+    }
+
+    /** Owner adds a member by phone (creating a placeholder account if needed). */
+    public function addMember(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'hand_count' => 'required|integer|min:1',
+        ]);
+
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can add members.');
+
+        $user = User::where('phone_number', $data['phone_number'])->first();
+        if (!$user) {
+            if (empty($data['name'])) {
+                return back()->withErrors(['name' => 'Enter a name for the new member (not on KeenPocket yet).'])->withInput();
+            }
+            $user = User::create([
+                'name' => $data['name'], 'email' => $data['phone_number'],
+                'username' => $data['phone_number'], 'phone_number' => $data['phone_number'],
+                'password' => bcrypt(Str::random(16)),
+            ]);
+        }
+
+        if (PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $user->id])->exists()) {
+            return back()->with('status', $user->name.' is already a member.');
+        }
+
+        $slot = new PocketSlot();
+        $slot->pocket_id = $pocket->id;
+        $slot->user_id = $user->id;
+        $slot->hand_count = $data['hand_count'];
+        $slot->amount_paying = $data['hand_count'] * $pocket->amount_per_hand;
+        $slot->status = 1;
+        $slot->comment = '';
+        $slot->save();
+
+        return redirect()->route('pockets.manage', $pocket->id)->with('status', $user->name.' added to the pocket.');
+    }
+
+    /** Owner toggles the pocket open/closed (open = others can join). */
+    public function toggleStatus($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403);
+
+        $pocket->status = $pocket->status ? 0 : 1;
+        $pocket->save();
+
+        return back()->with('status', 'Pocket is now '.($pocket->status ? 'open to join' : 'closed').'.');
     }
 }

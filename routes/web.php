@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\PayoutsController;
 use App\Http\Controllers\Web\PocketController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ReferralWebController;
+use App\Http\Controllers\Web\SettingsController;
 use App\Http\Controllers\Web\WalletWebController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets', [PocketController::class, 'store'])->name('pockets.store');
     Route::get('/pockets/{id}', [PocketController::class, 'show'])->name('pockets.show');
     Route::post('/pockets/{id}/join', [PocketController::class, 'join'])->name('pockets.join');
+    Route::get('/pockets/{id}/manage', [PocketController::class, 'manage'])->name('pockets.manage');
+    Route::post('/pockets/{id}/members', [PocketController::class, 'addMember'])->name('pockets.addMember');
+    Route::post('/pockets/{id}/toggle', [PocketController::class, 'toggleStatus'])->name('pockets.toggleStatus');
 
     // Invoices / contributions
     Route::get('/pockets/{id}/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
@@ -74,6 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/referrals', [ReferralWebController::class, 'index'])->name('referrals.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/kyc', [KycWebController::class, 'submit'])->name('kyc.submit');
+
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
 });
 
 /*
