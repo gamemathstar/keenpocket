@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\BannedUser;
 use App\Models\Invitation;
 use App\Models\Invoice;
-use App\Models\InvoiceItem;
 use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Pocket;
 use App\Models\PocketItem;
 use App\Models\PocketSlot;
-use App\Models\Post;
 use App\Models\PurchaseItem;
-use App\Models\PurchasePreference;
 use App\Models\PurchasingItem;
 use App\Models\User;
 use App\Services\Referral\ReferralService;
@@ -22,9 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class APIController extends Controller
+class PocketController extends Controller
 {
-    //
     public function dashboard(Request $request)
     {
         $user = auth()->user();
@@ -56,7 +53,7 @@ class APIController extends Controller
                     "users.name","users.phone_number"])
                 ->get();
             foreach ($invoices as $invoice){
-                $invoice->items = InvoiceItem::join("items","items.id","=","invoice_item.id")
+                $invoice->items = \App\Models\InvoiceItem::join("items","items.id","=","invoice_item.id")
                     ->select([
                         'invoice_item.id','items.name as item',
                         'category as item_type',
@@ -80,11 +77,6 @@ class APIController extends Controller
             ])
             ->whereRaw(" (pocket_slots.user_id={$user->id} AND pocket_slots.status=1) OR (pockets.user_id={$user->id})")->groupBy('pockets.id')->get();
         return $myPockets;
-    }
-
-    public function invoice(Request $request)
-    {
-        return Invoice::find($request->id)->fullInvoice();
     }
 
     public function search(Request $request)
@@ -240,157 +232,9 @@ class APIController extends Controller
                 return $pocket;
             }
         }catch (\Exception $exception){
-            return ['message'=>$exception->getMessage()];
+            return ['message'=>'Operation failed.'];
         }
         return [];
-    }
-
-    public function pocketInvoices(Request $request)
-    {
-        try {
-            $user = \auth()->user();
-            if($pocket = Pocket::find($request->id)){
-                if($pocket->user_id == $user->id){
-                    return Invoice::join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
-                        ->join("users","pocket_slots.user_id","=","users.id")
-                        ->where(['pocket_slots.pocket_id' => $request->id])
-                        ->select([
-                            'invoices.id', 'invoice_no', DB::raw('FORMAT(amount,0) AS amount'),
-                            'reference_no', 'reference_no', 'payment_date',"amount as amt",
-                            'paid_through', 'payment_status',"users.name","users.phone_number"
-                        ])
-                        ->orderBy("payment_status","DESC")
-                        ->orderBy("amt","DESC")
-                        ->get();
-                }else{
-                    return Invoice::join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
-                        ->join("users","pocket_slots.user_id","=","users.id")
-                        ->where(['pocket_slots.pocket_id' => $request->id,"pocket_slots.user_id"=>$user->id])
-                        ->select([
-                            'invoices.id', 'invoice_no', DB::raw('FORMAT(amount,0) AS amount'),
-                            'reference_no', 'reference_no', 'payment_date',"amount as amt",
-                            'paid_through', 'payment_status',"users.name","users.phone_number"
-                        ])
-                        ->orderBy("payment_status","DESC")
-                        ->orderBy("amt","DESC")
-                        ->get();
-                }
-
-
-            }
-            return response(['message'=>"Invalid Pocket."]);
-        }catch (\Exception $exception){
-            return response(['message'=>'Ooops!'.$exception->getMessage()]);
-        }
-
-    }
-
-    public function pocketMonthInvoices(Request $request)
-    {
-        $user = User::find($request->user_id);
-        $user = $user?$user:auth()->user();
-        $curr = auth()->user();
-
-        $id = $request->id;
-
-        $ps = PocketSlot::where(['pocket_id' => $id, "user_id" => $user->id, 'status' => 1])->first();
-        $months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-
-
-        if ($ps) {
-            $pocket = Pocket::find($id);
-            $invItemIdPayments = Invoice::where(['invoices.pocket_slot_id'=>$ps->id,"invoice_item.type"=>"Paid"])
-                ->join("invoice_item","invoice_item.invoice_id","=","invoices.id")
-                ->groupBy("invoice_item.month")
-                ->select(["invoice_item.month",DB::raw("{$ps->amount_paying} - SUM(invoice_item.amount) AS amount")])
-                ->orderBy("invoice_item.month","ASC")
-                ->get();
-            $amountPaying = [];
-            $amountPayingList = [];
-
-            if($user->id!=$curr->id && $pocket->user_id!=$curr->id){
-                return response(['message'=>"Invalid pocket"]);
-            }
-            $pocket_month = [];
-            for ($i = 0; $i < $pocket->month_count; $i++) {
-                $pocket_month[] = $months[($i + $pocket->start_month - 1) % count($months)];
-                if(isset($invItemIdPayments[$i]->month)){
-                    $amountPayingList[] = $invItemIdPayments[$i]->amount;
-                }else{
-                    $amountPayingList[] = $ps->amount_paying;
-                }
-
-            }
-
-            $amountPaying = $ps->amount_paying;
-
-            $invoiceIds = Invoice::where(['pocket_slot_id' => $ps->id, 'payment_status' => 'Paid'])->pluck('id');
-            $invoiceMonths = InvoiceItem::whereIn('invoice_id', $invoiceIds)
-                ->select(['invoice_id', DB::raw('SUM(amount) AS amount_paid'), 'month'])
-                ->where(['item_id' => 1])
-                ->groupBy(['invoice_id', 'month'])
-                ->orderBy('month', 'DESC')->get();
-            $completeMonths = InvoiceItem::whereIn('invoice_id', $invoiceIds)
-                ->select(['invoice_id', DB::raw('SUM(amount) AS amount_paid'), 'month'])
-                ->where(['item_id' => 1])
-                ->having('amount_paid', '=', $ps->amount_paying)
-                ->groupBy(['invoice_id', 'month'])
-                ->orderBy('month', 'DESC')
-                ->pluck('month');
-//            $firstInv =
-            $nextMonth = isset($invoiceMonths[0]) ? ($invoiceMonths[0]->amount_paid == $amountPaying ? $invoiceMonths[0]->month + 1 : $invoiceMonths[0]->month) : 1;
-            return [
-                'monthInvoice' => $invoiceMonths, 'nextMonth' => $nextMonth,
-                "amount_paying" => $amountPaying ,'amount_paying_list'=>$amountPayingList,
-                'month_order' => $pocket_month, 'paid_months' => $completeMonths
-            ];
-        }
-
-        return [];
-    }
-
-    public function searchUser(Request $request)
-    {
-        $query = $request->searchQuery;
-        return User::select(['id', 'name', 'phone_number'])
-            ->where("phone_number", "LIKE", "%$query%")->get();
-
-    }
-
-    public function posts(Request $request)
-    {
-        //$user = auth()->user();
-        return Post::select(["title", "body", "featured_image", DB::raw("DATE_FORMAT(created_at,'%D %b, %Y %r') AS date_posted")])->get();
-    }
-
-    public function post(Request $request)
-    {
-        return Post::select(["title", "body", "featured_image", DB::raw("DATE_FORMAT(created_at,'%D %b, %Y %r') AS date_posted")])->find($request->id);
-    }
-
-    public function notifications(Request $request)
-    {
-
-        $user = Auth::user();
-        $date = \Carbon\Carbon::now();
-        $lastMonth = $date->subMonth(2)->format('Y-m-d');
-
-
-        $notifications = Notification::join("users AS receiver", "receiver.id", "=", "notifications.user_id")
-            ->leftJoin("users AS sender", "sender.id", "=", "notifications.sender_id")
-            ->select([
-                'notifications.id', 'user_id',
-                'type', 'title', 'body', 'sender_id',
-                'model_id', 'status', DB::raw("IF(sender.name,sender.name,'System') AS sender"),
-                'receiver.name AS receiver', 'notifications.created_at AS posted_date'
-            ])
-            ->whereRaw("(notifications.created_at>='$lastMonth' OR status='Not Read') AND user_id=" . $user->id)
-            ->orderBy('notifications.created_at','DESC');
-
-        if ($request->id) {
-            return $notifications->where('id', '=', $request->id)->first();
-        }
-        return $notifications->get();
     }
 
     public function createPocket(Request $request)
@@ -468,8 +312,10 @@ class APIController extends Controller
     public function joinPocket(Request $request)
     {
         try{
+            return DB::transaction(function () use ($request) {
             $user = Auth::user();
-            $pocket = Pocket::find($request->id);
+            // Lock the pocket row so two concurrent joins can't oversubscribe slots.
+            $pocket = Pocket::where('id', $request->id)->lockForUpdate()->first();
             if($pocket){
                 if(PocketSlot::where(['pocket_id'=>$pocket->id,"user_id"=>$user->id])->first()){
                     return response(['message'=>"Already a member"]);
@@ -527,9 +373,11 @@ class APIController extends Controller
             }
 
             return response(['message'=>"Invalid Pocket"]);
+            });
 
         }catch (\Exception $exception){
-            return response(['message' => 'Invalid Pocket.'.$exception->getMessage()]);
+            \Illuminate\Support\Facades\Log::warning('joinPocket failed: '.$exception->getMessage());
+            return response(['message' => 'Invalid Pocket.']);
         }
     }
 
@@ -581,7 +429,7 @@ class APIController extends Controller
 
             return response(["message"=>$pocket->status?"Pocket is opened.":"Pocket is now 'Invite-Only'","pocket_id"=>$pocket->id],200);
         }catch (\Exception $exception){
-            return response(["message"=>"Invalid Pocket.".$exception->getMessage()]);
+            return response(["message"=>"Invalid Pocket."]);
         }
     }
 
@@ -609,116 +457,7 @@ class APIController extends Controller
 
             return response(["message"=>$pocket->open_purchasing_item?"Shopping list selection is now open.":"Shopping list selection is now close.","pocket_id"=>$pocket->id],200);
         }catch (\Exception $exception){
-            return response(["message"=>"Invalid Pocket.".$exception->getMessage()]);
-        }
-    }
-
-    public function createInvoice(Request $request)
-    {
-
-//        return  ;
-        try{
-            $user = User::find($request->user_id);
-            $user = $user?$user:Auth::user();
-            $curr = auth()->user();
-            if(!$pocket = Pocket::find($request->id)){
-                return response(["message"=>"Invalid Pocket."]);
-            }
-            if($user->id!=$curr->id && $pocket->user_id!=$curr->id){
-                return response(["message"=>"Invalid Pocket."]);
-            }
-//            return $request;
-            $owner = User::find($pocket->user_id);
-            $slot = PocketSlot::where(['pocket_id'=>$pocket->id,"status"=>1,"user_id"=>$user->id])->first();
-            if(!$slot ){
-                return response(["message"=>"You're not an active member of this pocket."]);
-            }
-
-            $total = 0;
-            $items = $request->items;
-            $months = $request->months;
-            $amounts = $request->amounts;
-            $types = $request->types;
-            $invArr = [];
-            for($i=0;$i< count($items);$i++){
-                $total += $amounts[$i];
-                $invArr[] = [
-                    "invoice_id"=>"[INVID]","item_id"=>$items[$i],
-                    "month"=>$months[$i],"amount"=>$amounts[$i],"type"=>$types[$i]
-                ];
-            }
-            $invJson = json_encode($invArr);
-
-            // Atomically replace any pending invoices for this slot with the new one,
-            // so a failure can never leave an invoice without its items (or vice versa).
-            $invoice = DB::transaction(function () use ($slot, $pocket, $owner, $curr, $total, $invJson) {
-                $invIds = Invoice::where(['pocket_slot_id'=>$slot->id,'payment_status'=>'Not Paid'])->pluck('id');
-                InvoiceItem::whereIn('invoice_id',$invIds)->delete();
-                Invoice::whereIn('id',$invIds)->delete();
-
-                $invoice = new Invoice();
-                $invoice->pocket_slot_id = $slot->id;
-                $invoice->invoice_no = "KP/".str_pad($pocket->id,3,'0',STR_PAD_LEFT)."/".date("ymdHi");
-                $invoice->amount = $total;
-                $invoice->reference_no = $invoice->invoice_no;
-                $invoice->payment_status = $owner->id == $curr->id?"Paid":'Not Paid';
-                $invoice->paid_through = $owner->id == $curr->id?"Manual":'Pending';
-                if($owner->id == $curr->id){
-                    $invoice->payment_date = now();
-                }
-                $invoice->save();
-
-                $replaced = str_replace("[INVID]",$invoice->id,$invJson);
-                $itemsList = [];
-                foreach (json_decode($replaced) as $v){
-                    $itemsList[] = (array)$v;
-                }
-                InvoiceItem::insert($itemsList);
-
-                return $invoice;
-            });
-
-            {
-                if($owner->id == $curr->id){
-                    if($curr->id!=$user->id){
-                        Notification::paymentReceivedNotification($owner,$user,$invoice);
-                    }
-
-                }else{
-                    Notification::paymentNotification($user,$owner,$invoice);
-                }
-                if($owner->id == $curr->id){
-                    $pocketSlots = PocketSlot::where(['pocket_id' => $pocket->id])
-                        ->leftJoin("users", "pocket_slots.user_id", "=", "users.id")
-                        ->leftJoin("invoices","invoices.pocket_slot_id","=","pocket_slots.id")
-                        ->leftJoin("invoice_item","invoice_item.invoice_id","=","invoices.id")
-                        ->select([
-                            'pocket_slots.id', 'users.name AS user',"users.id AS user_id",
-                            'pocket_slots.status','pocket_slots.hand_count','users.phone_number',
-                            DB::raw("FORMAT(SUM(IF((invoices.payment_status='Paid' AND invoice_item.item_id=1),invoice_item.amount,0)),0) AS contributed_amount"),
-                            DB::raw("SUM(IF((invoices.payment_status='Paid' AND invoice_item.item_id=1),invoice_item.amount,0)) AS contributed_amount2")
-                        ])
-                        ->orderBy('contributed_amount2','DESC')
-                        ->groupBy("pocket_slots.user_id")
-                        ->get();
-                    return ['message'=>"Successfully updated",'keens'=>$pocketSlots];
-                }else{
-                return response(["message"=>"Invoice generation successful.","invoice_id"=>$invoice->id],200);
-                }
-            }
-            return response(["message"=>"Failed to create Invoice"]);
-        }catch (\Exception $exception){
-            return response(["message"=>"Invalid Pocket.".$exception->getMessage()]);
-        }
-    }
-
-    public function savePushNotificationToken(Request $request)
-    {
-        try {
-            auth()->user()->update(['fcm_token'=>$request->token]);
-            return response(["message"=>'token saved successfully.']);
-        }catch (\Exception $exception){
-            return response(["message"=>'Something went wrong']);
+            return response(["message"=>"Invalid Pocket."]);
         }
     }
 
@@ -777,173 +516,8 @@ class APIController extends Controller
             return response(['message'=>'Invalid Request']);
 
         }catch (\Exception $exception){
-            return response(['message'=>'Something went wrong'.$exception->getMessage()]);
-        }
-    }
-
-    public function addPaymentItem(Request $request)
-    {
-
-//        return ['message'=>$request->id];
-        try{
-            $user = Auth::user();
-            if($pocket = Pocket::find($request->id)){
-
-                if($pocket->user_id == $user->id){
-                    $items = [];
-                    foreach($request->items as $itemId){
-                        $items[] = ['pocket_id'=>$pocket->id,"item_id"=>$itemId];
-                    }
-                    PocketItem::upsert($items,['pocket_id','item_id'],[]);
-                    return response(['message'=>"All items added",'pocket_id'=>$pocket->id]);
-                }
-            }
-            return response(["message"=>"Invalid Pocket"]);
-
-        }catch (\Exception $exception){
-            return response(['message'=>'Something went wrong'.$exception->getMessage()]);
-        }
-
-    }
-
-    public function removePaymentItem(Request $request)
-    {
-
-        try{
-            $user = Auth::user();
-            if($pocket = Pocket::find($request->id)){
-
-                if($pocket->user_id == $user->id){
-                    PocketItem::whereIn('id',$request->payment_items)
-                        ->where('pocket_id',$pocket->id)
-                        ->where('item_id',"<>",1)
-//                        ->whereNotIn('item_id',$itemIds)
-                        ->delete();
-                    return response(['message'=>"All selected items deleted",'pocket_id'=>$pocket->id]);
-                }
-            }
-            return response(["message"=>"Invalid Pocket"]);
-
-        }catch (\Exception $exception){
-            return response(['message'=>'Something went wrong'.$exception->getMessage()]);
-        }
-
-    }
-
-    public function addShoppingItem(Request $request)
-    {
-        try{
-            $user = Auth::user();
-            if($pocket = Pocket::find($request->id)){
-                if($pocket->user_id == $user->id){
-                    $items = [];
-                    foreach($request->items as $itemX){
-                        $item = (object)$itemX;
-                        $items[] = [
-                            'pocket_id'=>$pocket->id,"purchase_item_id"=>$item->purchase_item_id,
-                            "unit_price"=>floatval($item->unit_price),"description"=>$item->description,
-                            "person_count"=>$item->person_count,"available"=>$item->available
-                        ];
-                    }
-                    PurchasingItem::upsert(
-                        $items,['pocket_id','purchase_item_id'],
-                        ['unit_price','description','person_count','available']
-                    );
-                    return response(['message'=>"All items added",'pocket_id'=>$pocket->id]);
-                }
-                return response(["message"=>"Invalid Pocket"]);
-            }
-            return response(["message"=>"Invalid Pocket"]);
-
-        }catch (\Exception $exception){
             return response(['message'=>'Something went wrong']);
         }
-    }
-
-    public function removeShoppingItem(Request $request)
-    {
-
-        try{
-            $user = Auth::user();
-            foreach ($request->shoppingItems as $shItem){
-                if($purchasingItem = PurchasingItem::find($shItem)){
-                    $purchaseItem = PurchaseItem::find($purchasingItem->purchase_item_id);
-                    $pocket = Pocket::find($purchasingItem->pocket_id);
-                    if($pocket->user_id == $user->id){
-                        $slotIds = PocketSlot::where(['pocket_id'=>$pocket->id,"status"=>1])->pluck('id');
-                        $affectSlots = PurchasePreference::where(['purchasing_item_id'=>$purchasingItem->id])
-                            ->where('quantity',">",0)
-                            ->whereIn('pocket_slot_id',$slotIds)->pluck('pocket_slot_id');
-
-                        foreach(PocketSlot::whereIn('id',$affectSlots)->get() as $slot){
-                            $recipient = User::find($slot->user_id);
-                            $title = "Shopping Item";
-                            $body =  "We are sorry to inform you that you choice [{$purchaseItem->name} {$purchasingItem->description} @ ₦{$purchasingItem->unit_price}] has been
-                        removed from the shopping list by Pocket owner.
-                        This may be due to in-availability or change in price.\n Best regards";
-                            Notification::personalNotification($user,$recipient,$title,$body);
-                        }
-                        $purchasingItem->delete();
-                    }
-                }
-            }
-
-            return response(['message'=>"All selected items deleted",'pocket_id'=>$pocket->id]);
-
-        }catch (\Exception $exception){
-            return response(['message'=>'Something went wrong'.$exception->getMessage()]);
-        }
-
-    }
-
-    public function subscribeShoppingItem(Request $request)
-    {
-        try{
-            $user = \auth()->user();
-            $slot = PocketSlot::where(['pocket_id'=>$request->id,'user_id'=>$user->id])->first();
-
-            if($slot){
-                $listArr = [];
-                foreach ($request->shoppingList as $listX){
-                    $list = (object)$listX;
-                    $listArr[] = [
-                        'purchasing_item_id'=>$list->purchasing_item_id,
-                        'pocket_slot_id'=>$slot->id,'quantity'=>$list->quantity
-                    ];
-
-                }
-                PurchasePreference::upsert($listArr,['purchasing_item_id','pocket_slot_id'],['quantity']);
-                return response(['message'=>"Shopping Preference Updated"]);
-            }
-            return response(['message'=>"Invalid Slot"]);
-        }catch (\Exception $exception){
-            return response(['message'=>"Something went wrong".$exception->getMessage()]);
-        }
-    }
-
-    public function changePaymentStatus(Request $request)
-    {
-        $user = \auth()->user();
-        if($invoice = Invoice::find($request->id)){
-            if($pocket_slot = PocketSlot::find($invoice->pocket_slot_id)){
-                if($pocket = Pocket::find($pocket_slot->pocket_id)){
-                    if($pocket->user_id == $user->id){
-                        $target = User::find($pocket_slot->user_id);
-                        $invoice->payment_status = $request->status?"Paid":"Not Paid";
-                        $invoice->payment_date = $request->status?now():null;
-                        $invoice->save();
-                        Notification::paymentReceivedNotification($user,$target,$invoice,$request->status);
-                        return response(['message'=>"Payment status updated"]);
-
-                    }
-                    return response(['message'=>"Unauthorized access"]);
-                }
-            }
-        }
-
-        return response(['message'=>"Invalid Invoice"]);
-//        must be owner
-//        invoice must belong to a pocket you own
     }
 
     public function addKeen(Request $request)
@@ -1038,11 +612,10 @@ class APIController extends Controller
            }
 
            return response(['message'=>"Invalid Pocket" ]);
-       }catch (Exception $exception){
-           return response(['message'=>$exception->getMessage()]);
+       }catch (\Exception $exception){
+           return response(['message'=>'Operation failed.']);
        }
 //        must be owner
 //        invoice must belong to a pocket you own
     }
-
 }

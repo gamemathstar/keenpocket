@@ -52,6 +52,11 @@ class AdashiScheduler extends Command
                 continue;
             }
 
+            // 48h before payment reminder for participants (earlier nudge)
+            if (!$dueAt->isPast() && $dueAt->diffInHours($now) <= 48 && $dueAt->diffInHours($now) > 47.8) {
+                $this->send24hReminders($adashi, $currentRecord);
+            }
+
             // 24h before payment reminder for participants (only if not overdue)
             if (!$dueAt->isPast() && $dueAt->diffInHours($now) <= 24 && $dueAt->diffInHours($now) > 23.8) {
                 $this->send24hReminders($adashi, $currentRecord);

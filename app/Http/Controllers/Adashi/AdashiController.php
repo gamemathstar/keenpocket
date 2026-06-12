@@ -371,6 +371,21 @@ class AdashiController extends Controller
         }
     }
 
+    /** Best-effort audit trail for sensitive actions (never breaks the flow). */
+    protected function audit($adashiId, $userId, string $action, $meta = null): void
+    {
+        try {
+            \App\Models\AdashiAuditLog::create([
+                'adashi_id' => $adashiId,
+                'user_id' => $userId,
+                'action' => $action,
+                'meta' => $meta ? json_encode($meta) : null,
+            ]);
+        } catch (\Throwable $e) {
+            // auditing must not interrupt the operation
+        }
+    }
+
     protected function autoRotate($adashi)
     {
         $adashi->load(['members' => function($q){ $q->orderBy('position'); }]);
@@ -396,6 +411,17 @@ class AdashiController extends Controller
         // Notify receiver they received payment
         $receiverUser = User::find($receiverMember->user_id);
         Notification::adashiPaymentReceived($receiverUser, $adashi, $current);
+        $this->audit($adashi->id, $adashi->admin_id, 'ROTATE', ['cycle' => $current->cycle_number, 'receiver_user_id' => $receiverMember->user_id]);
+
+        // If every active member has now received, the adashi is complete.
+        $adashi->load(['members' => function ($q) { $q->orderBy('position'); }]);
+        $activeAll = $adashi->members->where('is_active', true);
+        if ($activeAll->count() && $activeAll->every(fn ($m) => (bool) $m->has_received)) {
+            $adashi->status = 'COMPLETED';
+            $adashi->save();
+            $this->audit($adashi->id, $adashi->admin_id, 'COMPLETED');
+            return;
+        }
 
         // Calculate next receiver
         $nextCycle = $current->cycle_number + 1;
@@ -552,10 +578,12 @@ class AdashiController extends Controller
     public function adminOverride($id, Request $request)
     {
         $data = $request->validate([
-            'action' => 'required|in:SET_RECEIVER,MARK_PAID_OUT,MARK_DISPUTE,DEACTIVATE_MEMBER,REACTIVATE_MEMBER,ADJUST_CONTRIBUTION',
+            'action' => 'required|in:SET_RECEIVER,MARK_PAID_OUT,MARK_DISPUTE,DEACTIVATE_MEMBER,REACTIVATE_MEMBER,ADJUST_CONTRIBUTION,SET_POSITION,PAUSE,RESUME',
             'record_id' => 'nullable|integer|exists:adashi_records,id',
             'receiver_user_id' => 'nullable|integer|exists:users,id',
             'member_user_id' => 'nullable|integer|exists:users,id',
+            'amount' => 'nullable|integer|min:1',
+            'position' => 'nullable|integer|min:1',
             'note' => 'nullable|string',
         ]);
 
@@ -567,7 +595,50 @@ class AdashiController extends Controller
         }
 
         return DB::transaction(function () use ($adashi, $data, $admin) {
+            $this->audit($adashi->id, $admin->id, $data['action'], collect($data)->except('note')->toArray());
+
             switch ($data['action']) {
+                case 'PAUSE':
+                    $adashi->status = 'PAUSED';
+                    $adashi->save();
+                    return response()->json(['success' => true, 'adashi' => $adashi]);
+
+                case 'RESUME':
+                    $adashi->status = 'ACTIVE';
+                    $adashi->save();
+                    return response()->json(['success' => true, 'adashi' => $adashi]);
+
+                case 'SET_POSITION':
+                    if (!$data['member_user_id'] || empty($data['position'])) {
+                        return response()->json(['message' => 'member_user_id and position required'], 400);
+                    }
+                    $member = AdashiMember::where('adashi_id', $adashi->id)->where('user_id', $data['member_user_id'])->firstOrFail();
+                    $member->position = $data['position'];
+                    $member->save();
+                    return response()->json(['success' => true, 'member' => $member]);
+
+                case 'ADJUST_CONTRIBUTION':
+                    if (!$data['record_id'] || !$data['member_user_id'] || empty($data['amount'])) {
+                        return response()->json(['message' => 'record_id, member_user_id and amount required'], 400);
+                    }
+                    $record = AdashiRecord::where('adashi_id', $adashi->id)->findOrFail($data['record_id']);
+                    $member = AdashiMember::where('adashi_id', $adashi->id)->where('user_id', $data['member_user_id'])->firstOrFail();
+                    // Record an admin-confirmed (offline) contribution as a Paid invoice.
+                    $invoice = new Invoice();
+                    $invoice->pocket_slot_id = null;
+                    $invoice->adashi_record_id = $record->id;
+                    $invoice->adashi_member_id = $member->id;
+                    $invoice->invoice_no = 'ADSH/'.str_pad($adashi->id, 3, '0', STR_PAD_LEFT).'/'.date('ymdHis');
+                    $invoice->amount = $data['amount'];
+                    $invoice->reference_no = $invoice->invoice_no;
+                    $invoice->payment_status = 'Paid';
+                    $invoice->paid_through = 'Manual';
+                    $invoice->payment_date = now();
+                    $invoice->save();
+                    InvoiceItem::create(['invoice_id' => $invoice->id, 'item_id' => 1, 'amount' => $data['amount'], 'type' => 'Paid', 'month' => $record->cycle_number]);
+                    $this->updateRecordFromInvoice($record, $member, $adashi);
+                    return response()->json(['success' => true, 'record' => $record->fresh()]);
+
                 case 'SET_RECEIVER':
                     if (!$data['record_id'] || !$data['receiver_user_id']) {
                         return response()->json(['message' => 'record_id and receiver_user_id required'], 400);

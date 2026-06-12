@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/keenpocket-icon.svg') }}">
     <title>@yield('title', 'KeenPocket')</title>
     @include('partials.styles')
 </head>
 <body class="h-full">
 <div class="min-h-full flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-md">
-        <div class="flex items-center justify-center gap-2 mb-6">
-            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-white font-bold text-lg">K</span>
-            <span class="font-semibold text-xl">KeenPocket</span>
+        <div class="flex items-center justify-center mb-6">
+            <img src="{{ asset('images/keenpocket-lockup.svg') }}" alt="KeenPocket" class="h-16">
         </div>
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
             @if ($errors->any())

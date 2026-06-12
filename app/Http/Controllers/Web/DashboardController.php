@@ -67,6 +67,19 @@ class DashboardController extends Controller
         $chartData = array_column($buckets, 'total');
         $totalSaved = (int) $paid->sum('amount');
 
-        return view('dashboard', compact('user', 'pockets', 'adashis', 'rep', 'profile', 'walletBalance', 'ownedPockets', 'chartLabels', 'chartData', 'totalSaved'));
+        // Weekly goal + streak (freezes auto-bridge a missed week — see StreakService).
+        $weeks = [];
+        foreach ($paid as $inv) {
+            $d = $inv->payment_date ?? $inv->created_at;
+            if ($d) {
+                $weeks[Carbon::parse($d)->format('oW')] = true;
+            }
+        }
+        $streak = app(\App\Services\Streak\StreakService::class)->evaluate($user, array_keys($weeks));
+        $thisWeekMet = $streak['this_week_met'];
+        $weekStreak = $streak['streak'];
+        $streakFreezes = $streak['freezes'];
+
+        return view('dashboard', compact('user', 'pockets', 'adashis', 'rep', 'profile', 'walletBalance', 'ownedPockets', 'chartLabels', 'chartData', 'totalSaved', 'thisWeekMet', 'weekStreak', 'streakFreezes'));
     }
 }

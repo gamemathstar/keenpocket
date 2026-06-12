@@ -53,6 +53,32 @@
     button.bg-brand:hover, a.bg-brand:hover { filter: brightness(1.03); }
     button.bg-brand:active, a.bg-brand:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--brand-dark); }
 
-    /* Duolingo-style raised cards: thicker 2px border + 4px bottom edge */
-    .bg-white.border { border-width: 2px; border-bottom-width: 4px; border-color: #e5e7eb; }
+    /* Distinctive KeenPocket cards: 3D edge + subtle sheen + soft brand glow */
+    .bg-white.border {
+        border-width: 2px;
+        border-bottom-width: 7px;
+        border-color: #e8eef3;
+        background-image: linear-gradient(177deg, #ffffff 0%, #f5fbff 100%);
+        box-shadow: 0 10px 24px -16px rgba(28, 176, 246, .45);
+        transition: transform .14s ease, box-shadow .14s ease;
+    }
+    /* Clickable cards lift toward you on hover */
+    a.bg-white.border:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -14px rgba(28, 176, 246, .5); }
+
+    /* ── Dark mode (class-based, applied via .dark on <html>) ── */
+    .dark body { background: #0f172a; color: #e2e8f0; }
+    .dark .bg-white { background: #1e293b !important; }
+    .dark .bg-slate-50 { background: #0f172a !important; }
+    .dark .bg-slate-100 { background: #334155 !important; }
+    .dark .text-slate-800, .dark .text-slate-700 { color: #e2e8f0 !important; }
+    .dark .text-slate-600, .dark .text-slate-500, .dark .text-slate-400 { color: #94a3b8 !important; }
+    .dark .border-slate-200, .dark .border-slate-100, .dark .border-slate-300 { border-color: #334155 !important; }
+    .dark .bg-white.border { border-color: #334155 !important; }
+    .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #334155 !important; }
+    .dark input, .dark select, .dark textarea { background: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+    .dark .bg-brand-light { background: #0c4a6e !important; }
+    .dark .text-brand-dark { color: #7dd3fc !important; }
 </style>
+<script>
+    (function () { try { if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {} })();
+</script>

@@ -18,6 +18,14 @@ class AdashiRecord extends Model
         'due_at' => 'datetime',
     ];
 
+    // Mobile client expects `due_date` (see API_CONTRACT_RECONCILIATION.md).
+    protected $appends = ['due_date'];
+
+    public function getDueDateAttribute()
+    {
+        return $this->due_at ? $this->due_at->toDateString() : null;
+    }
+
     public function adashi()
     {
         return $this->belongsTo(Adashi::class);

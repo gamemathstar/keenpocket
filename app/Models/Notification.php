@@ -122,9 +122,13 @@ class Notification extends Model
         try {
             $service = app(PushNotificationService::class);
 
+            // Respect each user's push preference.
             if (is_array($recipient)) {
-                $userIds = $recipient;
+                $userIds = User::whereIn('id', $recipient)->where('notify_push', true)->pluck('id')->all();
             } else {
+                if (!($recipient->notify_push ?? true)) {
+                    return ['success' => 0, 'failure' => 0, 'errors' => []];
+                }
                 $userIds = [$recipient->id];
             }
 
@@ -149,9 +153,9 @@ class Notification extends Model
             }
 
             if (is_array($recipient)) {
-                $phones = User::whereIn('id', $recipient)->whereNotNull('phone_number')->pluck('phone_number');
+                $phones = User::whereIn('id', $recipient)->where('notify_sms', true)->whereNotNull('phone_number')->pluck('phone_number');
             } else {
-                $phones = $recipient && $recipient->phone_number ? [$recipient->phone_number] : [];
+                $phones = ($recipient && $recipient->phone_number && ($recipient->notify_sms ?? true)) ? [$recipient->phone_number] : [];
             }
 
             foreach ($phones as $phone) {
@@ -175,9 +179,9 @@ class Notification extends Model
             }
 
             if (is_array($recipient)) {
-                $phones = User::whereIn('id', $recipient)->whereNotNull('phone_number')->pluck('phone_number');
+                $phones = User::whereIn('id', $recipient)->where('notify_whatsapp', true)->whereNotNull('phone_number')->pluck('phone_number');
             } else {
-                $phones = $recipient && $recipient->phone_number ? [$recipient->phone_number] : [];
+                $phones = ($recipient && $recipient->phone_number && ($recipient->notify_whatsapp ?? true)) ? [$recipient->phone_number] : [];
             }
 
             foreach ($phones as $phone) {

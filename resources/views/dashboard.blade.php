@@ -22,6 +22,21 @@
         <x-stat-tile icon="💳" :value="is_null($walletBalance) ? '—' : '₦'.number_format($walletBalance)" label="Wallet" tone="green" />
     </div>
 
+    {{-- Weekly goal --}}
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">{{ $thisWeekMet ? '✅' : '🎯' }}</span>
+            <div>
+                <div class="font-extrabold">Weekly goal</div>
+                <div class="text-sm text-slate-500">{{ $thisWeekMet ? "Done — you've contributed this week! 🎉" : 'Make a contribution this week to keep your streak going.' }}</div>
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="text-2xl font-extrabold text-brand-dark">{{ $weekStreak }} 🔥</div>
+            <div class="text-xs text-slate-500 uppercase font-bold tracking-wide">week streak · 🧊 {{ $streakFreezes }}</div>
+        </div>
+    </div>
+
     {{-- Contribution trend --}}
     <div class="bg-white rounded-xl border border-slate-200 p-5 mb-8">
         <h3 class="font-semibold mb-3">Contributions (last 6 months)</h3>

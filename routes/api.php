@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\APIController;
+use App\Http\Controllers\Api\FeedController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\PocketController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DirectoryController;
@@ -94,36 +97,36 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::get('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
 
-    Route::get('dashboard', [APIController::class, 'dashboard']);
-    Route::get('invoice', [APIController::class, 'invoice']);
-    Route::get('my-pockets', [APIController::class, 'myPockets']);
-    Route::get('search-pocket', [APIController::class, 'search']);
-    Route::get('search-user', [APIController::class, 'searchUser']);
-    Route::get('pocket', [APIController::class, 'pocket']);
-    Route::get('pocket/invoices', [APIController::class, 'pocketInvoices']);
-    Route::get('pocket/month/invoices/', [APIController::class, 'pocketMonthInvoices']);
-    Route::post('pocket/members/add-keen', [APIController::class, 'addKeen']);
+    Route::get('dashboard', [PocketController::class, 'dashboard']);
+    Route::get('invoice', [InvoiceController::class, 'invoice']);
+    Route::get('my-pockets', [PocketController::class, 'myPockets']);
+    Route::get('search-pocket', [PocketController::class, 'search']);
+    Route::get('search-user', [FeedController::class, 'searchUser']);
+    Route::get('pocket', [PocketController::class, 'pocket']);
+    Route::get('pocket/invoices', [InvoiceController::class, 'pocketInvoices']);
+    Route::get('pocket/month/invoices/', [InvoiceController::class, 'pocketMonthInvoices']);
+    Route::post('pocket/members/add-keen', [PocketController::class, 'addKeen']);
 
-    Route::get('posts/', [APIController::class, 'posts']);
-    Route::get('post/', [APIController::class, 'post']);
-    Route::get('notifications/', [APIController::class, 'notifications']);
+    Route::get('posts/', [FeedController::class, 'posts']);
+    Route::get('post/', [FeedController::class, 'post']);
+    Route::get('notifications/', [FeedController::class, 'notifications']);
 
-    Route::post('create/pocket', [APIController::class, 'createPocket']);
-    Route::post('pocket/add/bank/detail', [APIController::class, 'addBankDetails']);
-    Route::post('pocket/join', [APIController::class, 'joinPocket']);
-    Route::post('invite/user', [APIController::class, 'inviteUser']);
-    Route::post('pocket/switch', [APIController::class, 'pocketSwitch']);
-    Route::post('pocket/selection/switch', [APIController::class, 'openSelection']);
-    Route::post('invoice/create', [APIController::class, 'createInvoice']);
-    Route::post('push/notification/update', [APIController::class, 'savePushNotificationToken']);
-    Route::post('invitation/cancel', [APIController::class, 'cancelInvitation']);
-    Route::post('request/accept', [APIController::class, 'acceptRequest']);
-    Route::post('add/payment/item', [APIController::class, 'addPaymentItem']);
-    Route::post('remove/payment/item', [APIController::class, 'removePaymentItem']);
-    Route::post('add/shopping/item', [APIController::class, 'addShoppingItem']);
-    Route::post('remove/shopping/item', [APIController::class, 'removeShoppingItem']);
-    Route::post('subscribe/shopping/item', [APIController::class, 'subscribeShoppingItem']);
-    Route::post('payment/status/update', [APIController::class, 'changePaymentStatus']);
+    Route::post('create/pocket', [PocketController::class, 'createPocket']);
+    Route::post('pocket/add/bank/detail', [PocketController::class, 'addBankDetails']);
+    Route::post('pocket/join', [PocketController::class, 'joinPocket']);
+    Route::post('invite/user', [PocketController::class, 'inviteUser']);
+    Route::post('pocket/switch', [PocketController::class, 'pocketSwitch']);
+    Route::post('pocket/selection/switch', [PocketController::class, 'openSelection']);
+    Route::post('invoice/create', [InvoiceController::class, 'createInvoice']);
+    Route::post('push/notification/update', [FeedController::class, 'savePushNotificationToken']);
+    Route::post('invitation/cancel', [PocketController::class, 'cancelInvitation']);
+    Route::post('request/accept', [PocketController::class, 'acceptRequest']);
+    Route::post('add/payment/item', [ItemController::class, 'addPaymentItem']);
+    Route::post('remove/payment/item', [ItemController::class, 'removePaymentItem']);
+    Route::post('add/shopping/item', [ItemController::class, 'addShoppingItem']);
+    Route::post('remove/shopping/item', [ItemController::class, 'removeShoppingItem']);
+    Route::post('subscribe/shopping/item', [ItemController::class, 'subscribeShoppingItem']);
+    Route::post('payment/status/update', [InvoiceController::class, 'changePaymentStatus']);
 
     // Online payments (no-op while PAYMENTS_ENABLED=false — see config/payments.php).
     Route::get('payments/status', [PaymentController::class, 'status']);

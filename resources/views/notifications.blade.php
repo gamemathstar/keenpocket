@@ -22,7 +22,7 @@
                 <span class="mt-1.5 h-2 w-2 rounded-full shrink-0 {{ $n->status === 'Not Read' ? 'bg-brand' : 'bg-transparent' }}"></span>
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
-                        <span class="font-medium text-sm">{{ $n->title }}</span>
+                        <a href="{{ route('notifications.open', $n->id) }}" class="font-medium text-sm hover:underline">{{ $n->title }}</a>
                         @if ($n->type)<span class="text-[10px] uppercase tracking-wide text-slate-400">{{ $n->type }}</span>@endif
                     </div>
                     <p class="text-sm text-slate-600 mt-0.5">{{ $n->body }}</p>

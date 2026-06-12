@@ -18,6 +18,23 @@
         </form>
     </div>
 
+    {{-- Notification preferences --}}
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 max-w-4xl">
+        <h3 class="font-semibold mb-1">Notification preferences</h3>
+        <p class="text-sm text-slate-500 mb-4">Choose how you'd like to receive payment reminders & updates.</p>
+        <form method="POST" action="{{ route('settings.preferences') }}" class="space-y-3">
+            @csrf
+            @php $prefs = [['notify_push','Push notifications','📱'],['notify_sms','SMS','✉️'],['notify_whatsapp','WhatsApp','💬']]; @endphp
+            @foreach ($prefs as [$key, $label, $icon])
+                <label class="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3">
+                    <span class="font-bold">{{ $icon }} {{ $label }}</span>
+                    <input type="checkbox" name="{{ $key }}" value="1" @checked($user->$key) class="h-5 w-5 rounded border-slate-300 text-brand focus:ring-brand">
+                </label>
+            @endforeach
+            <button class="rounded-lg bg-brand text-white font-medium px-5 py-2.5">Save preferences</button>
+        </form>
+    </div>
+
     <div class="grid lg:grid-cols-2 gap-6 max-w-4xl">
         {{-- Account info --}}
         <div class="bg-white rounded-xl border border-slate-200 p-6">

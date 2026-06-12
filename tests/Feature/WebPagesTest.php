@@ -60,6 +60,20 @@ class WebPagesTest extends TestCase
         $this->get("/adashi/{$adashi->id}/members")->assertStatus(200);   // admin controls
     }
 
+    public function test_user_can_update_notification_preferences()
+    {
+        $user = $this->user();
+        $this->actingAs($user);
+
+        // Only push checked → SMS & WhatsApp turned off.
+        $this->post('/settings/preferences', ['notify_push' => '1'])->assertRedirect();
+
+        $user->refresh();
+        $this->assertTrue($user->notify_push);
+        $this->assertFalse($user->notify_sms);
+        $this->assertFalse($user->notify_whatsapp);
+    }
+
     public function test_user_can_upload_avatar()
     {
         Storage::fake('public');

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/keenpocket-icon.svg') }}">
     <title>@yield('title', 'KeenPocket')</title>
     @include('partials.styles')
 </head>
@@ -13,7 +14,7 @@
     <aside class="md:w-64 md:flex md:flex-col bg-white border-b md:border-b-0 md:border-r border-slate-200">
         <div class="px-5 py-4 flex items-center justify-between border-b border-slate-100">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white font-bold">K</span>
+                <img src="{{ asset('images/keenpocket-icon.svg') }}" alt="" class="h-8 w-8 rounded-lg">
                 <span class="font-semibold text-lg">KeenPocket</span>
             </a>
             <button type="button" onclick="document.getElementById('navPanel').classList.toggle('hidden')"
@@ -68,6 +69,7 @@
                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-none rounded-full px-1.5 py-0.5">{{ $unread > 9 ? '9+' : $unread }}</span>
                     @endif
                 </a>
+                <button type="button" onclick="(function(){var d=document.documentElement.classList.toggle('dark');try{localStorage.setItem('theme',d?'dark':'light');}catch(e){}})()" class="text-xl" title="Toggle dark mode">🌓</button>
                 <a href="{{ route('settings') }}" class="text-xl" title="Settings">⚙️</a>
                 <span class="text-slate-500 hidden sm:inline">{{ auth()->user()->name ?? '' }}</span>
                 <a href="{{ route('settings') }}"><x-avatar :user="auth()->user()" :size="32" /></a>

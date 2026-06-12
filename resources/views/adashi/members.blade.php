@@ -48,6 +48,28 @@
         </div>
     @endif
 
+    {{-- Adashi status control --}}
+    <div class="bg-white border border-slate-200 rounded-xl p-5 mt-4 flex items-center justify-between">
+        <div>
+            <span class="font-semibold">Status:</span>
+            <span class="text-xs px-2 py-0.5 rounded-full ml-1 font-bold uppercase
+                {{ $adashi->status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : ($adashi->status === 'PAUSED' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500') }}">
+                {{ strtolower($adashi->status) }}
+            </span>
+        </div>
+        @if ($adashi->status === 'ACTIVE')
+            <form method="POST" action="{{ route('adashi.admin', $adashi->id) }}">
+                @csrf<input type="hidden" name="action" value="PAUSE">
+                <button class="rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 px-4 py-2 text-sm font-bold">⏸ Pause adashi</button>
+            </form>
+        @elseif ($adashi->status === 'PAUSED')
+            <form method="POST" action="{{ route('adashi.admin', $adashi->id) }}">
+                @csrf<input type="hidden" name="action" value="RESUME">
+                <button class="rounded-lg bg-brand text-white px-4 py-2 text-sm font-bold">▶ Resume adashi</button>
+            </form>
+        @endif
+    </div>
+
     <div class="grid lg:grid-cols-3 gap-6 mt-6">
         {{-- Add member --}}
         <div class="bg-white rounded-xl border border-slate-200 p-6">

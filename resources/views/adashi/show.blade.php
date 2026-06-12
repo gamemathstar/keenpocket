@@ -88,6 +88,37 @@
         </div>
     </div>
 
+    {{-- Payout timeline --}}
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 mt-6">
+        <h3 class="font-semibold mb-4">🗓️ Payout timeline</h3>
+        <ol class="relative border-l-2 border-slate-200 ml-3 space-y-5">
+            @foreach ($timeline as $t)
+                <li class="ml-6">
+                    <span class="absolute -left-[11px] flex h-5 w-5 items-center justify-center rounded-full ring-4 ring-white
+                        {{ $t['has_received'] ? 'bg-emerald-500' : ($t['is_current'] ? 'bg-brand' : 'bg-slate-300') }}">
+                        @if ($t['has_received'])<span class="text-white text-[10px]">✓</span>@endif
+                    </span>
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <div class="font-bold text-sm">
+                                #{{ $t['position'] }} · {{ $t['name'] }}
+                                @if ($t['is_me'])<span class="text-xs text-brand-dark font-extrabold">(you)</span>@endif
+                            </div>
+                            <div class="text-xs text-slate-400">~ {{ $t['payout_date'] }}</div>
+                        </div>
+                        @if ($t['has_received'])
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold">received</span>
+                        @elseif ($t['is_current'])
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-brand-light text-brand-dark font-bold">up next</span>
+                        @else
+                            <span class="text-xs text-slate-400 font-bold uppercase">upcoming</span>
+                        @endif
+                    </div>
+                </li>
+            @endforeach
+        </ol>
+    </div>
+
     <div class="mt-6 max-w-xl">
         <x-mini-leaderboard :rows="$contributors" title="Top contributors" />
     </div>

@@ -48,6 +48,17 @@ class SettingsController extends Controller
         return back()->with('status', 'Password changed.');
     }
 
+    public function updatePreferences(Request $request)
+    {
+        $user = $request->user();
+        $user->notify_push = $request->boolean('notify_push');
+        $user->notify_sms = $request->boolean('notify_sms');
+        $user->notify_whatsapp = $request->boolean('notify_whatsapp');
+        $user->save();
+
+        return back()->with('status', 'Notification preferences saved.');
+    }
+
     public function updateAvatar(Request $request)
     {
         $request->validate(['avatar' => 'required|image|max:2048']); // ≤ 2 MB

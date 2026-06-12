@@ -35,6 +35,11 @@ class User extends Authenticatable
         'kyc_reference',
         'kyc_verified_at',
         'avatar',
+        'notify_push',
+        'notify_sms',
+        'notify_whatsapp',
+        'streak_freezes',
+        'streak_frozen_weeks',
     ];
 
     /**
@@ -57,6 +62,10 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'notify_push' => 'boolean',
+        'notify_sms' => 'boolean',
+        'notify_whatsapp' => 'boolean',
+        'streak_frozen_weeks' => 'array',
     ];
 
     public function __allPockets()

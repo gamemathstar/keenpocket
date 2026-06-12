@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'readOne'])->name('notifications.readOne');
+    Route::get('/notifications/{id}/open', [NotificationController::class, 'open'])->name('notifications.open');
 
     Route::get('/payouts', [PayoutsController::class, 'index'])->name('payouts.index');
     Route::post('/payouts/bank-account', [PayoutsController::class, 'saveBankAccount'])->name('payouts.saveBank');
@@ -94,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::post('/settings/avatar', [SettingsController::class, 'updateAvatar'])->name('settings.avatar');
+    Route::post('/settings/preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences');
 });
 
 /*

@@ -29,8 +29,8 @@ values, so flag whether **backend adapts** or **client tolerates**:
    accessor to lowercase these. (Low effort either way — pick one.)
 2. **`amount_per_cycle` type.** Stored/returned as integer; doc example shows string `"50000"`. Client
    sends it as a string and Laravel accepts it. Confirm the client deserializer tolerates a JSON number.
-3. **`due_date` vs `due_at`.** Adashi records expose `due_at` (DB column); doc §5.3/§5.7 reference
-   `due_date` (and §5.7 shows both). Confirm the client field name, or we add a `due_date` alias.
+3. **`due_date` vs `due_at`.** ✅ **Resolved** — `AdashiRecord` now appends a `due_date` (date) alias
+   alongside `due_at`, so both appear in the JSON. No client change needed.
 4. **Refresh token semantics.** Sanctum has no native refresh tokens; the implemented flow issues a
    second named token (`refresh`) and rotates. It is a valid bearer if misused — acceptable for now,
    but consider scoping it with an ability if refresh tokens must be access-incapable.
@@ -44,3 +44,20 @@ values, so flag whether **backend adapts** or **client tolerates**:
 - The core read-model response shapes (dashboard, pocket detail `list_load`/`pocketSlots`/`invitations`,
   invoices) were **not** modified here; verify them against §3 with a real device against the live DB,
   since those queries are MySQL-specific and untestable on the sqlite test DB.
+
+## Adashi spec gap-fills (added)
+
+Closed the gaps from the original Adashi design doc:
+- **Pause / Resume + COMPLETED** — `admin/override` gains `PAUSE` and `RESUME` (status `ACTIVE`↔`PAUSED`;
+  the scheduler already skips non-ACTIVE adashis). `autoRotate` now sets `COMPLETED` once every active
+  member has received, instead of opening another cycle.
+- **`ADJUST_CONTRIBUTION`** — previously validated but unhandled; now records an admin-confirmed (offline)
+  contribution as a `Paid` invoice for `{record_id, member_user_id, amount}` and reconciles the record.
+- **`SET_POSITION`** — reorder a member's turn position (`{member_user_id, position}`).
+- **Audit log** — `adashi_audit_logs` (adashi_id, user_id, action, meta) written on every override and on
+  rotation, for traceability.
+- **48h reminder** — added alongside the existing 24h reminder in `adashi:process`.
+- **Payout timeline** (web) — adashi detail shows each member's projected payout date + received/up-next
+  markers (the spec's optional "calendar view").
+
+All covered by `tests/Feature/AdashiAdminTest.php` (+ existing adashi tests). Suite: 96 green.

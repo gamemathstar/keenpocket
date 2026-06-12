@@ -84,13 +84,24 @@ class AdashiWebController extends Controller
         $members = AdashiMember::query()
             ->join('users', 'users.id', '=', 'adashi_members.user_id')
             ->where('adashi_members.adashi_id', $adashi->id)
-            ->select(['adashi_members.position', 'adashi_members.has_received', 'adashi_members.is_active', 'users.name'])
+            ->select(['adashi_members.user_id', 'adashi_members.position', 'adashi_members.has_received', 'adashi_members.is_active', 'users.name'])
             ->orderBy('adashi_members.position')->get();
 
         $records = AdashiRecord::where('adashi_id', $adashi->id)->orderByDesc('cycle_number')->get();
         $currentRecord = $records->first();
         $isAdmin = $adashi->admin_id == auth()->id();
         $myMember = AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => auth()->id(), 'is_active' => 1])->first();
+
+        // Payout timeline: projected payout date per member (cycle p ≈ start + p × duration).
+        $start = \Illuminate\Support\Carbon::parse($adashi->start_date);
+        $timeline = $members->where('is_active', 1)->values()->map(fn ($m) => [
+            'position' => $m->position,
+            'name' => $m->name,
+            'has_received' => (bool) $m->has_received,
+            'is_current' => (int) $m->position === (int) $adashi->current_cycle_number && $adashi->status === 'ACTIVE',
+            'is_me' => $m->user_id == auth()->id(),
+            'payout_date' => $start->copy()->addDays((int) $m->position * (int) $adashi->cycle_duration_days)->format('M j, Y'),
+        ]);
 
         $contributors = \App\Models\Invoice::query()
             ->where('invoices.payment_status', 'Paid')
@@ -101,7 +112,7 @@ class AdashiWebController extends Controller
             ->selectRaw('users.name as name, COUNT(*) as total') // count of contributions, not amount
             ->orderByDesc('total')->limit(10)->get();
 
-        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors'));
+        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline'));
     }
 
     /** A member records a contribution for the current cycle. */
@@ -171,7 +182,7 @@ class AdashiWebController extends Controller
         $adashi = Adashi::findOrFail($id);
         abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can perform this action.');
 
-        $params = $request->only(['action', 'record_id', 'receiver_user_id', 'member_user_id', 'note']);
+        $params = $request->only(['action', 'record_id', 'receiver_user_id', 'member_user_id', 'amount', 'position', 'note']);
         $apiRequest = \Illuminate\Http\Request::create('/', 'POST', $params);
 
         try {
