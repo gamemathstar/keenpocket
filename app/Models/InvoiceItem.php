@@ -11,5 +11,6 @@ class InvoiceItem extends Model
     protected $table = "invoice_item";
     protected $fillable = [
         'invoice_id', 'item_id', 'amount', 'type', 'month',
+        'charity_project_id', 'charity_goal_item_id', 'quantity',
     ];
 }

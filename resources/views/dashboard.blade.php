@@ -98,8 +98,7 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         @forelse ($pockets as $p)
             <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-brand transition">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">{{ $p->pocket_type }}</span>
+                <div class="flex items-center justify-end mb-2">
                     <span class="text-xs {{ $p->status ? 'text-emerald-600' : 'text-slate-400' }}">{{ $p->status ? 'Open' : 'Closed' }}</span>
                 </div>
                 <div class="font-semibold truncate">{{ $p->title }}</div>

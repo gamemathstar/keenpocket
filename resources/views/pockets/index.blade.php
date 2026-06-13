@@ -12,10 +12,9 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($all as $p)
             <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-brand transition">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">{{ $p->pocket_type }}</span>
-                    @if ($p->user_id == auth()->id())<span class="text-xs text-amber-600">Owner</span>@endif
-                </div>
+                @if ($p->user_id == auth()->id())
+                    <div class="flex items-center justify-end mb-2"><span class="text-xs text-amber-600">Owner</span></div>
+                @endif
                 <div class="font-semibold truncate">{{ $p->title }}</div>
                 <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand</div>
                 <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>

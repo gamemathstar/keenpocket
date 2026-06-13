@@ -104,6 +104,9 @@ Route::group(["middleware" => ['auth:sanctum']], function () {
     Route::get('search-user', [FeedController::class, 'searchUser']);
     Route::get('pocket', [PocketController::class, 'pocket']);
     Route::get('pocket/invoices', [InvoiceController::class, 'pocketInvoices']);
+    Route::get('pocket/charity', [\App\Http\Controllers\Api\CharityController::class, 'show']);
+    Route::post('pocket/charity/donate', [\App\Http\Controllers\Api\CharityController::class, 'donate']);
+    Route::post('pocket/charity/setup', [\App\Http\Controllers\Api\CharityController::class, 'setup']);
     Route::get('pocket/month/invoices/', [InvoiceController::class, 'pocketMonthInvoices']);
     Route::post('pocket/members/add-keen', [PocketController::class, 'addKeen']);
 

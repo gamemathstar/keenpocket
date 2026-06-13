@@ -29,6 +29,8 @@ class InvoiceController extends Controller
         $data = $request->validate([
             'amount' => 'required|integer|min:1',
             'month' => 'required|integer|min:1|max:12',
+            // Pay the monthly amount for this many consecutive months (pay-ahead).
+            'months_count' => 'nullable|integer|min:1|max:12',
         ]);
 
         $pocket = Pocket::findOrFail($pocketId);
@@ -36,26 +38,36 @@ class InvoiceController extends Controller
         $slot = $this->activeSlot($pocket->id, $user->id);
         abort_unless($slot, 403, 'You are not an active member of this pocket.');
 
-        DB::transaction(function () use ($pocket, $slot, $data) {
+        // Spread one invoice across N consecutive months, each at the same amount.
+        $count = max(1, min((int) ($data['months_count'] ?? 1), (int) $pocket->month_count - (int) $data['month'] + 1));
+        $months = range((int) $data['month'], (int) $data['month'] + $count - 1);
+
+        DB::transaction(function () use ($pocket, $slot, $data, $months) {
             $invoice = new Invoice();
             $invoice->pocket_slot_id = $slot->id;
             $invoice->invoice_no = 'KP/'.str_pad($pocket->id, 3, '0', STR_PAD_LEFT).'/'.date('ymdHis');
-            $invoice->amount = $data['amount'];
+            $invoice->amount = $data['amount'] * count($months);
             $invoice->reference_no = $invoice->invoice_no;
             $invoice->payment_status = 'Not Paid';
             $invoice->paid_through = 'Pending';
             $invoice->save();
 
-            InvoiceItem::create([
-                'invoice_id' => $invoice->id,
-                'item_id' => 1, // default contribution item
-                'amount' => $data['amount'],
-                'type' => 'Paid',
-                'month' => $data['month'],
-            ]);
+            foreach ($months as $m) {
+                InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'item_id' => 1, // default contribution item
+                    'amount' => $data['amount'],
+                    'type' => 'Paid',
+                    'month' => $m,
+                ]);
+            }
         });
 
-        return redirect()->route('pockets.show', $pocket->id)->with('status', 'Contribution invoice created.');
+        $msg = count($months) > 1
+            ? 'Contribution invoice created for '.count($months).' months.'
+            : 'Contribution invoice created.';
+
+        return redirect()->route('pockets.show', $pocket->id)->with('status', $msg);
     }
 
     /** Pocket owner approves a member's invoice. */

@@ -28,6 +28,7 @@
                         ['dashboard', 'Dashboard', '🏠'],
                         ['pockets.index', 'My Pockets', '👛'],
                         ['adashi.index', 'Adashi', '🔄'],
+                        ['plans.index', 'Planning', '🧾'],
                         ['discover', 'Discover', '🧭'],
                         ['leaderboard', 'Leaderboard', '🏆'],
                         ['wallet.index', 'Wallet', '💳'],

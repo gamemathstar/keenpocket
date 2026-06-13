@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets', [PocketController::class, 'store'])->name('pockets.store');
     Route::get('/pockets/{id}', [PocketController::class, 'show'])->name('pockets.show');
     Route::post('/pockets/{id}/join', [PocketController::class, 'join'])->name('pockets.join');
+    Route::post('/pockets/{id}/rate-admin', [PocketController::class, 'rateAdmin'])->name('pockets.rateAdmin');
     Route::get('/search', [\App\Http\Controllers\Web\SearchController::class, 'index'])->name('search');
     Route::get('/pockets/{id}/manage', [PocketController::class, 'manage'])->name('pockets.manage');
     Route::get('/pockets/{id}/invoices/export', [PocketController::class, 'exportInvoices'])->name('pockets.invoices.export');
@@ -60,6 +61,23 @@ Route::middleware('auth')->group(function () {
     // Pocket shopping list (group buying)
     Route::post('/pockets/{id}/shopping', [\App\Http\Controllers\Web\ShoppingController::class, 'store'])->name('shopping.store');
     Route::post('/shopping/{id}/delete', [\App\Http\Controllers\Web\ShoppingController::class, 'destroy'])->name('shopping.destroy');
+
+    // Charity drive (Sadaqah / fi-sabilillah)
+    Route::get('/pockets/{id}/charity/setup', [\App\Http\Controllers\Web\CharityController::class, 'setup'])->name('charity.setup');
+    Route::post('/pockets/{id}/charity', [\App\Http\Controllers\Web\CharityController::class, 'store'])->name('charity.store');
+    Route::post('/pockets/{id}/charity/donate', [\App\Http\Controllers\Web\CharityController::class, 'donate'])->name('charity.donate');
+
+    // Home planning (monthly grocery plans, shared & collaborative)
+    Route::get('/plans', [\App\Http\Controllers\Web\PlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [\App\Http\Controllers\Web\PlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [\App\Http\Controllers\Web\PlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/{id}', [\App\Http\Controllers\Web\PlanController::class, 'show'])->name('plans.show');
+    Route::post('/plans/{id}/items', [\App\Http\Controllers\Web\PlanController::class, 'storeItem'])->name('plans.items.store');
+    Route::post('/plan-items/{itemId}/update', [\App\Http\Controllers\Web\PlanController::class, 'updateItem'])->name('plans.items.update');
+    Route::post('/plan-items/{itemId}/delete', [\App\Http\Controllers\Web\PlanController::class, 'destroyItem'])->name('plans.items.destroy');
+    Route::post('/plans/{id}/share', [\App\Http\Controllers\Web\PlanController::class, 'share'])->name('plans.share');
+    Route::post('/plans/{id}/unshare/{userId}', [\App\Http\Controllers\Web\PlanController::class, 'unshare'])->name('plans.unshare');
+    Route::post('/plans/{id}/archive', [\App\Http\Controllers\Web\PlanController::class, 'archive'])->name('plans.archive');
 
     Route::get('/adashi', [AdashiWebController::class, 'index'])->name('adashi.index');
     Route::get('/adashi/create', [AdashiWebController::class, 'create'])->name('adashi.create');

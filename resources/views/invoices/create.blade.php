@@ -11,13 +11,20 @@
                 <label class="block text-sm font-medium mb-1">Amount (₦)</label>
                 <input type="number" name="amount" value="{{ old('amount', $pocket->amount_per_hand) }}" min="1" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
             </div>
-            <div>
-                <label class="block text-sm font-medium mb-1">Month</label>
-                <select name="month" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
-                    @foreach (['January','February','March','April','May','June','July','August','September','October','November','December'] as $i => $m)
-                        <option value="{{ $i + 1 }}">{{ $m }}</option>
-                    @endforeach
-                </select>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Starting month</label>
+                    <select name="month" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                        @foreach (['January','February','March','April','May','June','July','August','September','October','November','December'] as $i => $m)
+                            <option value="{{ $i + 1 }}">{{ $m }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Pay ahead (months)</label>
+                    <input type="number" name="months_count" value="1" min="1" max="12" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                    <p class="text-xs text-slate-400 mt-1">Pay this many months at once, each at the amount above.</p>
+                </div>
             </div>
             <div class="flex gap-3 pt-2">
                 <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Create invoice</button>

@@ -10,17 +10,9 @@
                 <label class="block text-sm font-medium mb-1">Title</label>
                 <input name="title" value="{{ old('title') }}" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand" placeholder="2026 Ramadan Pocket">
             </div>
-            <div class="grid sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Type</label>
-                    <select name="pocket_type" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
-                        <option>Ramadan</option><option>Monthly</option><option>Layya</option><option>Adashe</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Year</label>
-                    <input type="number" name="year" value="{{ old('year', date('Y')) }}" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
-                </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Year</label>
+                <input type="number" name="year" value="{{ old('year', date('Y')) }}" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Description</label>

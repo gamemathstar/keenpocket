@@ -6,8 +6,7 @@
     <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
         <div class="flex items-start justify-between gap-4">
             <div>
-                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">{{ $pocket->pocket_type }}</span>
-                <h2 class="text-2xl font-semibold mt-2">{{ $pocket->title }}</h2>
+                <h2 class="text-2xl font-semibold">{{ $pocket->title }}</h2>
                 <p class="text-slate-500 text-sm mt-1">{{ $pocket->description ?: 'No description.' }}</p>
                 <p class="text-xs text-slate-400 mt-2">Organised by
                     @if ($owner)<a href="{{ route('users.show', $owner->id) }}" class="text-brand-dark hover:underline">{{ $owner->name }}</a>@else — @endif
@@ -161,4 +160,110 @@
             </form>
         @endif
     </div>
+
+    {{-- Charity drive (Sadaqah / fi-sabilillah) --}}
+    @if ($charity)
+        @php $c = $charity; @endphp
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+            <div class="flex items-center justify-between mb-1">
+                <h3 class="font-semibold">🤲 {{ $c['project']->title }}</h3>
+                @if ($isOwner)<a href="{{ route('charity.setup', $pocket->id) }}" class="text-sm text-brand-dark hover:underline">Edit drive →</a>@endif
+            </div>
+            @if ($c['project']->description)<p class="text-sm text-slate-500 mb-2">{{ $c['project']->description }}</p>@endif
+            <p class="text-xs text-slate-400 mb-3">Sadaqah · individual donations are private (fi-sabilillah)</p>
+
+            @if ($c['goal_type'] === 'amount' && $c['target_amount'] > 0)
+                <x-progress-bar :percent="$c['percent']" label="Raised" :current="$c['raised']" :target="$c['target_amount']" />
+            @elseif ($c['goal_type'] === 'items')
+                <div class="space-y-3">
+                    @foreach ($c['items'] as $it)
+                        <div>
+                            <div class="flex justify-between text-sm"><span>{{ $it['name'] }}</span><span class="text-slate-500">{{ $it['collected_quantity'] }} / {{ $it['target_quantity'] }} {{ $it['unit'] }}</span></div>
+                            <div class="h-2 rounded-full bg-slate-100 mt-1 overflow-hidden"><div class="h-full bg-brand" style="width: {{ $it['percent'] }}%"></div></div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-sm text-slate-500">Total raised: ₦{{ number_format($c['raised']) }}</p>
+            @endif
+
+            <div class="grid grid-cols-2 gap-3 mt-4 text-center">
+                <div class="rounded-lg bg-brand-light p-3"><div class="text-xs text-slate-500">Your total</div><div class="font-semibold text-brand-dark">₦{{ number_format($c['my_total']) }}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><div class="text-xs text-slate-500">Group total</div><div class="font-semibold">₦{{ number_format($c['group_total']) }}</div></div>
+            </div>
+
+            @if ($isMember)
+                <form method="POST" action="{{ route('charity.donate', $pocket->id) }}" class="mt-4 border-t border-slate-100 pt-4 space-y-3">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Donation amount (₦) — optional</label>
+                        <input type="number" name="amount" min="0" value="0" class="w-full sm:w-56 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+                    </div>
+                    @if ($c['goal_type'] === 'items' && count($c['items']))
+                        <div class="space-y-2">
+                            <p class="text-xs font-medium text-slate-500">Or pledge items:</p>
+                            @foreach ($c['items'] as $i => $it)
+                                <div class="flex items-center gap-2 text-sm">
+                                    <input type="hidden" name="items[{{ $i }}][goal_item_id]" value="{{ $it['id'] }}">
+                                    <span class="w-40">{{ $it['name'] }} <span class="text-xs text-slate-400">{{ $it['unit'] }}</span></span>
+                                    <input type="number" name="items[{{ $i }}][quantity]" min="0" value="0" class="w-24 rounded-lg border border-slate-300 px-2 py-1 focus:border-brand focus:ring-brand">
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                    <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Donate</button>
+                </form>
+            @endif
+
+            @isset($c['breakdown'])
+                <div class="mt-4 border-t border-slate-100 pt-4">
+                    <p class="text-xs font-medium text-slate-500 mb-2">Donor breakdown @unless($pocket->charity_donors_visible)<span class="text-slate-400">(admin only)</span>@endunless</p>
+                    <ul class="divide-y divide-slate-100 text-sm">
+                        @forelse ($c['breakdown'] as $b)
+                            <li class="py-1.5 flex justify-between"><span>{{ $b['name'] }}</span><span class="text-slate-500">₦{{ number_format($b['total']) }}@if($b['items']) · {{ $b['items'] }} item(s)@endif</span></li>
+                        @empty
+                            <li class="py-1.5 text-slate-500">No donations yet.</li>
+                        @endforelse
+                    </ul>
+                </div>
+            @endisset
+        </div>
+    @elseif ($charityEnabled && $isOwner)
+        <div class="bg-white rounded-xl border border-dashed border-slate-300 p-5 mt-6 text-center">
+            <h3 class="font-semibold mb-1">🤲 Add a charity drive</h3>
+            <p class="text-sm text-slate-500 mb-3">Collect Sadaqah for orphans &amp; the needy alongside contributions. Individual donations stay private (fi-sabilillah).</p>
+            <a href="{{ route('charity.setup', $pocket->id) }}" class="inline-block rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Set up charity</a>
+        </div>
+    @endif
+
+    {{-- Rate the admin --}}
+    @if (!$isOwner && $isMember)
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">⭐ Rate the admin</h3>
+                @if ($adminRating['count'])
+                    <span class="text-sm text-slate-500">{{ number_format($adminRating['average'], 1) }} ★ · {{ $adminRating['count'] }} rating(s)</span>
+                @endif
+            </div>
+            <form method="POST" action="{{ route('pockets.rateAdmin', $pocket->id) }}" class="flex flex-wrap items-end gap-3">
+                @csrf
+                <div>
+                    <label class="block text-xs font-medium mb-1">Stars</label>
+                    <select name="stars" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+                        @for ($s = 5; $s >= 1; $s--)<option value="{{ $s }}" {{ (int) $myRating === $s ? 'selected' : '' }}>{{ $s }} ★</option>@endfor
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[12rem]">
+                    <label class="block text-xs font-medium mb-1">Comment (optional)</label>
+                    <input name="comment" maxlength="500" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="How is the admin running this pocket?">
+                </div>
+                <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">{{ $myRating ? 'Update rating' : 'Submit' }}</button>
+            </form>
+        </div>
+    @elseif ($isOwner && $adminRating['count'])
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+            <h3 class="font-semibold">⭐ Your admin rating</h3>
+            <p class="text-sm text-slate-500 mt-1">{{ number_format($adminRating['average'], 1) }} ★ from {{ $adminRating['count'] }} member(s).</p>
+        </div>
+    @endif
 @endsection

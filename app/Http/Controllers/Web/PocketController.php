@@ -37,7 +37,6 @@ class PocketController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'pocket_type' => 'required|string|max:50',
             'description' => 'nullable|string',
             'year' => 'required|integer|min:2020|max:2100',
             'start_month' => 'required|integer|min:1|max:12',
@@ -53,7 +52,6 @@ class PocketController extends Controller
             $pocket = new Pocket();
             $pocket->user_id = $user->id;
             $pocket->title = $data['title'];
-            $pocket->pocket_type = $data['pocket_type'];
             $pocket->description = $data['description'] ?? '';
             $pocket->year = $data['year'];
             $pocket->start_month = $data['start_month'];
@@ -124,7 +122,41 @@ class PocketController extends Controller
             ->selectRaw('users.name as name, COUNT(*) as total') // count of contributions, not amount
             ->orderByDesc('total')->limit(10)->get();
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors'));
+        // Charity drive (Sadaqah) — privacy-aware summary for this viewer.
+        $charity = null;
+        $charitySvc = app(\App\Services\Charity\CharityService::class);
+        if ($charitySvc->enabled() && $pocket->charity_enabled) {
+            if ($project = $charitySvc->activeProject($pocket)) {
+                $charity = $charitySvc->summary($pocket, $project, $user, $isOwner);
+            }
+        }
+        $charityEnabled = $charitySvc->enabled();
+
+        // Admin rating (members rate the pocket admin).
+        $adminRating = app(\App\Services\Rating\RatingService::class)->averageFor($pocket->user_id);
+        $myRating = \App\Models\Rating::where([
+            'rater_id' => $user->id, 'context_type' => 'pocket', 'context_id' => $pocket->id,
+        ])->value('stars');
+
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating'));
+    }
+
+    /** A member rates the pocket admin (1–5 stars). */
+    public function rateAdmin(Request $request, $id)
+    {
+        $data = $request->validate([
+            'stars' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500',
+        ]);
+
+        $result = app(\App\Services\Rating\RatingService::class)
+            ->submit($request->user(), 'pocket', (int) $id, (int) $data['stars'], $data['comment'] ?? null);
+
+        if (!$result['ok']) {
+            return back()->withErrors(['rating' => $result['message'] ?? 'Could not save your rating.']);
+        }
+
+        return back()->with('status', 'Thanks for rating the admin.');
     }
 
     public function join(Request $request, $id)

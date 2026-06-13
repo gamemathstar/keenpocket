@@ -17,8 +17,7 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
             @forelse ($pockets as $p)
                 <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-brand transition">
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">{{ $p->pocket_type }}</span>
-                    <div class="font-medium truncate mt-2">{{ $p->title }}</div>
+                    <div class="font-medium truncate">{{ $p->title }}</div>
                     <div class="text-xs text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand</div>
                 </a>
             @empty
