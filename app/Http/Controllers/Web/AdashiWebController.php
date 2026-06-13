@@ -173,7 +173,15 @@ class AdashiWebController extends Controller
         $canChat = config('chat.enabled', true) && ($isAdmin || $myMember);
         $messages = $canChat ? \App\Models\Message::recentFor('adashi', $adashi->id) : collect();
 
-        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline', 'adminRating', 'myRating', 'pending', 'myOwed', 'myAccounts', 'receiverAccount', 'canChat', 'messages'));
+        // Disputes (members see their own; the admin sees all).
+        $canDispute = config('disputes.enabled', true) && ($isAdmin || $myMember);
+        $disputes = $canDispute ? \App\Models\Dispute::where(['context_type' => 'adashi', 'context_id' => $adashi->id])
+            ->leftJoin('users', 'users.id', '=', 'disputes.raised_by')
+            ->when(!$isAdmin, fn ($q) => $q->where('disputes.raised_by', auth()->id()))
+            ->select('disputes.*', 'users.name as raiser_name')
+            ->orderByRaw("disputes.status = 'OPEN' desc")->orderByDesc('disputes.id')->get() : collect();
+
+        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline', 'adminRating', 'myRating', 'pending', 'myOwed', 'myAccounts', 'receiverAccount', 'canChat', 'messages', 'canDispute', 'disputes'));
     }
 
     /** Admin toggles whether members can see the full payout order (who gets what cycle). */

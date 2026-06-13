@@ -81,6 +81,11 @@ Route::middleware('auth')->group(function () {
     // In-group chat (pocket / adashi members)
     Route::post('/chat/{type}/{id}', [\App\Http\Controllers\Web\ChatController::class, 'post'])->name('chat.post');
 
+    // Dispute resolution
+    Route::post('/disputes/{type}/{id}', [\App\Http\Controllers\Web\DisputeController::class, 'raise'])->name('disputes.raise')->whereIn('type', ['pocket', 'adashi']);
+    Route::post('/disputes/{disputeId}/resolve', [\App\Http\Controllers\Web\DisputeController::class, 'resolve'])->name('disputes.resolve');
+    Route::post('/disputes/{disputeId}/dismiss', [\App\Http\Controllers\Web\DisputeController::class, 'dismiss'])->name('disputes.dismiss');
+
     // Home planning (monthly grocery plans, shared & collaborative)
     Route::get('/plans', [\App\Http\Controllers\Web\PlanController::class, 'index'])->name('plans.index');
     Route::get('/plans/create', [\App\Http\Controllers\Web\PlanController::class, 'create'])->name('plans.create');

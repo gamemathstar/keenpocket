@@ -22,6 +22,14 @@
                     <x-rate-admin :action="route('adashi.rateAdmin', $adashi->id)" :average="$adminRating" :my="$myRating" />
                 </div>
             @endif
+            @if ($adashi->is_public ?? false)
+                <div class="mt-2">
+                    <x-share-card cardTitle="Join my adashi" :cardBig="$adashi->name"
+                        :cardSub="'₦'.number_format($adashi->amount_per_cycle).'/cycle · '.$adashi->total_members.' members'"
+                        :shareText="'Join my KeenPocket adashi: '.$adashi->name.' (₦'.number_format($adashi->amount_per_cycle).'/cycle).'"
+                        :shareUrl="route('adashi.show', $adashi->id)" />
+                </div>
+            @endif
         </div>
     </div>
 
@@ -222,6 +230,10 @@
 
     @if ($canChat)
         <x-group-chat type="adashi" :id="$adashi->id" :messages="$messages" :canPost="true" />
+    @endif
+
+    @if ($canDispute)
+        <x-disputes type="adashi" :id="$adashi->id" :disputes="$disputes" :isAdmin="$isAdmin" :canRaise="true" />
     @endif
 
     {{-- Contribute modal --}}

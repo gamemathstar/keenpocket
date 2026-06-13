@@ -25,6 +25,12 @@
                         <x-rate-admin :action="route('pockets.rateAdmin', $pocket->id)" :average="$adminRating" :my="$myRating" />
                     </div>
                 @endif
+                <div class="mt-2">
+                    <x-share-card cardTitle="Join my pocket" :cardBig="$pocket->title"
+                        :cardSub="'₦'.number_format($pocket->amount_per_hand).'/hand · '.$pocket->month_count.' months'"
+                        :shareText="'Join my KeenPocket savings pocket: '.$pocket->title.' (₦'.number_format($pocket->amount_per_hand).'/hand).'"
+                        :shareUrl="route('pockets.show', $pocket->id)" />
+                </div>
             </div>
         </div>
 
@@ -196,6 +202,10 @@
 
     @if ($canChat)
         <x-group-chat type="pocket" :id="$pocket->id" :messages="$messages" :canPost="true" />
+    @endif
+
+    @if ($canDispute)
+        <x-disputes type="pocket" :id="$pocket->id" :disputes="$disputes" :isAdmin="$isOwner" :canRaise="true" />
     @endif
 
     {{-- Shopping list (group buying) --}}

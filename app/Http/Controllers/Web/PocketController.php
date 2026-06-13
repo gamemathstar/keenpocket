@@ -148,7 +148,15 @@ class PocketController extends Controller
         $canChat = config('chat.enabled', true) && ($isMember || $isOwner);
         $messages = $canChat ? \App\Models\Message::recentFor('pocket', $pocket->id) : collect();
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating', 'mySlot', 'myAccounts', 'canChat', 'messages'));
+        // Disputes (members see their own; the owner sees all).
+        $canDispute = config('disputes.enabled', true) && ($isMember || $isOwner);
+        $disputes = $canDispute ? \App\Models\Dispute::where(['context_type' => 'pocket', 'context_id' => $pocket->id])
+            ->leftJoin('users', 'users.id', '=', 'disputes.raised_by')
+            ->when(!$isOwner, fn ($q) => $q->where('disputes.raised_by', $user->id))
+            ->select('disputes.*', 'users.name as raiser_name')
+            ->orderByRaw("disputes.status = 'OPEN' desc")->orderByDesc('disputes.id')->get() : collect();
+
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating', 'mySlot', 'myAccounts', 'canChat', 'messages', 'canDispute', 'disputes'));
     }
 
     /** A member picks which saved account to receive this pocket's cashback/payout into. */
