@@ -53,6 +53,20 @@
     button.bg-brand:hover, a.bg-brand:hover { filter: brightness(1.03); }
     button.bg-brand:active, a.bg-brand:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--brand-dark); }
 
+    /* Signature chunky 3D secondary buttons (light, same press feel) */
+    .btn-soft {
+        display: inline-flex; align-items: center; gap: .4rem;
+        background: #fff; color: #334155;
+        border: 2px solid #e2e8f0; border-radius: .7rem;
+        font-weight: 800; padding: .5rem 1rem;
+        box-shadow: 0 4px 0 0 #e2e8f0;
+        transition: transform .05s ease, box-shadow .05s ease, filter .15s ease;
+    }
+    .btn-soft:hover { filter: brightness(.99); background: #f8fafc; }
+    .btn-soft:active { transform: translateY(3px); box-shadow: 0 1px 0 0 #e2e8f0; }
+    .dark .btn-soft { background: #1e293b; color: #e2e8f0; border-color: #334155; box-shadow: 0 4px 0 0 #334155; }
+    .dark .btn-soft:active { box-shadow: 0 1px 0 0 #334155; }
+
     /* Distinctive KeenPocket cards: 3D edge + subtle sheen + soft brand glow */
     .bg-white.border {
         border-width: 2px;
@@ -64,6 +78,34 @@
     }
     /* Clickable cards lift toward you on hover */
     a.bg-white.border:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -14px rgba(28, 176, 246, .5); }
+
+    /* Photo-style cards (cover banner + chunky "polaroid" lower border) */
+    .kp-photo-card {
+        border-width: 1px;
+        border-bottom-width: 12px;
+        border-color: #e8eef3;
+        background-image: none;
+        box-shadow: 0 12px 26px -16px rgba(28, 176, 246, .5);
+        transition: transform .14s ease, box-shadow .14s ease;
+    }
+    a.kp-photo-card:hover { transform: translateY(-3px); box-shadow: 0 20px 34px -14px rgba(28, 176, 246, .55); }
+    .dark .kp-photo-card { border-color: #334155; }
+
+    /* Consistent custom dropdowns (replace the native OS chevron) */
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.7rem center;
+        background-size: 1.05em;
+        padding-right: 2.25rem;
+    }
+    select::-ms-expand { display: none; }
+    .dark select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
 
     /* ── Dark mode (class-based, applied via .dark on <html>) ── */
     .dark body { background: #0f172a; color: #e2e8f0; }

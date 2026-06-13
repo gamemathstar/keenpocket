@@ -10,10 +10,13 @@
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($adashis as $a)
-            <a href="{{ route('adashi.show', $a->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-brand transition">
-                <div class="font-semibold truncate">{{ $a->name }}</div>
-                <div class="text-sm text-slate-500 mt-1">₦{{ number_format($a->amount_per_cycle) }}/cycle · {{ $a->total_members }} members</div>
-                <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · every {{ $a->cycle_duration_days }} days</div>
+            <a href="{{ route('adashi.show', $a->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
+                <x-card-cover :seed="$a->name" emoji="🔄" :label="'Cycle '.$a->current_cycle_number" />
+                <div class="p-4">
+                    <div class="font-semibold truncate">{{ $a->name }}</div>
+                    <div class="text-sm text-slate-500 mt-1">₦{{ number_format($a->amount_per_cycle) }}/cycle · {{ $a->total_members }} members</div>
+                    <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · every {{ $a->cycle_duration_days }} days</div>
+                </div>
             </a>
         @empty
             <div class="col-span-full">

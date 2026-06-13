@@ -39,7 +39,8 @@ class PlanController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'month' => 'nullable|string|max:7',
+            'period_type' => 'nullable|in:month,year',
+            'month' => 'nullable|string|max:7',  // "2026-06" (month) or "2026" (year)
             'budget' => 'nullable|integer|min:0',
             'carry_from' => 'nullable|integer',
         ]);
@@ -47,7 +48,8 @@ class PlanController extends Controller
         $plan = Plan::create([
             'owner_id' => auth()->id(),
             'title' => $data['title'],
-            'month' => $data['month'] ?? null,
+            'period_type' => $data['period_type'] ?? 'month',
+            'month' => ($data['month'] ?? null) ?: null,
             'budget' => $data['budget'] ?? null,
             'status' => 'ACTIVE',
         ]);

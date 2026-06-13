@@ -97,13 +97,13 @@
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         @forelse ($pockets as $p)
-            <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-brand transition">
-                <div class="flex items-center justify-end mb-2">
-                    <span class="text-xs {{ $p->status ? 'text-emerald-600' : 'text-slate-400' }}">{{ $p->status ? 'Open' : 'Closed' }}</span>
+            <a href="{{ route('pockets.show', $p->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
+                <x-card-cover :seed="$p->title" emoji="👛" :label="$p->status ? 'Open' : 'Closed'" />
+                <div class="p-4">
+                    <div class="font-semibold truncate">{{ $p->title }}</div>
+                    <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand · {{ (int) $p->hand_count }} hand(s)</div>
+                    <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>
                 </div>
-                <div class="font-semibold truncate">{{ $p->title }}</div>
-                <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand · {{ (int) $p->hand_count }} hand(s)</div>
-                <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>
             </a>
         @empty
             <div class="col-span-full">

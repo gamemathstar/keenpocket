@@ -23,7 +23,7 @@
                             <span class="font-semibold truncate">{{ $plan->title }}</span>
                             @if ($plan->status === 'ARCHIVED')<span class="text-xs text-slate-400">archived</span>@endif
                         </div>
-                        <div class="text-xs text-slate-400 mb-3">{{ $plan->month ?: 'No month set' }}</div>
+                        <div class="text-xs text-slate-400 mb-3">{{ $plan->periodLabel() }}</div>
                         <div class="flex items-center gap-2 text-xs">
                             <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{{ $s['purchased'] }} bought</span>
                             <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{{ $s['pending'] }} to buy</span>

@@ -3,12 +3,13 @@
 @section('heading', 'Plan')
 
 @section('content')
+    <a href="{{ route('plans.index') }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to Planning</a>
     {{-- Header + summary --}}
     <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
         <div class="flex items-start justify-between gap-4">
             <div>
                 <h2 class="text-2xl font-semibold">{{ $plan->title }}</h2>
-                <p class="text-xs text-slate-400 mt-1">{{ $plan->month ?: 'No month set' }}@if(!$isOwner) · shared with you @endif</p>
+                <p class="text-xs text-slate-400 mt-1">{{ $plan->periodLabel() }}@if(!$isOwner) · shared with you @endif</p>
             </div>
             @if ($isOwner)
                 <form method="POST" action="{{ route('plans.archive', $plan->id) }}" onsubmit="return confirm('Archive this plan?')">

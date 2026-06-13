@@ -81,7 +81,10 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('phone_number', $fields['phone_number'])->first();
+        // The "phone_number" field accepts either a phone number or an email,
+        // so existing clients keep working while email logins are now supported.
+        $user = User::where('phone_number', $fields['phone_number'])
+            ->orWhere('email', $fields['phone_number'])->first();
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             // Shape per API_REFERENCE §2.1 error example (status 0, empty token).
             return response(['status' => 0, 'token' => '', 'message' => 'Invalid Credentials'], 200);

@@ -47,7 +47,7 @@ class GuarantorTest extends TestCase
         $pocket = $this->pocket($admin);
         $requester = $this->makeUser();
 
-        $this->actingAs($requester)->post("/pockets/{$pocket->id}/join", ['hand_count' => 1])->assertRedirect();
+        $this->actingAs($requester)->post("/pockets/{$pocket->id}/join", ['hand_count' => 1, 'accept_terms' => 1])->assertRedirect();
 
         $slot = PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $requester->id])->first();
         $this->assertNotNull($slot);
@@ -77,7 +77,7 @@ class GuarantorTest extends TestCase
 
         // Request names a guarantor.
         $this->actingAs($requester)->post("/pockets/{$pocket->id}/join", [
-            'hand_count' => 1, 'guarantor_contact' => 'guar@example.com',
+            'hand_count' => 1, 'guarantor_contact' => 'guar@example.com', 'accept_terms' => 1,
         ])->assertRedirect();
 
         $slot = PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $requester->id])->first();
@@ -107,7 +107,7 @@ class GuarantorTest extends TestCase
         $guarantor = $this->makeUser('guar2@example.com');
 
         $this->actingAs($requester)->post("/pockets/{$pocket->id}/join", [
-            'hand_count' => 1, 'guarantor_contact' => 'guar2@example.com',
+            'hand_count' => 1, 'guarantor_contact' => 'guar2@example.com', 'accept_terms' => 1,
         ]);
         $g = PocketGuarantor::where('pocket_id', $pocket->id)->first();
 

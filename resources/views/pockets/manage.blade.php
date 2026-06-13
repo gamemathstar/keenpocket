@@ -18,6 +18,12 @@
                     {{ $pocket->guarantor_required ? '🤝 Guarantor: on' : '🤝 Guarantor: off' }}
                 </button>
             </form>
+            <form method="POST" action="{{ route('pockets.membersVisibility', $pocket->id) }}">
+                @csrf
+                <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
+                    {{ $pocket->members_visible ? '👀 Hands: visible' : '🙈 Hands: private' }}
+                </button>
+            </form>
             <form method="POST" action="{{ route('pockets.toggleStatus', $pocket->id) }}">
                 @csrf
                 <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
@@ -87,6 +93,7 @@
                     <label class="block text-sm font-medium mb-1">Hands</label>
                     <input type="number" name="hand_count" value="1" min="1" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
                 </div>
+                <x-terms-notice variant="add" />
                 <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Add member</button>
             </form>
         </div>

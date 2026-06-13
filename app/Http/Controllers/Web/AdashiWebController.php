@@ -43,7 +43,8 @@ class AdashiWebController extends Controller
             'bank' => 'nullable|string|max:255',
             'nuban' => 'nullable|string|max:32',
             'account_name' => 'nullable|string|max:255',
-        ]);
+            'accept_terms' => 'accepted',
+        ], ['accept_terms.accepted' => 'Please confirm you understand and accept the terms.']);
 
         $user = auth()->user();
         $isPublic = $request->boolean('is_public');
@@ -134,10 +135,96 @@ class AdashiWebController extends Controller
             ->selectRaw('users.name as name, COUNT(*) as total') // count of contributions, not amount
             ->orderByDesc('total')->limit(10)->get();
 
-        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline'));
+        $adminRating = app(\App\Services\Rating\RatingService::class)->averageFor($adashi->admin_id);
+        $myRating = \App\Models\Rating::where([
+            'rater_id' => auth()->id(), 'context_type' => 'adashi', 'context_id' => $adashi->id,
+        ])->value('stars');
+
+        // Pending (unverified) contributions for the current cycle + the viewer's remaining owed.
+        $pending = collect();
+        $myOwed = 0;
+        if ($currentRecord) {
+            $pending = \App\Models\Invoice::where('invoices.adashi_record_id', $currentRecord->id)
+                ->where('invoices.payment_status', 'Not Paid')
+                ->join('adashi_members', 'adashi_members.id', '=', 'invoices.adashi_member_id')
+                ->join('users', 'users.id', '=', 'adashi_members.user_id')
+                ->select('invoices.id', 'invoices.amount', 'users.name', 'adashi_members.user_id')
+                ->orderBy('invoices.id')->get();
+
+            if ($myMember) {
+                $submitted = (int) \App\Models\Invoice::where(['adashi_record_id' => $currentRecord->id, 'adashi_member_id' => $myMember->id])
+                    ->whereIn('payment_status', ['Paid', 'Not Paid'])->sum('amount');
+                $myOwed = max(0, (int) $adashi->amount_per_cycle - $submitted);
+            }
+        }
+
+        // Bank accounts: the member's own (to choose a payout account) + the
+        // current receiver's chosen account (shown to the admin who disburses).
+        $myAccounts = $myMember ? auth()->user()->bankAccounts : collect();
+        $receiverAccount = null;
+        if ($isAdmin) {
+            $recvMember = AdashiMember::where(['adashi_id' => $adashi->id, 'position' => $adashi->current_cycle_number])->first();
+            if ($recvMember && $recvMember->bank_account_id) {
+                $receiverAccount = \App\Models\BankAccount::find($recvMember->bank_account_id);
+            }
+        }
+
+        // Group chat (members + admin only).
+        $canChat = config('chat.enabled', true) && ($isAdmin || $myMember);
+        $messages = $canChat ? \App\Models\Message::recentFor('adashi', $adashi->id) : collect();
+
+        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline', 'adminRating', 'myRating', 'pending', 'myOwed', 'myAccounts', 'receiverAccount', 'canChat', 'messages'));
     }
 
-    /** A member records a contribution for the current cycle. */
+    /** Admin toggles whether members can see the full payout order (who gets what cycle). */
+    public function togglePayoutVisibility($id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can do this.');
+        $adashi->payout_visible = !$adashi->payout_visible;
+        $adashi->save();
+
+        return back()->with('status', $adashi->payout_visible
+            ? 'Members can now see the full payout order.'
+            : 'The payout order is now private (members see positions only).');
+    }
+
+    /** A member picks which of their saved accounts to receive this adashi's payout into. */
+    public function setAccount(Request $request, $id)
+    {
+        $data = $request->validate(['bank_account_id' => 'nullable|integer']);
+        $adashi = Adashi::findOrFail($id);
+        $member = AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => auth()->id(), 'is_active' => 1])->firstOrFail();
+
+        $accountId = $data['bank_account_id'] ?: null;
+        if ($accountId) {
+            // Must be one of the current user's own accounts.
+            abort_unless($request->user()->bankAccounts()->whereKey($accountId)->exists(), 422, 'Unknown account.');
+        }
+        $member->update(['bank_account_id' => $accountId]);
+
+        return back()->with('status', 'Payout account updated.');
+    }
+
+    /** A member rates the adashi admin (1–5 stars). */
+    public function rateAdmin(Request $request, $id)
+    {
+        $data = $request->validate([
+            'stars' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500',
+        ]);
+
+        $result = app(\App\Services\Rating\RatingService::class)
+            ->submit($request->user(), 'adashi', (int) $id, (int) $data['stars'], $data['comment'] ?? null);
+
+        if (!$result['ok']) {
+            return back()->withErrors(['rating' => $result['message'] ?? 'Could not save your rating.']);
+        }
+
+        return back()->with('status', 'Thanks for rating the admin.');
+    }
+
+    /** A member submits a contribution for the current cycle (pending admin verification). */
     public function contribute(Request $request, $id)
     {
         $data = $request->validate(['amount' => 'required|integer|min:1']);
@@ -150,24 +237,60 @@ class AdashiWebController extends Controller
         $record = AdashiRecord::where('adashi_id', $adashi->id)->orderByDesc('cycle_number')->first();
         abort_unless($record, 422, 'No active cycle.');
 
-        DB::transaction(function () use ($adashi, $record, $member, $data) {
-            $invoice = new \App\Models\Invoice();
-            $invoice->pocket_slot_id = null;
-            $invoice->adashi_record_id = $record->id;
-            $invoice->adashi_member_id = $member->id;
-            $invoice->invoice_no = 'ADSH/'.str_pad($adashi->id, 3, '0', STR_PAD_LEFT).'/'.date('ymdHis');
-            $invoice->amount = $data['amount'];
-            $invoice->reference_no = $invoice->invoice_no;
-            $invoice->payment_status = 'Paid';   // self-recorded manual contribution
+        $owed = $this->remainingOwed($adashi, $record, $member);
+        if ($owed <= 0) {
+            return back()->withErrors(['amount' => 'You have already paid your full ₦'.number_format($adashi->amount_per_cycle).' for this cycle.']);
+        }
+        if ($data['amount'] > $owed) {
+            return back()->withErrors(['amount' => 'You can contribute at most ₦'.number_format($owed).' more for this cycle.'])->withInput();
+        }
+
+        $this->recordPendingContribution($adashi, $record, $member, (int) $data['amount']);
+
+        return back()->with('status', 'Contribution submitted — the admin will verify it.');
+    }
+
+    /** Admin records a contribution on behalf of a member (still pending until verified). */
+    public function addContribution(Request $request, $id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can add contributions.');
+
+        $data = $request->validate([
+            'member_user_id' => 'required|integer',
+            'amount' => 'required|integer|min:1',
+        ]);
+
+        $member = AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => $data['member_user_id'], 'is_active' => 1])->first();
+        abort_unless($member, 422, 'That member is not active in this adashi.');
+
+        $record = AdashiRecord::where('adashi_id', $adashi->id)->orderByDesc('cycle_number')->first();
+        abort_unless($record, 422, 'No active cycle.');
+
+        $owed = $this->remainingOwed($adashi, $record, $member);
+        if ($data['amount'] > $owed) {
+            return back()->withErrors(['amount' => 'That member can take at most ₦'.number_format($owed).' more for this cycle.'])->withInput();
+        }
+
+        $this->recordPendingContribution($adashi, $record, $member, (int) $data['amount']);
+
+        return back()->with('status', 'Contribution added — verify it to count it toward the cycle.');
+    }
+
+    /** Admin verifies a pending contribution; it then counts toward the cycle. */
+    public function verifyContribution($invoiceId)
+    {
+        $invoice = \App\Models\Invoice::whereNotNull('adashi_record_id')->findOrFail($invoiceId);
+        $record = AdashiRecord::findOrFail($invoice->adashi_record_id);
+        $adashi = Adashi::findOrFail($record->adashi_id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can verify contributions.');
+
+        if ($invoice->payment_status !== 'Paid') {
+            $invoice->payment_status = 'Paid';
             $invoice->paid_through = 'Manual';
             $invoice->payment_date = now();
             $invoice->save();
-
-            \App\Models\InvoiceItem::create([
-                'invoice_id' => $invoice->id, 'item_id' => 1, 'amount' => $data['amount'],
-                'type' => 'Paid', 'month' => $record->cycle_number,
-            ]);
-        });
+        }
 
         // Recompute the cycle (and auto-rotate when fully collected).
         try {
@@ -175,7 +298,54 @@ class AdashiWebController extends Controller
         } catch (\Throwable $e) {
         }
 
-        return back()->with('status', 'Contribution recorded.')->with('celebrate', true);
+        return back()->with('status', 'Contribution verified.')->with('celebrate', true);
+    }
+
+    /** Admin declines (removes) a pending contribution. */
+    public function declineContribution($invoiceId)
+    {
+        $invoice = \App\Models\Invoice::whereNotNull('adashi_record_id')->findOrFail($invoiceId);
+        $record = AdashiRecord::findOrFail($invoice->adashi_record_id);
+        $adashi = Adashi::findOrFail($record->adashi_id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can decline contributions.');
+        abort_if($invoice->payment_status === 'Paid', 422, 'A verified contribution cannot be declined here.');
+
+        DB::transaction(function () use ($invoice) {
+            \App\Models\InvoiceItem::where('invoice_id', $invoice->id)->delete();
+            $invoice->delete();
+        });
+
+        return back()->with('status', 'Pending contribution removed.');
+    }
+
+    /** Amount a member may still pay toward the current cycle (counts paid + pending). */
+    private function remainingOwed(Adashi $adashi, AdashiRecord $record, AdashiMember $member): int
+    {
+        $submitted = (int) \App\Models\Invoice::where(['adashi_record_id' => $record->id, 'adashi_member_id' => $member->id])
+            ->whereIn('payment_status', ['Paid', 'Not Paid'])->sum('amount');
+
+        return max(0, (int) $adashi->amount_per_cycle - $submitted);
+    }
+
+    private function recordPendingContribution(Adashi $adashi, AdashiRecord $record, AdashiMember $member, int $amount): void
+    {
+        DB::transaction(function () use ($adashi, $record, $member, $amount) {
+            $invoice = new \App\Models\Invoice();
+            $invoice->pocket_slot_id = null;
+            $invoice->adashi_record_id = $record->id;
+            $invoice->adashi_member_id = $member->id;
+            $invoice->invoice_no = 'ADSH/'.str_pad($adashi->id, 3, '0', STR_PAD_LEFT).'/'.date('ymdHis').random_int(10, 99);
+            $invoice->amount = $amount;
+            $invoice->reference_no = $invoice->invoice_no;
+            $invoice->payment_status = 'Not Paid';   // awaiting admin verification
+            $invoice->paid_through = 'Pending';
+            $invoice->save();
+
+            \App\Models\InvoiceItem::create([
+                'invoice_id' => $invoice->id, 'item_id' => 1, 'amount' => $amount,
+                'type' => 'Paid', 'month' => $record->cycle_number,
+            ]);
+        });
     }
 
     /** Admin: manage members screen. */
@@ -222,7 +392,8 @@ class AdashiWebController extends Controller
         $data = $request->validate([
             'name' => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
-        ]);
+            'accept_terms' => 'accepted',
+        ], ['accept_terms.accepted' => 'Please confirm you personally know this member.']);
 
         $adashi = Adashi::findOrFail($id);
         abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can add members.');

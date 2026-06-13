@@ -132,6 +132,28 @@ class CharityTest extends TestCase
         $this->assertCount(2, $adminView['breakdown']);
     }
 
+    public function test_member_can_rate_the_adashi_admin_on_web()
+    {
+        $admin = $this->makeUser();
+        $adashi = \App\Models\Adashi::create([
+            'name' => 'A'.uniqid(), 'amount_per_cycle' => 50000, 'total_members' => 2,
+            'start_date' => now()->toDateString(), 'cycle_duration_days' => 30,
+            'current_cycle_number' => 1, 'admin_id' => $admin->id, 'rotation_mode' => 'AUTO', 'status' => 'ACTIVE',
+        ]);
+        $member = $this->makeUser();
+        \App\Models\AdashiMember::create([
+            'adashi_id' => $adashi->id, 'user_id' => $member->id, 'position' => 2,
+            'has_received' => false, 'joined_at' => now(), 'is_active' => true,
+        ]);
+
+        $this->actingAs($member)->post("/adashi/{$adashi->id}/rate-admin", ['stars' => 4])->assertRedirect();
+
+        $this->assertDatabaseHas('ratings', [
+            'rater_id' => $member->id, 'ratee_id' => $admin->id,
+            'context_type' => 'adashi', 'context_id' => $adashi->id, 'stars' => 4,
+        ]);
+    }
+
     public function test_member_can_rate_the_admin_on_web()
     {
         $admin = $this->makeUser();

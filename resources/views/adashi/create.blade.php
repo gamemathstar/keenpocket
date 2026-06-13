@@ -51,6 +51,7 @@
                 <input type="checkbox" name="is_public" value="1" class="rounded border-slate-300 text-brand focus:ring-brand">
                 List in the public directory (others can discover &amp; join)
             </label>
+            <x-terms-notice variant="create" />
             <div class="flex gap-3 pt-2">
                 <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Create adashi</button>
                 <a href="{{ route('adashi.index') }}" class="rounded-lg border border-slate-300 px-5 py-2.5 text-slate-600 hover:bg-slate-50">Cancel</a>

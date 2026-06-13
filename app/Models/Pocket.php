@@ -14,6 +14,7 @@ class Pocket extends Model
         'charity_donors_visible' => 'boolean',
         'guarantor_required' => 'boolean',
         'open_purchasing_item' => 'boolean',
+        'members_visible' => 'boolean',
     ];
 
     public function charityProjects()

@@ -42,6 +42,7 @@
                     <input type="number" name="hand_count" value="{{ old('hand_count', 1) }}" min="1" required class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
                 </div>
             </div>
+            <x-terms-notice variant="create" />
             <div class="flex gap-3 pt-2">
                 <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Create pocket</button>
                 <a href="{{ route('pockets.index') }}" class="rounded-lg border border-slate-300 px-5 py-2.5 text-slate-600 hover:bg-slate-50">Cancel</a>

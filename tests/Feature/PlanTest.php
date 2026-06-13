@@ -40,6 +40,20 @@ class PlanTest extends TestCase
         $this->assertSame(100000, $summary['budget']);
     }
 
+    public function test_can_create_a_whole_year_plan()
+    {
+        $user = $this->makeUser();
+        $this->actingAs($user)->post('/plans', [
+            'title' => '2026 household', 'period_type' => 'year', 'month' => '2026',
+        ])->assertRedirect();
+
+        $plan = Plan::where('title', '2026 household')->first();
+        $this->assertNotNull($plan);
+        $this->assertSame('year', $plan->period_type);
+        $this->assertSame('2026', $plan->month);
+        $this->assertStringContainsString('whole year', $plan->periodLabel());
+    }
+
     public function test_purchase_and_defer_update_summary()
     {
         $user = $this->makeUser();

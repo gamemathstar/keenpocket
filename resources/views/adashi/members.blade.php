@@ -85,6 +85,7 @@
                     <label class="block text-sm font-medium mb-1">Name <span class="text-slate-400 font-normal">(if new)</span></label>
                     <input name="name" value="{{ old('name') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand" placeholder="Member name">
                 </div>
+                <x-terms-notice variant="add" />
                 <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Add member</button>
             </form>
         </div>

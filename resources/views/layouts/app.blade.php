@@ -80,8 +80,9 @@
 
         <main class="p-6 pb-24 md:pb-6 flex-1">
             @if (session('status'))
-                <div id="toast" class="fixed top-5 right-5 z-50 bg-white border border-slate-200 rounded-xl px-4 py-3 shadow-lg text-sm font-extrabold flex items-center gap-2">
-                    <span>✅</span><span>{{ session('status') }}</span>
+                <div id="toast" class="fixed top-5 right-5 z-50 bg-white border border-slate-200 rounded-xl pl-3 pr-4 py-3 shadow-lg text-sm font-extrabold flex items-center gap-2.5">
+                    <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                    <span>{{ session('status') }}</span>
                 </div>
                 <script>setTimeout(function(){var t=document.getElementById('toast');if(t){t.style.transition='opacity .4s';t.style.opacity='0';setTimeout(function(){t.remove();},400);}}, 3500);</script>
             @endif
@@ -117,5 +118,25 @@
         </a>
     @endforeach
 </nav>
+
+<script>
+    // Copy-to-clipboard helper used by account numbers etc.
+    function kpCopy(text, btn) {
+        var done = function () {
+            if (!btn) return;
+            var old = btn.innerHTML;
+            btn.innerHTML = '✓';
+            setTimeout(function () { btn.innerHTML = old; }, 1200);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, done);
+        } else {
+            var t = document.createElement('textarea');
+            t.value = text; document.body.appendChild(t); t.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(t); done();
+        }
+    }
+</script>
 </body>
 </html>

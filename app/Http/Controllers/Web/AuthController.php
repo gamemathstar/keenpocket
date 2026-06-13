@@ -21,12 +21,15 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $data = $request->validate([
-            'phone_number' => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt(['phone_number' => $data['phone_number'], 'password' => $data['password']], $request->boolean('remember'))) {
-            return back()->withErrors(['phone_number' => 'Invalid phone number or password.'])->onlyInput('phone_number');
+        // Accept either an email or a phone number in the single "login" field.
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
+
+        if (!Auth::attempt([$field => $data['login'], 'password' => $data['password']], $request->boolean('remember'))) {
+            return back()->withErrors(['login' => 'Invalid credentials. Check your phone/email and password.'])->onlyInput('login');
         }
 
         $request->session()->regenerate();

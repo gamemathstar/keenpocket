@@ -9,6 +9,8 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Pocket;
 use App\Models\PocketSlot;
+use App\Services\Charity\CharityService;
+use App\Services\Contribution\ContributionPlanner;
 use App\Services\Wallet\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,53 +23,112 @@ class InvoiceController extends Controller
         $slot = $this->activeSlot($pocket->id, auth()->id());
         abort_unless($slot, 403, 'You are not an active member of this pocket.');
 
-        return view('invoices.create', compact('pocket'));
+        $project = $this->charityProject($pocket);
+        $monthly = (int) $slot->amount_paying;
+
+        return view('invoices.create', compact('pocket', 'project', 'monthly'));
     }
 
-    public function store(Request $request, $pocketId)
+    /**
+     * Step 2 — compute (and let the member edit) how the amount is split:
+     * an optional donation, then the rest spread across the next unpaid months.
+     */
+    public function preview(Request $request, $pocketId)
     {
+        $pocket = Pocket::findOrFail($pocketId);
+        $slot = $this->activeSlot($pocket->id, auth()->id());
+        abort_unless($slot, 403, 'You are not an active member of this pocket.');
+
         $data = $request->validate([
             'amount' => 'required|integer|min:1',
-            'month' => 'required|integer|min:1|max:12',
-            // Pay the monthly amount for this many consecutive months (pay-ahead).
-            'months_count' => 'nullable|integer|min:1|max:12',
+            'donation' => 'nullable|integer|min:0',
         ]);
 
+        $project = $this->charityProject($pocket);
+        $donation = $project ? min((int) ($data['donation'] ?? 0), $data['amount']) : 0;
+        $contribution = $data['amount'] - $donation;
+
+        $plan = app(ContributionPlanner::class)->plan($pocket, $slot, $contribution);
+        $total = (int) $data['amount'];
+
+        return view('invoices.preview', compact('pocket', 'project', 'plan', 'donation', 'total'));
+    }
+
+    /** Step 3 — persist the (possibly edited) allocation as one invoice + items. */
+    public function store(Request $request, $pocketId)
+    {
         $pocket = Pocket::findOrFail($pocketId);
         $user = auth()->user();
         $slot = $this->activeSlot($pocket->id, $user->id);
         abort_unless($slot, 403, 'You are not an active member of this pocket.');
 
-        // Spread one invoice across N consecutive months, each at the same amount.
-        $count = max(1, min((int) ($data['months_count'] ?? 1), (int) $pocket->month_count - (int) $data['month'] + 1));
-        $months = range((int) $data['month'], (int) $data['month'] + $count - 1);
+        $data = $request->validate([
+            'balance' => 'required|integer|min:1',
+            'donation' => 'nullable|integer|min:0',
+            'months' => 'nullable|array',
+            'months.*' => 'integer|min:1|max:60',
+            'amounts' => 'nullable|array',
+            'amounts.*' => 'integer|min:0',
+        ]);
 
-        DB::transaction(function () use ($pocket, $slot, $data, $months) {
+        $project = $this->charityProject($pocket);
+        $donation = $project ? (int) ($data['donation'] ?? 0) : 0;
+        $months = $data['months'] ?? [];
+        $amounts = $data['amounts'] ?? [];
+
+        // Never let the edited allocation exceed the amount the member is paying.
+        $allocated = $donation + array_sum(array_map('intval', $amounts));
+        if ($allocated > (int) $data['balance']) {
+            return back()->withErrors(['amount' => 'Allocation (₦'.number_format($allocated).') exceeds your balance of ₦'.number_format($data['balance']).'.'])->withInput();
+        }
+
+        // One invoice; a Paid item per month plus an optional Donation item.
+        $lines = [];
+        $total = 0;
+        foreach ($months as $i => $m) {
+            $amt = (int) ($amounts[$i] ?? 0);
+            if ($amt <= 0) {
+                continue;
+            }
+            $lines[] = ['item_id' => 1, 'amount' => $amt, 'type' => 'Paid', 'month' => (int) $m, 'charity_project_id' => null];
+            $total += $amt;
+        }
+        if ($donation > 0 && $project) {
+            $lines[] = ['item_id' => 1, 'amount' => $donation, 'type' => 'Donation', 'month' => 0, 'charity_project_id' => $project->id];
+            $total += $donation;
+        }
+        if (empty($lines)) {
+            return back()->withErrors(['amount' => 'Nothing to record — enter an amount.']);
+        }
+
+        // Owner self-records as Paid; a member's request waits for owner approval.
+        $isOwner = $pocket->user_id == $user->id;
+
+        DB::transaction(function () use ($pocket, $slot, $lines, $total, $isOwner) {
             $invoice = new Invoice();
             $invoice->pocket_slot_id = $slot->id;
             $invoice->invoice_no = 'KP/'.str_pad($pocket->id, 3, '0', STR_PAD_LEFT).'/'.date('ymdHis');
-            $invoice->amount = $data['amount'] * count($months);
+            $invoice->amount = $total;
             $invoice->reference_no = $invoice->invoice_no;
-            $invoice->payment_status = 'Not Paid';
-            $invoice->paid_through = 'Pending';
+            $invoice->payment_status = $isOwner ? 'Paid' : 'Not Paid';
+            $invoice->paid_through = $isOwner ? 'Manual' : 'Pending';
+            $invoice->payment_date = $isOwner ? now() : null;
             $invoice->save();
 
-            foreach ($months as $m) {
-                InvoiceItem::create([
-                    'invoice_id' => $invoice->id,
-                    'item_id' => 1, // default contribution item
-                    'amount' => $data['amount'],
-                    'type' => 'Paid',
-                    'month' => $m,
-                ]);
+            foreach ($lines as $line) {
+                InvoiceItem::create(array_merge(['invoice_id' => $invoice->id], $line));
             }
         });
 
-        $msg = count($months) > 1
-            ? 'Contribution invoice created for '.count($months).' months.'
-            : 'Contribution invoice created.';
+        return redirect()->route('pockets.show', $pocket->id)->with('status', 'Contribution invoice created.')->with('celebrate', true);
+    }
 
-        return redirect()->route('pockets.show', $pocket->id)->with('status', $msg);
+    /** The pocket's active charity project, or null when charity is off. */
+    private function charityProject(Pocket $pocket)
+    {
+        $charity = app(CharityService::class);
+
+        return ($charity->enabled() && $pocket->charity_enabled) ? $charity->activeProject($pocket) : null;
     }
 
     /** Pocket owner approves a member's invoice. */

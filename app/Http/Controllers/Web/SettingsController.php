@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class SettingsController extends Controller
 {
@@ -19,13 +18,14 @@ class SettingsController extends Controller
     {
         $user = $request->user();
 
+        // Phone number and email are locked (account identity) — only the name is
+        // editable here; phone/email changes must go through support.
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'phone_number' => ['required', 'string', 'max:20', Rule::unique('users', 'phone_number')->ignore($user->id)],
         ]);
 
-        $user->fill($data)->save();
+        $user->name = $data['name'];
+        $user->save();
 
         return back()->with('status', 'Profile updated.');
     }
@@ -57,6 +57,51 @@ class SettingsController extends Controller
         $user->save();
 
         return back()->with('status', 'Notification preferences saved.');
+    }
+
+    public function storeAccount(Request $request)
+    {
+        $data = $request->validate([
+            'label' => 'nullable|string|max:60',
+            'account_name' => 'required|string|max:255',
+            'bank' => 'required|string|max:255',
+            'nuban' => 'required|string|max:32',
+            'is_default' => 'nullable|boolean',
+        ]);
+
+        $user = $request->user();
+        $makeDefault = $request->boolean('is_default') || $user->bankAccounts()->count() === 0;
+
+        $account = $user->bankAccounts()->create([
+            'label' => $data['label'] ?? null,
+            'account_name' => $data['account_name'],
+            'bank' => $data['bank'],
+            'nuban' => $data['nuban'],
+            'is_default' => $makeDefault,
+        ]);
+
+        if ($makeDefault) {
+            $user->bankAccounts()->where('id', '!=', $account->id)->update(['is_default' => false]);
+        }
+
+        return back()->with('status', 'Bank account saved.');
+    }
+
+    public function defaultAccount(Request $request, $id)
+    {
+        $user = $request->user();
+        $account = $user->bankAccounts()->findOrFail($id);
+        $user->bankAccounts()->update(['is_default' => false]);
+        $account->update(['is_default' => true]);
+
+        return back()->with('status', 'Default account updated.');
+    }
+
+    public function deleteAccount(Request $request, $id)
+    {
+        $request->user()->bankAccounts()->findOrFail($id)->delete();
+
+        return back()->with('status', 'Bank account removed.');
     }
 
     public function updateAvatar(Request $request)

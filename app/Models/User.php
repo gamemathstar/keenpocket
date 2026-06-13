@@ -126,4 +126,9 @@ class User extends Authenticatable
         $user = $this;
         return compact('user','pockets');
     }
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class)->orderByDesc('is_default')->orderBy('id');
+    }
 }

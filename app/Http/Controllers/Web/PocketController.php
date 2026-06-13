@@ -46,7 +46,8 @@ class PocketController extends Controller
             'max_keens' => 'required|integer|min:0',
             'amount_per_hand' => 'required|integer|min:1',
             'hand_count' => 'required|integer|min:1',
-        ]);
+            'accept_terms' => 'accepted',
+        ], ['accept_terms.accepted' => 'Please confirm you understand and accept the terms.']);
 
         $user = auth()->user();
 
@@ -141,7 +142,29 @@ class PocketController extends Controller
             'rater_id' => $user->id, 'context_type' => 'pocket', 'context_id' => $pocket->id,
         ])->value('stars');
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating'));
+        $myAccounts = $mySlot ? auth()->user()->bankAccounts : collect();
+
+        // Group chat (members + owner only).
+        $canChat = config('chat.enabled', true) && ($isMember || $isOwner);
+        $messages = $canChat ? \App\Models\Message::recentFor('pocket', $pocket->id) : collect();
+
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating', 'mySlot', 'myAccounts', 'canChat', 'messages'));
+    }
+
+    /** A member picks which saved account to receive this pocket's cashback/payout into. */
+    public function setAccount(Request $request, $id)
+    {
+        $data = $request->validate(['bank_account_id' => 'nullable|integer']);
+        $slot = PocketSlot::where(['pocket_id' => $id, 'user_id' => auth()->id(), 'status' => 1])->firstOrFail();
+
+        $accountId = $data['bank_account_id'] ?: null;
+        if ($accountId) {
+            abort_unless($request->user()->bankAccounts()->whereKey($accountId)->exists(), 422, 'Unknown account.');
+        }
+        $slot->bank_account_id = $accountId;
+        $slot->save();
+
+        return back()->with('status', 'Payout account updated.');
     }
 
     /** A member rates the pocket admin (1–5 stars). */
@@ -181,7 +204,10 @@ class PocketController extends Controller
         if ($guarantorRequired) {
             $rules['guarantor_contact'] = 'required|string|max:255';
         }
-        $data = $request->validate($rules);
+        if (!$isOwner) {
+            $rules['accept_terms'] = 'accepted';
+        }
+        $data = $request->validate($rules, ['accept_terms.accepted' => 'Please confirm you understand and accept the terms.']);
 
         // Resolve the guarantor (must be an existing user, not self / not the admin).
         $guarantor = null;
@@ -319,6 +345,19 @@ class PocketController extends Controller
             : 'Shopping suggestions are now closed.');
     }
 
+    /** Owner toggles whether members can see each other's hand counts. */
+    public function toggleMembersVisibility($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can do this.');
+        $pocket->members_visible = !$pocket->members_visible;
+        $pocket->save();
+
+        return back()->with('status', $pocket->members_visible
+            ? "Members can now see each other's hands."
+            : "Members' hands are now private.");
+    }
+
     /** Owner: manage members + open/close. */
     public function manage($id)
     {
@@ -352,7 +391,8 @@ class PocketController extends Controller
             'name' => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
             'hand_count' => 'required|integer|min:1',
-        ]);
+            'accept_terms' => 'accepted',
+        ], ['accept_terms.accepted' => 'Please confirm you personally know this member.']);
 
         $pocket = Pocket::findOrFail($id);
         abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can add members.');

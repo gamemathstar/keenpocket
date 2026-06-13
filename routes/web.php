@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pockets/{id}', [PocketController::class, 'show'])->name('pockets.show');
     Route::post('/pockets/{id}/join', [PocketController::class, 'join'])->name('pockets.join');
     Route::post('/pockets/{id}/rate-admin', [PocketController::class, 'rateAdmin'])->name('pockets.rateAdmin');
+    Route::post('/pockets/{id}/payout-account', [PocketController::class, 'setAccount'])->name('pockets.setAccount');
     Route::get('/search', [\App\Http\Controllers\Web\SearchController::class, 'index'])->name('search');
     Route::get('/pockets/{id}/manage', [PocketController::class, 'manage'])->name('pockets.manage');
     Route::get('/pockets/{id}/invoices/export', [PocketController::class, 'exportInvoices'])->name('pockets.invoices.export');
@@ -59,9 +60,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets/{id}/toggle', [PocketController::class, 'toggleStatus'])->name('pockets.toggleStatus');
     Route::post('/pockets/{id}/account-details', [PocketController::class, 'saveBankDetails'])->name('pockets.account');
     Route::post('/pockets/{id}/selection/toggle', [PocketController::class, 'toggleSelection'])->name('pockets.selection');
+    Route::post('/pockets/{id}/members-visibility', [PocketController::class, 'toggleMembersVisibility'])->name('pockets.membersVisibility');
 
     // Invoices / contributions
     Route::get('/pockets/{id}/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/pockets/{id}/invoices/preview', [InvoiceController::class, 'preview'])->name('invoices.preview');
     Route::post('/pockets/{id}/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
     Route::post('/invoices/{id}/mark-paid', [InvoiceController::class, 'markPaid'])->name('invoices.markPaid');
     Route::post('/invoices/{id}/pay-wallet', [InvoiceController::class, 'payWallet'])->name('invoices.payWallet');
@@ -74,6 +77,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pockets/{id}/charity/setup', [\App\Http\Controllers\Web\CharityController::class, 'setup'])->name('charity.setup');
     Route::post('/pockets/{id}/charity', [\App\Http\Controllers\Web\CharityController::class, 'store'])->name('charity.store');
     Route::post('/pockets/{id}/charity/donate', [\App\Http\Controllers\Web\CharityController::class, 'donate'])->name('charity.donate');
+
+    // In-group chat (pocket / adashi members)
+    Route::post('/chat/{type}/{id}', [\App\Http\Controllers\Web\ChatController::class, 'post'])->name('chat.post');
 
     // Home planning (monthly grocery plans, shared & collaborative)
     Route::get('/plans', [\App\Http\Controllers\Web\PlanController::class, 'index'])->name('plans.index');
@@ -92,12 +98,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/adashi', [AdashiWebController::class, 'store'])->name('adashi.store');
     Route::get('/adashi/{id}', [AdashiWebController::class, 'show'])->name('adashi.show');
     Route::post('/adashi/{id}/contribute', [AdashiWebController::class, 'contribute'])->name('adashi.contribute');
+    Route::post('/adashi/{id}/contributions/add', [AdashiWebController::class, 'addContribution'])->name('adashi.contribution.add');
+    Route::post('/adashi/contributions/{invoiceId}/verify', [AdashiWebController::class, 'verifyContribution'])->name('adashi.contribution.verify');
+    Route::post('/adashi/contributions/{invoiceId}/decline', [AdashiWebController::class, 'declineContribution'])->name('adashi.contribution.decline');
     Route::post('/adashi/{id}/reconcile', [AdashiWebController::class, 'reconcile'])->name('adashi.reconcile');
     Route::get('/adashi/{id}/records/export', [AdashiWebController::class, 'exportRecords'])->name('adashi.records.export');
     Route::get('/adashi/{id}/members', [AdashiWebController::class, 'membersForm'])->name('adashi.members');
     Route::post('/adashi/{id}/members', [AdashiWebController::class, 'addMember'])->name('adashi.members.store');
     Route::post('/adashi/{id}/admin', [AdashiWebController::class, 'adminAction'])->name('adashi.admin');
     Route::post('/adashi/{id}/bank', [AdashiWebController::class, 'saveBank'])->name('adashi.bank');
+    Route::post('/adashi/{id}/rate-admin', [AdashiWebController::class, 'rateAdmin'])->name('adashi.rateAdmin');
+    Route::post('/adashi/{id}/payout-account', [AdashiWebController::class, 'setAccount'])->name('adashi.setAccount');
+    Route::post('/adashi/{id}/payout-visibility', [AdashiWebController::class, 'togglePayoutVisibility'])->name('adashi.payoutVisibility');
 
     Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
     Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'index'])->name('leaderboard');
@@ -123,6 +135,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::post('/settings/avatar', [SettingsController::class, 'updateAvatar'])->name('settings.avatar');
     Route::post('/settings/preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences');
+    Route::post('/settings/accounts', [SettingsController::class, 'storeAccount'])->name('settings.accounts.store');
+    Route::post('/settings/accounts/{id}/default', [SettingsController::class, 'defaultAccount'])->name('settings.accounts.default');
+    Route::post('/settings/accounts/{id}/delete', [SettingsController::class, 'deleteAccount'])->name('settings.accounts.delete');
 });
 
 /*

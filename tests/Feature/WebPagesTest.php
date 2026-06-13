@@ -44,11 +44,11 @@ class WebPagesTest extends TestCase
         $this->post('/pockets', [
             'title' => 'Render Pocket', 'pocket_type' => 'Monthly', 'description' => '',
             'year' => 2026, 'start_month' => 1, 'month_count' => 12, 'max_keens' => 0,
-            'amount_per_hand' => 5000, 'hand_count' => 1,
+            'amount_per_hand' => 5000, 'hand_count' => 1, 'accept_terms' => 1,
         ]);
         $this->post('/adashi', [
             'name' => 'Render Adashi', 'amount_per_cycle' => 50000, 'cycle_duration_days' => 30,
-            'start_date' => '2026-01-01', 'rotation_mode' => 'manual',
+            'start_date' => '2026-01-01', 'rotation_mode' => 'manual', 'accept_terms' => 1,
         ]);
 
         $pocket = Pocket::first();

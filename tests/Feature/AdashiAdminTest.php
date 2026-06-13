@@ -24,7 +24,7 @@ class AdashiAdminTest extends TestCase
 
         $this->post('/adashi', [
             'name' => 'Admin Adashi', 'amount_per_cycle' => 50000, 'cycle_duration_days' => 30,
-            'start_date' => '2026-01-01', 'rotation_mode' => 'manual',
+            'start_date' => '2026-01-01', 'rotation_mode' => 'manual', 'accept_terms' => 1,
         ]);
 
         return [$admin, Adashi::first()];

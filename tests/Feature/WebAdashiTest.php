@@ -31,6 +31,7 @@ class WebAdashiTest extends TestCase
             'start_date' => '2026-01-01',
             'rotation_mode' => 'manual',
             'is_public' => '1',
+            'accept_terms' => 1,
         ])->assertRedirect();
 
         $this->assertDatabaseHas('adashis', [
@@ -52,7 +53,7 @@ class WebAdashiTest extends TestCase
         $this->post('/pockets', [
             'title' => 'Web Pocket', 'pocket_type' => 'Monthly', 'description' => 'x',
             'year' => 2026, 'start_month' => 1, 'month_count' => 12, 'max_keens' => 0,
-            'amount_per_hand' => 5000, 'hand_count' => 1,
+            'amount_per_hand' => 5000, 'hand_count' => 1, 'accept_terms' => 1,
         ])->assertRedirect();
 
         $this->assertDatabaseHas('pockets', ['title' => 'Web Pocket', 'user_id' => $user->id]);

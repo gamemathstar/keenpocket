@@ -8,6 +8,7 @@
         $rows = $goalItems->values();
         $blankNeeded = max(0, 5 - $rows->count());
     @endphp
+    <a href="{{ route('pockets.show', $pocket->id) }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to {{ $pocket->title }}</a>
     <div class="max-w-2xl bg-white rounded-xl border border-slate-200 p-6">
         <div class="mb-4">
             <h2 class="text-xl font-semibold">🤲 {{ $project ? 'Edit' : 'Set up' }} charity drive</h2>

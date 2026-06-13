@@ -11,7 +11,7 @@ class AdashiMember extends Model
 
     protected $fillable = [
         'adashi_id', 'user_id', 'position', 'has_received',
-        'next_receiver_date', 'joined_at', 'is_active',
+        'next_receiver_date', 'joined_at', 'is_active', 'bank_account_id',
     ];
 
     protected $casts = [
