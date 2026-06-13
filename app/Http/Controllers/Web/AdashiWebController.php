@@ -40,6 +40,9 @@ class AdashiWebController extends Controller
             'start_date' => 'required|date',
             'rotation_mode' => 'required|in:AUTO,MANUAL,auto,manual',
             'is_public' => 'nullable|boolean',
+            'bank' => 'nullable|string|max:255',
+            'nuban' => 'nullable|string|max:32',
+            'account_name' => 'nullable|string|max:255',
         ]);
 
         $user = auth()->user();
@@ -57,6 +60,9 @@ class AdashiWebController extends Controller
                 'rotation_mode' => strtoupper($data['rotation_mode']),
                 'status' => 'ACTIVE',
                 'is_public' => $isPublic,
+                'bank' => $data['bank'] ?? null,
+                'nuban' => $data['nuban'] ?? null,
+                'account_name' => $data['account_name'] ?? null,
             ]);
 
             $member = AdashiMember::create([
@@ -75,6 +81,22 @@ class AdashiWebController extends Controller
         });
 
         return redirect()->route('adashi.show', $adashi->id)->with('status', 'Adashi created.');
+    }
+
+    /** Admin updates the adashi's collection account details. */
+    public function saveBank(Request $request, $id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can edit account details.');
+
+        $data = $request->validate([
+            'account_name' => 'nullable|string|max:255',
+            'bank' => 'nullable|string|max:255',
+            'nuban' => 'nullable|string|max:32',
+        ]);
+        $adashi->update($data);
+
+        return back()->with('status', 'Account details updated.');
     }
 
     public function show($id)

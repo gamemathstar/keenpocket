@@ -12,6 +12,8 @@ class Pocket extends Model
     protected $casts = [
         'charity_enabled' => 'boolean',
         'charity_donors_visible' => 'boolean',
+        'guarantor_required' => 'boolean',
+        'open_purchasing_item' => 'boolean',
     ];
 
     public function charityProjects()

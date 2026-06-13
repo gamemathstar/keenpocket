@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pocket;
+use App\Models\PocketSlot;
 use App\Models\ShoppingItem;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,11 @@ class ShoppingController extends Controller
         ]);
 
         $pocket = Pocket::findOrFail($pocketId);
-        abort_unless($pocket->user_id == $request->user()->id, 403, 'Only the pocket owner can manage the shopping list.');
+        $user = $request->user();
+        $isOwner = $pocket->user_id == $user->id;
+        // Members may suggest items only while the admin has opened suggestions.
+        $isActiveMember = PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $user->id, 'status' => 1])->exists();
+        abort_unless($isOwner || ($pocket->open_purchasing_item && $isActiveMember), 403, 'Shopping suggestions are closed for this pocket.');
 
         ShoppingItem::create([
             'pocket_id' => $pocket->id,

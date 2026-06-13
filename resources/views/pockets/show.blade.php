@@ -27,16 +27,44 @@
             </div>
         @endif
 
-        @unless ($isMember)
-            <form method="POST" action="{{ route('pockets.join', $pocket->id) }}" class="mt-5 flex items-end gap-3 border-t border-slate-100 pt-4">
-                @csrf
-                <div>
-                    <label class="block text-xs font-medium mb-1">Hands</label>
-                    <input type="number" name="hand_count" value="1" min="1" class="w-24 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
-                </div>
-                <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Join pocket</button>
-            </form>
-        @endunless
+        @if ($isMember && ($pocket->nuban || $pocket->bank))
+            <div class="mt-4 border-t border-slate-100 pt-4 text-sm">
+                <span class="text-slate-400">Pay contributions to:</span>
+                <span class="font-medium">{{ $pocket->account_name ?: $pocket->title }}</span>
+                @if ($pocket->bank) · {{ $pocket->bank }}@endif
+                @if ($pocket->nuban) · <span class="font-mono">{{ $pocket->nuban }}</span>@endif
+            </div>
+        @endif
+
+        @if (!$isMember && !$isOwner && $hasPending)
+            <div class="mt-5 border-t border-slate-100 pt-4 text-sm text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                ⏳ Your join request is pending @if($pocket->guarantor_required) — your guarantor must recommend you, then the admin will accept.@else the admin's approval.@endif
+            </div>
+        @elseif (!$isMember && !$isOwner)
+            @if (!$pocket->status)
+                <div class="mt-5 border-t border-slate-100 pt-4 text-sm text-slate-500">🔒 This pocket is invitation-only. Ask the admin to invite you.</div>
+            @else
+                <form method="POST" action="{{ route('pockets.join', $pocket->id) }}" class="mt-5 border-t border-slate-100 pt-4 space-y-3">
+                    @csrf
+                    <div class="flex items-end gap-3">
+                        <div>
+                            <label class="block text-xs font-medium mb-1">Hands</label>
+                            <input type="number" name="hand_count" value="1" min="1" class="w-24 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                        </div>
+                        @unless ($pocket->guarantor_required)
+                            <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Request to join</button>
+                        @endunless
+                    </div>
+                    @if ($pocket->guarantor_required)
+                        <div>
+                            <label class="block text-xs font-medium mb-1">Guarantor <span class="text-slate-400 font-normal">(phone or email of someone who'll vouch for you)</span></label>
+                            <input name="guarantor_contact" class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand" placeholder="guarantor@example.com">
+                        </div>
+                        <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Request to join</button>
+                    @endif
+                </form>
+            @endif
+        @endif
     </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
@@ -102,8 +130,17 @@
     </div>
 
     {{-- Shopping list (group buying) --}}
+    @php $canSuggest = $isOwner || ($pocket->open_purchasing_item && $isMember); @endphp
     <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
-        <h3 class="font-semibold mb-3">🛒 Shopping list</h3>
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold">🛒 Shopping list</h3>
+            <span class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full {{ $pocket->open_purchasing_item ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">{{ $pocket->open_purchasing_item ? 'Suggestions open' : 'Suggestions closed' }}</span>
+                @if ($isOwner)
+                    <form method="POST" action="{{ route('pockets.selection', $pocket->id) }}">@csrf<button class="text-xs text-brand-dark hover:underline">{{ $pocket->open_purchasing_item ? 'close' : 'open' }}</button></form>
+                @endif
+            </span>
+        </div>
         @if ($shoppingItems->isNotEmpty())
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -141,11 +178,11 @@
             <p class="text-sm text-slate-500">No items on the shopping list yet.</p>
         @endif
 
-        @if ($isOwner)
+        @if ($canSuggest)
             <form method="POST" action="{{ route('shopping.store', $pocket->id) }}" class="mt-4 grid sm:grid-cols-5 gap-2 items-end border-t border-slate-100 pt-4">
                 @csrf
                 <div class="sm:col-span-2">
-                    <label class="block text-xs font-medium mb-1">Item</label>
+                    <label class="block text-xs font-medium mb-1">Item @unless($isOwner)<span class="text-slate-400 font-normal">(suggestion)</span>@endunless</label>
                     <input name="name" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Rice (50kg)">
                 </div>
                 <div>

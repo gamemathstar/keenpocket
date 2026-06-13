@@ -12,6 +12,12 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('pockets.invoices.export', $pocket->id) }}" class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">⬇ Export invoices (CSV)</a>
+            <form method="POST" action="{{ route('pockets.guarantorToggle', $pocket->id) }}">
+                @csrf
+                <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
+                    {{ $pocket->guarantor_required ? '🤝 Guarantor: on' : '🤝 Guarantor: off' }}
+                </button>
+            </form>
             <form method="POST" action="{{ route('pockets.toggleStatus', $pocket->id) }}">
                 @csrf
                 <button class="rounded-lg border border-slate-300 hover:bg-slate-50 px-4 py-2 text-sm">
@@ -20,6 +26,47 @@
             </form>
         </div>
     </div>
+
+    {{-- Pending join requests --}}
+    @if ($requests->isNotEmpty())
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mt-6 max-w-5xl">
+            <h3 class="font-semibold mb-3">Join requests ({{ $requests->count() }})</h3>
+            <ul class="divide-y divide-slate-100">
+                @foreach ($requests as $r)
+                    @php $g = $guarantors[$r->slot_id] ?? null; @endphp
+                    <li class="py-3 flex flex-wrap items-center justify-between gap-3 text-sm">
+                        <div>
+                            <span class="font-medium">{{ $r->name }}</span>
+                            <span class="text-xs text-slate-400">· {{ $r->phone_number }} · {{ (int) $r->hand_count }} hand(s)</span>
+                            @if ($pocket->guarantor_required)
+                                @if ($g && $g->status === 'RECOMMENDED')
+                                    <span class="block text-xs text-emerald-600">🤝 Guarantor recommended</span>
+                                @elseif ($g && $g->status === 'DECLINED')
+                                    <span class="block text-xs text-red-500">🤝 Guarantor declined</span>
+                                @elseif ($g)
+                                    <span class="block text-xs text-amber-600">🤝 Awaiting guarantor recommendation</span>
+                                @else
+                                    <span class="block text-xs text-amber-600">No guarantor named</span>
+                                @endif
+                            @endif
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <form method="POST" action="{{ route('pockets.acceptMember', $pocket->id) }}">
+                                @csrf
+                                <input type="hidden" name="slot_id" value="{{ $r->slot_id }}">
+                                <button class="text-xs rounded-md bg-brand hover:bg-brand-dark text-white px-3 py-1.5">Accept</button>
+                            </form>
+                            <form method="POST" action="{{ route('pockets.declineMember', $pocket->id) }}">
+                                @csrf
+                                <input type="hidden" name="slot_id" value="{{ $r->slot_id }}">
+                                <button class="text-xs rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 px-3 py-1.5">Decline</button>
+                            </form>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="grid lg:grid-cols-3 gap-6 mt-6 max-w-5xl">
         {{-- Add member --}}
@@ -41,6 +88,19 @@
                     <input type="number" name="hand_count" value="1" min="1" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
                 </div>
                 <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Add member</button>
+            </form>
+        </div>
+
+        {{-- Collection account --}}
+        <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 class="font-semibold mb-1">Collection account</h3>
+            <p class="text-sm text-slate-500 mb-4">Where members send contributions.</p>
+            <form method="POST" action="{{ route('pockets.account', $pocket->id) }}" class="space-y-3">
+                @csrf
+                <input name="account_name" value="{{ old('account_name', $pocket->account_name) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Account name">
+                <input name="bank" value="{{ old('bank', $pocket->bank) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Bank">
+                <input name="nuban" value="{{ old('nuban', $pocket->nuban) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Account number">
+                <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Save account</button>
             </form>
         </div>
 

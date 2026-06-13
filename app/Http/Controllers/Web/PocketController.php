@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Pocket;
+use App\Models\PocketGuarantor;
 use App\Models\PocketItem;
 use App\Models\PocketSlot;
 use App\Models\User;
+use App\Support\PhoneNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -94,6 +96,7 @@ class PocketController extends Controller
             ->get();
 
         $isMember = $members->where('user_id', $user->id)->where('status', 1)->isNotEmpty();
+        $hasPending = $members->where('user_id', $user->id)->where('status', 0)->isNotEmpty();
         $isOwner = $pocket->user_id == $user->id;
 
         $invoices = Invoice::query()
@@ -138,7 +141,7 @@ class PocketController extends Controller
             'rater_id' => $user->id, 'context_type' => 'pocket', 'context_id' => $pocket->id,
         ])->value('stars');
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating'));
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating'));
     }
 
     /** A member rates the pocket admin (1–5 stars). */
@@ -161,32 +164,159 @@ class PocketController extends Controller
 
     public function join(Request $request, $id)
     {
-        $data = $request->validate(['hand_count' => 'required|integer|min:1']);
         $user = auth()->user();
         $pocket = Pocket::findOrFail($id);
+        $isOwner = $pocket->user_id == $user->id;
 
         if (PocketSlot::where(['pocket_id' => $pocket->id, 'user_id' => $user->id])->exists()) {
-            return back()->with('status', 'You are already a member of this pocket.');
+            return back()->with('status', 'You already have a slot or pending request in this pocket.');
         }
-        if (!$pocket->status && $pocket->user_id != $user->id) {
-            return back()->withErrors(['hand_count' => 'This pocket is invitation-only.']);
+        // Closed (invite-only) pockets can't be joined by request — admin must invite.
+        if (!$pocket->status && !$isOwner) {
+            return back()->withErrors(['hand_count' => 'This pocket is invitation-only — ask the admin to invite you.']);
         }
 
-        $slot = new PocketSlot();
-        $slot->pocket_id = $pocket->id;
-        $slot->user_id = $user->id;
-        $slot->hand_count = $data['hand_count'];
-        $slot->amount_paying = $data['hand_count'] * $pocket->amount_per_hand;
+        $guarantorRequired = config('guarantor.enabled', true) && $pocket->guarantor_required && !$isOwner;
+        $rules = ['hand_count' => 'required|integer|min:1'];
+        if ($guarantorRequired) {
+            $rules['guarantor_contact'] = 'required|string|max:255';
+        }
+        $data = $request->validate($rules);
+
+        // Resolve the guarantor (must be an existing user, not self / not the admin).
+        $guarantor = null;
+        if ($guarantorRequired) {
+            $contact = trim($data['guarantor_contact']);
+            $guarantor = User::where('email', $contact)->first()
+                ?? User::where('phone_number', 'LIKE', '%'.PhoneNumber::normalize($contact).'%')->first();
+            if (!$guarantor) {
+                return back()->withErrors(['guarantor_contact' => 'No KeenPocket user found with that phone or email.'])->withInput();
+            }
+            if ($guarantor->id == $user->id || $guarantor->id == $pocket->user_id) {
+                return back()->withErrors(['guarantor_contact' => 'Choose a guarantor other than yourself or the admin.'])->withInput();
+            }
+        }
+
+        // Owner is active immediately; everyone else creates a pending request.
+        $status = $isOwner ? 1 : 0;
+
+        DB::transaction(function () use ($pocket, $user, $data, $status, $guarantor) {
+            $slot = new PocketSlot();
+            $slot->pocket_id = $pocket->id;
+            $slot->user_id = $user->id;
+            $slot->hand_count = $data['hand_count'];
+            $slot->amount_paying = $data['hand_count'] * $pocket->amount_per_hand;
+            $slot->status = $status;
+            $slot->comment = '';
+            $slot->save();
+
+            if ($guarantor) {
+                PocketGuarantor::create([
+                    'pocket_id' => $pocket->id, 'slot_id' => $slot->id,
+                    'requester_id' => $user->id, 'guarantor_id' => $guarantor->id, 'status' => 'PENDING',
+                ]);
+            }
+        });
+
+        if ($isOwner) {
+            return redirect()->route('pockets.show', $pocket->id)->with('status', 'You joined this pocket.')->with('celebrate', true);
+        }
+        if ($guarantor) {
+            return back()->with('status', 'Request sent — '.$guarantor->name.' must recommend you before the admin can accept.');
+        }
+
+        return back()->with('status', 'Join request sent to the admin.');
+    }
+
+    /** Owner accepts a pending join request (requires guarantor recommendation if enabled). */
+    public function acceptMember(Request $request, $id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can accept members.');
+
+        $slot = PocketSlot::where('pocket_id', $pocket->id)->findOrFail($request->slot_id);
+
+        if (config('guarantor.enabled', true) && $pocket->guarantor_required) {
+            $g = PocketGuarantor::where(['pocket_id' => $pocket->id, 'slot_id' => $slot->id])->latest('id')->first();
+            if (!$g || $g->status !== 'RECOMMENDED') {
+                return back()->withErrors(['accept' => 'This request still needs a guarantor recommendation.']);
+            }
+        }
+
         $slot->status = 1;
-        $slot->comment = '';
         $slot->save();
 
         try {
-            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($user);
+            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly(User::find($slot->user_id));
+        } catch (\Throwable $e) {
+        }
+        try {
+            \App\Models\Notification::acceptNotification($pocket->user_id ? User::find($pocket->user_id) : null, User::find($slot->user_id), $pocket);
         } catch (\Throwable $e) {
         }
 
-        return redirect()->route('pockets.show', $pocket->id)->with('status', 'You joined this pocket.')->with('celebrate', true);
+        return back()->with('status', 'Member accepted.')->with('celebrate', true);
+    }
+
+    /** Owner declines a pending join request. */
+    public function declineMember(Request $request, $id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can decline requests.');
+
+        $slot = PocketSlot::where(['pocket_id' => $pocket->id, 'status' => 0])->findOrFail($request->slot_id);
+
+        DB::transaction(function () use ($pocket, $slot) {
+            PocketGuarantor::where(['pocket_id' => $pocket->id, 'slot_id' => $slot->id])->delete();
+            $slot->delete();
+        });
+
+        return back()->with('status', 'Request declined.');
+    }
+
+    /** Owner toggles whether join requests need a guarantor recommendation. */
+    public function toggleGuarantor($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can do this.');
+        $pocket->guarantor_required = !$pocket->guarantor_required;
+        $pocket->save();
+
+        return back()->with('status', $pocket->guarantor_required
+            ? 'New members must now be vouched for by a guarantor.'
+            : 'Guarantor requirement turned off.');
+    }
+
+    /** Owner updates the pocket's collection account details. */
+    public function saveBankDetails(Request $request, $id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can edit account details.');
+
+        $data = $request->validate([
+            'account_name' => 'nullable|string|max:255',
+            'bank' => 'nullable|string|max:255',
+            'nuban' => 'nullable|string|max:32',
+        ]);
+        $pocket->account_name = $data['account_name'] ?? null;
+        $pocket->bank = $data['bank'] ?? null;
+        $pocket->nuban = $data['nuban'] ?? null;
+        $pocket->save();
+
+        return back()->with('status', 'Account details updated.');
+    }
+
+    /** Owner toggles whether members may suggest shopping-list items. */
+    public function toggleSelection($id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can do this.');
+        $pocket->open_purchasing_item = !$pocket->open_purchasing_item;
+        $pocket->save();
+
+        return back()->with('status', $pocket->open_purchasing_item
+            ? 'Members can now suggest shopping items.'
+            : 'Shopping suggestions are now closed.');
     }
 
     /** Owner: manage members + open/close. */
@@ -197,11 +327,22 @@ class PocketController extends Controller
 
         $members = PocketSlot::query()
             ->join('users', 'users.id', '=', 'pocket_slots.user_id')
-            ->where('pocket_slots.pocket_id', $pocket->id)
+            ->where('pocket_slots.pocket_id', $pocket->id)->where('pocket_slots.status', 1)
             ->select(['pocket_slots.hand_count', 'pocket_slots.status', 'users.name', 'users.phone_number'])
-            ->orderByDesc('pocket_slots.status')->get();
+            ->orderBy('users.name')->get();
 
-        return view('pockets.manage', compact('pocket', 'members'));
+        // Pending join requests (status 0), with their guarantor recommendation state.
+        $requests = PocketSlot::query()
+            ->join('users', 'users.id', '=', 'pocket_slots.user_id')
+            ->where('pocket_slots.pocket_id', $pocket->id)->where('pocket_slots.status', 0)
+            ->select(['pocket_slots.id as slot_id', 'pocket_slots.hand_count', 'users.name', 'users.phone_number'])
+            ->orderBy('pocket_slots.id')->get();
+
+        $guarantors = PocketGuarantor::where('pocket_id', $pocket->id)
+            ->whereIn('slot_id', $requests->pluck('slot_id'))
+            ->get()->keyBy('slot_id');
+
+        return view('pockets.manage', compact('pocket', 'members', 'requests', 'guarantors'));
     }
 
     /** Owner adds a member by phone (creating a placeholder account if needed). */

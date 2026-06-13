@@ -50,7 +50,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/pockets/{id}/manage', [PocketController::class, 'manage'])->name('pockets.manage');
     Route::get('/pockets/{id}/invoices/export', [PocketController::class, 'exportInvoices'])->name('pockets.invoices.export');
     Route::post('/pockets/{id}/members', [PocketController::class, 'addMember'])->name('pockets.addMember');
+    Route::post('/pockets/{id}/members/accept', [PocketController::class, 'acceptMember'])->name('pockets.acceptMember');
+    Route::post('/pockets/{id}/members/decline', [PocketController::class, 'declineMember'])->name('pockets.declineMember');
+    Route::post('/pockets/{id}/guarantor/toggle', [PocketController::class, 'toggleGuarantor'])->name('pockets.guarantorToggle');
+    Route::get('/vouches', [\App\Http\Controllers\Web\GuarantorController::class, 'requests'])->name('guarantor.requests');
+    Route::post('/vouches/{id}/recommend', [\App\Http\Controllers\Web\GuarantorController::class, 'recommend'])->name('guarantor.recommend');
+    Route::post('/vouches/{id}/decline', [\App\Http\Controllers\Web\GuarantorController::class, 'decline'])->name('guarantor.decline');
     Route::post('/pockets/{id}/toggle', [PocketController::class, 'toggleStatus'])->name('pockets.toggleStatus');
+    Route::post('/pockets/{id}/account-details', [PocketController::class, 'saveBankDetails'])->name('pockets.account');
+    Route::post('/pockets/{id}/selection/toggle', [PocketController::class, 'toggleSelection'])->name('pockets.selection');
 
     // Invoices / contributions
     Route::get('/pockets/{id}/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
@@ -89,6 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adashi/{id}/members', [AdashiWebController::class, 'membersForm'])->name('adashi.members');
     Route::post('/adashi/{id}/members', [AdashiWebController::class, 'addMember'])->name('adashi.members.store');
     Route::post('/adashi/{id}/admin', [AdashiWebController::class, 'adminAction'])->name('adashi.admin');
+    Route::post('/adashi/{id}/bank', [AdashiWebController::class, 'saveBank'])->name('adashi.bank');
 
     Route::get('/discover', [DiscoverController::class, 'index'])->name('discover');
     Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'index'])->name('leaderboard');

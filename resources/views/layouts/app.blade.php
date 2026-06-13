@@ -29,6 +29,7 @@
                         ['pockets.index', 'My Pockets', '👛'],
                         ['adashi.index', 'Adashi', '🔄'],
                         ['plans.index', 'Planning', '🧾'],
+                        ['guarantor.requests', 'Vouches', '🤝'],
                         ['discover', 'Discover', '🧭'],
                         ['leaderboard', 'Leaderboard', '🏆'],
                         ['wallet.index', 'Wallet', '💳'],

@@ -87,6 +87,8 @@ class PocketController extends Controller
         if ($by == 'title') {
             //return [$by,$queryString];
             $pockets = Pocket::where('title', "LIKE", "%" . $queryString . "%")
+                // Closed (invite-only) pockets are not discoverable — only your own.
+                ->where(fn ($w) => $w->where('pockets.status', 1)->orWhere('pockets.user_id', auth()->id()))
                 ->leftJoin('pocket_slots', "pocket_slots.pocket_id", "=", "pockets.id")
                 ->join("users", "users.id", "=", "pockets.user_id")
                 ->select([
@@ -100,6 +102,7 @@ class PocketController extends Controller
             $userIds = User::where("phone_number", "LIKE", "%{$phone_number}%")->pluck('id')->toArray();
             if (!count($userIds)) return [];
             $pockets = Pocket::whereIn('pockets.user_id', $userIds)
+                ->where(fn ($w) => $w->where('pockets.status', 1)->orWhere('pockets.user_id', auth()->id()))
                 ->leftJoin('pocket_slots', "pocket_slots.pocket_id", "=", "pockets.id")
                 ->join("users", "users.id", "=", "pockets.user_id")
                 ->select([
@@ -114,6 +117,7 @@ class PocketController extends Controller
             $pocketIds = PocketItem::whereIn('item_id', $itemIds)->pluck('pocket_id');
             if (!count($pocketIds)) return [];
             $pockets = Pocket::whereIn('pockets.id', $pocketIds)
+                ->where(fn ($w) => $w->where('pockets.status', 1)->orWhere('pockets.user_id', auth()->id()))
                 ->join('pocket_slots', "pocket_slots.pocket_id", "=", "pockets.id")
                 ->join("users", "users.id", "=", "pockets.user_id")
                 ->select([

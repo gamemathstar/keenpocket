@@ -16,6 +16,36 @@
         </div>
     </div>
 
+    {{-- Collection account --}}
+    @if ($adashi->nuban || $adashi->bank || $isAdmin)
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="text-sm">
+                    <span class="text-slate-400">Pay contributions to:</span>
+                    @if ($adashi->nuban || $adashi->bank)
+                        <span class="font-medium">{{ $adashi->account_name ?: $adashi->name }}</span>
+                        @if ($adashi->bank) · {{ $adashi->bank }}@endif
+                        @if ($adashi->nuban) · <span class="font-mono">{{ $adashi->nuban }}</span>@endif
+                    @else
+                        <span class="text-slate-400">not set yet</span>
+                    @endif
+                </div>
+                @if ($isAdmin)
+                    <details>
+                        <summary class="text-sm text-brand-dark hover:underline cursor-pointer list-none">Edit account</summary>
+                        <form method="POST" action="{{ route('adashi.bank', $adashi->id) }}" class="mt-3 grid sm:grid-cols-3 gap-2">
+                            @csrf
+                            <input name="account_name" value="{{ $adashi->account_name }}" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Account name">
+                            <input name="bank" value="{{ $adashi->bank }}" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Bank">
+                            <input name="nuban" value="{{ $adashi->nuban }}" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Account number">
+                            <button class="sm:col-span-3 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium px-4 py-2">Save account</button>
+                        </form>
+                    </details>
+                @endif
+            </div>
+        </div>
+    @endif
+
     {{-- Current cycle + actions --}}
     @if ($currentRecord)
         <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
