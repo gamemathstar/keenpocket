@@ -3,7 +3,7 @@
 @section('heading', 'Plan')
 
 @section('content')
-    <a href="{{ route('plans.index') }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to Planning</a>
+    <a href="{{ route('plans.index') }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to Shopping</a>
     {{-- Header + summary --}}
     <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
         <div class="flex items-start justify-between gap-4">

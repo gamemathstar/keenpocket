@@ -123,6 +123,27 @@ class ContributionTest extends TestCase
         $this->assertDatabaseHas('invoice_item', ['invoice_id' => $invoice->id, 'type' => 'Paid', 'month' => 4, 'amount' => 8000]);
     }
 
+    public function test_owner_sees_and_approves_a_members_pending_invoice()
+    {
+        [$admin, $pocket, $member, $slot] = $this->scenario();
+
+        // Member raises a contribution (pending).
+        $inv = new Invoice();
+        $inv->pocket_slot_id = $slot->id;
+        $inv->invoice_no = 'KP/PEND/'.$slot->id;
+        $inv->amount = 10000;
+        $inv->reference_no = $inv->invoice_no;
+        $inv->payment_status = 'Not Paid';
+        $inv->paid_through = 'Pending';
+        $inv->save();
+        InvoiceItem::create(['invoice_id' => $inv->id, 'item_id' => 1, 'amount' => 10000, 'type' => 'Paid', 'month' => 1]);
+
+        // Owner sees it in "Payments to approve" and marks it paid.
+        $this->actingAs($admin)->get("/pockets/{$pocket->id}")->assertStatus(200)->assertSee('Payments to approve');
+        $this->actingAs($admin)->post("/invoices/{$inv->id}/mark-paid")->assertRedirect();
+        $this->assertSame('Paid', $inv->fresh()->payment_status);
+    }
+
     public function test_allocation_exceeding_balance_is_rejected()
     {
         [$admin, $pocket, $member, $slot] = $this->scenario();

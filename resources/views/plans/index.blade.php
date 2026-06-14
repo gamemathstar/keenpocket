@@ -1,9 +1,12 @@
 @extends('layouts.app')
-@section('title', 'Home Planning')
-@section('heading', 'Home Planning')
+@section('title', 'Shopping')
+@section('heading', 'Shopping')
 
 @section('content')
     @php $svc = app(\App\Services\Plan\PlanService::class); @endphp
+    <div class="rounded-2xl overflow-hidden border border-slate-200 mb-6">
+        <img src="{{ asset('ant-k/kplanning.png') }}" alt="Plan your shopping" class="w-full h-40 sm:h-48 object-cover object-center">
+    </div>
     <div class="flex items-center justify-between mb-6">
         <p class="text-sm text-slate-500">Plan your monthly groceries — budget ahead, tick off what you buy, and carry over what you defer.</p>
         <a href="{{ route('plans.create') }}" class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">+ New plan</a>

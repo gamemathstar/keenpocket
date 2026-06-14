@@ -49,6 +49,12 @@ class AdashiWebController extends Controller
         $user = auth()->user();
         $isPublic = $request->boolean('is_public');
 
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $cost = $coins->cost('adashi', 1);
+        if (!$coins->canAfford($user, $cost)) {
+            return back()->withErrors(['name' => "This adashi costs {$cost} Keens — you have {$coins->balance($user)}."])->withInput();
+        }
+
         $adashi = DB::transaction(function () use ($data, $user, $isPublic) {
             $adashi = Adashi::create([
                 'name' => $data['name'],
@@ -81,7 +87,9 @@ class AdashiWebController extends Controller
             return $adashi;
         });
 
-        return redirect()->route('adashi.show', $adashi->id)->with('status', 'Adashi created.');
+        $coins->charge($user, $cost, 'Create adashi: '.$adashi->name);
+
+        return redirect()->route('adashi.show', $adashi->id)->with('status', 'Adashi created.'.($cost ? " ({$cost} Keens)" : ''));
     }
 
     /** Admin updates the adashi's collection account details. */
@@ -173,6 +181,11 @@ class AdashiWebController extends Controller
         $canChat = config('chat.enabled', true) && ($isAdmin || $myMember);
         $messages = $canChat ? \App\Models\Message::recentFor('adashi', $adashi->id) : collect();
 
+        // Public view facts (admin trust) for non-members.
+        $admin = \App\Models\User::find($adashi->admin_id);
+        $reputation = app(\App\Services\Reputation\ReputationService::class)->forUser($adashi->admin_id);
+        $alreadyIn = (bool) AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => auth()->id()])->exists();
+
         // Disputes (members see their own; the admin sees all).
         $canDispute = config('disputes.enabled', true) && ($isAdmin || $myMember);
         $disputes = $canDispute ? \App\Models\Dispute::where(['context_type' => 'adashi', 'context_id' => $adashi->id])
@@ -181,7 +194,94 @@ class AdashiWebController extends Controller
             ->select('disputes.*', 'users.name as raiser_name')
             ->orderByRaw("disputes.status = 'OPEN' desc")->orderByDesc('disputes.id')->get() : collect();
 
-        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline', 'adminRating', 'myRating', 'pending', 'myOwed', 'myAccounts', 'receiverAccount', 'canChat', 'messages', 'canDispute', 'disputes'));
+        return view('adashi.show', compact('adashi', 'members', 'records', 'currentRecord', 'isAdmin', 'myMember', 'contributors', 'timeline', 'adminRating', 'myRating', 'pending', 'myOwed', 'myAccounts', 'receiverAccount', 'canChat', 'messages', 'canDispute', 'disputes', 'admin', 'reputation', 'alreadyIn'));
+    }
+
+    /** Clone an adashi's settings + chosen members into a fresh adashi (cycle 1). */
+    public function cloneAdashi(Request $request, $id)
+    {
+        $src = Adashi::findOrFail($id);
+        $owner = auth()->user();
+        abort_unless($src->admin_id == $owner->id, 403, 'Only the admin can clone this adashi.');
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'amount_per_cycle' => 'required|integer|min:1',
+            'cycle_duration_days' => 'required|integer|min:1',
+            'start_date' => 'required|date',
+            'members' => 'nullable|array',
+            'members.*' => 'integer',
+        ]);
+
+        $keep = collect($data['members'] ?? []);
+        $sourceMembers = AdashiMember::where(['adashi_id' => $src->id, 'is_active' => 1])
+            ->when($keep->isNotEmpty(), fn ($q) => $q->whereIn('user_id', $keep))
+            ->orderBy('position')->get();
+        // The admin is always carried over.
+        if (!$sourceMembers->firstWhere('user_id', $owner->id)) {
+            $sourceMembers = AdashiMember::where(['adashi_id' => $src->id, 'is_active' => 1])
+                ->where(fn ($q) => $q->whereIn('user_id', $keep)->orWhere('user_id', $owner->id))
+                ->orderBy('position')->get();
+        }
+        $capacity = max(1, $sourceMembers->count());
+
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $cost = $coins->cost('adashi', $capacity);
+        if (!$coins->canAfford($owner, $cost)) {
+            return back()->withErrors(['clone' => "Cloning costs {$cost} Keens — you have {$coins->balance($owner)}."]);
+        }
+
+        $new = DB::transaction(function () use ($src, $data, $sourceMembers) {
+            $a = Adashi::create([
+                'name' => $data['name'],
+                'amount_per_cycle' => $data['amount_per_cycle'],
+                'total_members' => 1,
+                'start_date' => $data['start_date'],
+                'cycle_duration_days' => $data['cycle_duration_days'],
+                'current_cycle_number' => 1,
+                'admin_id' => $src->admin_id,
+                'rotation_mode' => $src->rotation_mode,
+                'status' => 'ACTIVE',
+                'is_public' => $src->is_public,
+                'bank' => $src->bank, 'nuban' => $src->nuban, 'account_name' => $src->account_name,
+                'payout_visible' => $src->payout_visible, 'rules' => $src->rules,
+            ]);
+
+            $first = null;
+            $pos = 1;
+            foreach ($sourceMembers as $m) {
+                $nm = AdashiMember::create([
+                    'adashi_id' => $a->id, 'user_id' => $m->user_id, 'position' => $pos++,
+                    'has_received' => false, 'joined_at' => now(), 'is_active' => true,
+                ]);
+                $first = $first ?? $nm;
+            }
+            $a->update(['total_members' => max(1, $pos - 1)]);
+
+            AdashiRecord::create([
+                'adashi_id' => $a->id, 'cycle_number' => 1,
+                'due_at' => Carbon::parse($a->start_date)->addDays($a->cycle_duration_days),
+                'total_collected' => 0, 'receiver_user_id' => $first?->user_id ?? $src->admin_id,
+                'receiver_member_id' => $first?->id, 'paid_members_count' => 0, 'status' => 'PENDING',
+            ]);
+
+            return $a;
+        });
+
+        $coins->charge($owner, $cost, 'Clone adashi: '.$new->name);
+
+        return redirect()->route('adashi.show', $new->id)->with('status', 'Adashi cloned.'.($cost ? " ({$cost} Keens)" : ''));
+    }
+
+    /** Admin sets the group rules (free-form contract members agree to). */
+    public function saveRules(Request $request, $id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->admin_id == auth()->id(), 403, 'Only the admin can set rules.');
+        $data = $request->validate(['rules' => 'nullable|string|max:5000']);
+        $adashi->update(['rules' => $data['rules'] ?? null]);
+
+        return back()->with('status', 'Group rules updated.');
     }
 
     /** Admin toggles whether members can see the full payout order (who gets what cycle). */
@@ -230,6 +330,36 @@ class AdashiWebController extends Controller
         }
 
         return back()->with('status', 'Thanks for rating the admin.');
+    }
+
+    /** A user joins a public adashi themselves (after accepting the terms). */
+    public function join(Request $request, $id)
+    {
+        $adashi = Adashi::findOrFail($id);
+        abort_unless($adashi->is_public, 403, 'This adashi is private — ask the admin to add you.');
+        $user = auth()->user();
+
+        if (AdashiMember::where(['adashi_id' => $adashi->id, 'user_id' => $user->id])->exists()) {
+            return back()->with('status', 'You are already a member of this adashi.');
+        }
+
+        $request->validate(['accept_terms' => 'accepted'], ['accept_terms.accepted' => 'Please confirm you understand and accept the terms.']);
+
+        DB::transaction(function () use ($adashi, $user) {
+            $position = (AdashiMember::where('adashi_id', $adashi->id)->max('position') ?? 0) + 1;
+            AdashiMember::create([
+                'adashi_id' => $adashi->id, 'user_id' => $user->id, 'position' => $position,
+                'has_received' => false, 'joined_at' => now(), 'is_active' => true,
+            ]);
+            $adashi->increment('total_members');
+        });
+
+        try {
+            app(\App\Services\Referral\ReferralService::class)->qualifyQuietly($user);
+        } catch (\Throwable $e) {
+        }
+
+        return redirect()->route('adashi.show', $adashi->id)->with('status', 'You joined this adashi.')->with('celebrate', true);
     }
 
     /** A member submits a contribution for the current cycle (pending admin verification). */

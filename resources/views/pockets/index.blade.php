@@ -12,7 +12,10 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($all as $p)
             <a href="{{ route('pockets.show', $p->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
-                <x-card-cover :seed="$p->title" emoji="👛" :label="$p->user_id == auth()->id() ? 'Owner' : ($p->status ? 'Open' : 'Closed')" />
+                <div class="relative h-28 bg-gradient-to-br from-sky-100 to-emerald-100 overflow-hidden">
+                    <img src="{{ asset('ant-k/kforpocket.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover object-center">
+                    <span class="absolute top-2 right-2 text-[11px] font-bold uppercase tracking-wide text-white bg-black/30 rounded-full px-2 py-0.5">{{ $p->user_id == auth()->id() ? 'Owner' : ($p->status ? 'Open' : 'Closed') }}</span>
+                </div>
                 <div class="p-4">
                     <div class="font-semibold truncate">{{ $p->title }}</div>
                     <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand</div>

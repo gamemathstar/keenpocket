@@ -4,9 +4,12 @@
 
 @section('content')
     <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
-        <div>
-            <h2 class="text-2xl font-semibold">Hello, {{ explode(' ', $user->name)[0] }} 👋</h2>
-            <p class="text-slate-500 text-sm">Here's your savings at a glance.</p>
+        <div class="flex items-center gap-3">
+            <x-mascot :size="64" class="shrink-0 -mb-2" />
+            <div>
+                <h2 class="text-2xl font-semibold">Hello, {{ explode(' ', $user->name)[0] }} 👋</h2>
+                <p class="text-slate-500 text-sm">Here's your savings at a glance.</p>
+            </div>
         </div>
         <div class="text-right">
             <div class="text-xs text-slate-500">Total saved</div>
@@ -98,7 +101,10 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         @forelse ($pockets as $p)
             <a href="{{ route('pockets.show', $p->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
-                <x-card-cover :seed="$p->title" emoji="👛" :label="$p->status ? 'Open' : 'Closed'" />
+                <div class="relative h-28 bg-gradient-to-br from-sky-100 to-emerald-100 overflow-hidden">
+                    <img src="{{ asset('ant-k/kforpocket.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover object-center">
+                    <span class="absolute top-2 right-2 text-[11px] font-bold uppercase tracking-wide text-white bg-black/30 rounded-full px-2 py-0.5">{{ $p->status ? 'Open' : 'Closed' }}</span>
+                </div>
                 <div class="p-4">
                     <div class="font-semibold truncate">{{ $p->title }}</div>
                     <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand · {{ (int) $p->hand_count }} hand(s)</div>
@@ -121,10 +127,16 @@
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($adashis as $a)
-            <a href="{{ route('adashi.show', $a->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-brand transition">
-                <div class="font-semibold truncate">{{ $a->name }}</div>
-                <div class="text-sm text-slate-500 mt-1">₦{{ number_format($a->amount_per_cycle) }}/cycle · {{ $a->total_members }} members</div>
-                <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · {{ ucfirst(strtolower($a->status)) }}</div>
+            <a href="{{ route('adashi.show', $a->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
+                <div class="relative h-28 bg-gradient-to-br from-amber-100 to-emerald-100 overflow-hidden">
+                    <img src="{{ asset('ant-k/kforadashi.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover object-center">
+                    <span class="absolute top-2 right-2 text-[11px] font-bold uppercase tracking-wide text-white bg-black/30 rounded-full px-2 py-0.5">Cycle {{ $a->current_cycle_number }}</span>
+                </div>
+                <div class="p-4">
+                    <div class="font-semibold truncate">{{ $a->name }}</div>
+                    <div class="text-sm text-slate-500 mt-1">₦{{ number_format($a->amount_per_cycle) }}/cycle · {{ $a->total_members }} members</div>
+                    <div class="text-xs text-slate-400 mt-2">Cycle {{ $a->current_cycle_number }} · {{ ucfirst(strtolower($a->status)) }}</div>
+                </div>
             </a>
         @empty
             <div class="col-span-full">

@@ -3,6 +3,10 @@
 @section('heading', 'Discover')
 
 @section('content')
+    <div class="rounded-2xl overflow-hidden border border-slate-200 mb-6">
+        <img src="{{ asset('ant-k/kdiscover.png') }}" alt="Discover groups to join" class="w-full h-40 sm:h-48 object-cover object-center">
+    </div>
+
     <form method="GET" class="mb-6 flex gap-2 max-w-md">
         <input name="q" value="{{ $term }}" placeholder="Search pockets & adashi…" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
         <button class="rounded-lg bg-brand hover:bg-brand-dark text-white px-4">Search</button>

@@ -3,7 +3,7 @@
 @section('heading', 'New plan')
 
 @section('content')
-    <a href="{{ route('plans.index') }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to Planning</a>
+    <a href="{{ route('plans.index') }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to Shopping</a>
     <div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
         <form method="POST" action="{{ route('plans.store') }}" class="space-y-4">
             @csrf

@@ -3,6 +3,9 @@
 @section('heading', 'Adashi')
 
 @section('content')
+@if (!$myMember && !$isAdmin)
+    @include('adashi._public')
+@else
     <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6 flex items-start justify-between gap-4">
         <div>
             <h2 class="text-2xl font-semibold">{{ $adashi->name }}</h2>
@@ -99,6 +102,75 @@
                 @endif
             </div>
         </div>
+    @endif
+
+    {{-- Group rules + admin tools --}}
+    @if ($adashi->rules || $isAdmin)
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="font-semibold">📋 Group rules</h3>
+                @if ($isAdmin)
+                    <div class="flex gap-2">
+                        <button type="button" onclick="document.getElementById('rulesModal').classList.remove('hidden')" class="btn-soft text-sm">Edit rules</button>
+                        <button type="button" onclick="document.getElementById('cloneModal').classList.remove('hidden')" class="btn-soft text-sm">⧉ Clone</button>
+                    </div>
+                @endif
+            </div>
+            @if ($adashi->rules)
+                <p class="text-sm text-slate-600 whitespace-pre-line">{{ $adashi->rules }}</p>
+            @else
+                <p class="text-sm text-slate-400">No rules set. Add the group's agreement (contribution dates, penalties, payout order policy, etc.).</p>
+            @endif
+        </div>
+        @if ($isAdmin)
+            <div id="rulesModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onclick="if(event.target===this)this.classList.add('hidden')">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100">
+                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                        <span class="font-semibold">Group rules</span>
+                        <button type="button" onclick="document.getElementById('rulesModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <form method="POST" action="{{ route('adashi.rules', $adashi->id) }}" class="p-5 space-y-3">
+                        @csrf
+                        <textarea name="rules" rows="6" maxlength="5000" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="e.g. Contributions due before each cycle's due date. Rotation order is fixed.">{{ $adashi->rules }}</textarea>
+                        <button class="w-full rounded-lg bg-brand text-white font-medium py-2.5">Save rules</button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Clone modal: adjust settings + choose which members to carry over --}}
+            <div id="cloneModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onclick="if(event.target===this)this.classList.add('hidden')">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100 shrink-0">
+                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                        <span class="font-semibold">Clone adashi</span>
+                        <button type="button" onclick="document.getElementById('cloneModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <form method="POST" action="{{ route('adashi.clone', $adashi->id) }}" class="p-5 space-y-3 overflow-y-auto">
+                        @csrf
+                        <input name="name" value="{{ $adashi->name }} (copy)" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Name">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="block text-xs font-medium mb-1">₦/cycle</label><input type="number" name="amount_per_cycle" value="{{ $adashi->amount_per_cycle }}" min="1" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                            <div><label class="block text-xs font-medium mb-1">Cycle days</label><input type="number" name="cycle_duration_days" value="{{ $adashi->cycle_duration_days }}" min="1" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                            <div><label class="block text-xs font-medium mb-1">Start</label><input type="date" name="start_date" value="{{ now()->toDateString() }}" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium mb-1">Carry over members</p>
+                            <div class="max-h-40 overflow-y-auto space-y-1 rounded-lg border border-slate-200 p-2">
+                                @foreach ($members->where('is_active', 1) as $m)
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" name="members[]" value="{{ $m->user_id }}" {{ $m->user_id == $adashi->admin_id ? 'checked disabled' : 'checked' }} class="rounded border-slate-300 text-brand focus:ring-brand">
+                                        <span>{{ $m->name }}@if($m->user_id == $adashi->admin_id) <span class="text-xs text-slate-400">(you · admin)</span>@endif</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Uncheck anyone you don't want in the new adashi.</p>
+                        </div>
+                        <button class="w-full rounded-lg bg-brand text-white font-medium py-2.5">Create clone</button>
+                    </form>
+                </div>
+            </div>
+        @endif
     @endif
 
     {{-- Contributions awaiting verification --}}
@@ -347,4 +419,5 @@
             </div>
         @endif
     @endif
+@endif
 @endsection

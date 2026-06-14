@@ -8,10 +8,10 @@
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
         <div>
-            <label class="block text-sm font-medium mb-1">Phone number or email</label>
+            <label class="block text-sm font-medium mb-1">Phone, email or username</label>
             <input name="login" value="{{ old('login') }}" required autofocus
                    class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand"
-                   placeholder="09087654321 or you@example.com">
+                   placeholder="09087654321 · you@example.com · username">
         </div>
         <div>
             <label class="block text-sm font-medium mb-1">Password</label>

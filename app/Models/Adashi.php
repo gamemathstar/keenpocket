@@ -13,7 +13,7 @@ class Adashi extends Model
         'name', 'amount_per_cycle', 'total_members', 'start_date',
         'cycle_duration_days', 'current_cycle_number', 'admin_id',
         'rotation_mode', 'status', 'is_public',
-        'bank', 'nuban', 'account_name', 'payout_visible',
+        'bank', 'nuban', 'account_name', 'payout_visible', 'rules',
     ];
 
     protected $casts = [

@@ -24,27 +24,65 @@
         <div id="navPanel" class="hidden md:flex md:flex-col md:flex-1">
             <nav class="p-3 md:flex-1 space-y-1">
                 @php
-                    $nav = [
-                        ['dashboard', 'Dashboard', '🏠'],
-                        ['pockets.index', 'My Pockets', '👛'],
-                        ['adashi.index', 'Adashi', '🔄'],
-                        ['plans.index', 'Planning', '🧾'],
-                        ['guarantor.requests', 'Vouches', '🤝'],
-                        ['discover', 'Discover', '🧭'],
-                        ['leaderboard', 'Leaderboard', '🏆'],
+                    $me = auth()->user();
+                    $isActive = fn ($r) => request()->routeIs($r) || request()->routeIs(str_replace('.index', '', $r).'.*');
+                    $pocketItems = [['pockets.index', 'My Pockets', '👛'], ['adashi.index', 'Adashi', '🔄']];
+                    $profileItems = [
+                        ['profile', 'Profile', '⭐'],
                         ['wallet.index', 'Wallet', '💳'],
                         ['payouts.index', 'Payouts & Bank', '🏦'],
                         ['referrals.index', 'Referrals', '🎁'],
-                        ['profile', 'Profile', '⭐'],
+                        ['guarantor.requests', 'Vouches', '🤝'],
+                        ['insights', 'Insights', '📊'],
+                        ['admin.health', 'Admin', '🩺'],
                     ];
+                    $pocketOpen = collect($pocketItems)->contains(fn ($i) => $isActive($i[0]));
+                    $profileOpen = collect($profileItems)->contains(fn ($i) => $isActive($i[0]));
                 @endphp
-                @foreach ($nav as [$route, $label, $icon])
-                    @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*'); @endphp
-                    <a href="{{ route($route) }}"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide border-2 {{ $active ? 'bg-brand-light text-brand-dark border-brand/40' : 'text-slate-500 border-transparent hover:bg-slate-100' }}">
-                        <span class="text-base">{{ $icon }}</span><span>{{ $label }}</span>
-                    </a>
-                @endforeach
+
+                @include('partials.nav-link', ['route' => 'dashboard', 'label' => 'Dashboard', 'icon' => '🏠'])
+
+                {{-- Pocket group --}}
+                <details class="group" {{ $pocketOpen ? 'open' : '' }}>
+                    <summary class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide text-slate-500 hover:bg-slate-100 cursor-pointer list-none">
+                        <span class="text-base">👛</span><span>Pocket</span>
+                        <span class="ml-auto text-slate-400 transition-transform group-open:rotate-90">›</span>
+                    </summary>
+                    <div class="mt-1 space-y-1">
+                        @foreach ($pocketItems as [$route, $label, $icon])
+                            @include('partials.nav-link', ['route' => $route, 'label' => $label, 'icon' => $icon, 'sub' => true])
+                        @endforeach
+                    </div>
+                </details>
+
+                {{-- School (right after Pocket) --}}
+                @if (config('school.enabled', true) && $me->canCreateSchool())
+                    @include('partials.nav-link', ['route' => 'school.create', 'label' => 'My School', 'icon' => '🏫'])
+                @endif
+                @if ($me->children()->exists())
+                    @include('partials.nav-link', ['route' => 'school.children', 'label' => 'My Children', 'icon' => '🎒'])
+                @endif
+
+                @include('partials.nav-link', ['route' => 'plans.index', 'label' => 'Shopping', 'icon' => '🛒'])
+                @include('partials.nav-link', ['route' => 'discover', 'label' => 'Discover', 'icon' => '🧭'])
+                @include('partials.nav-link', ['route' => 'leaderboard', 'label' => 'Leaderboard', 'icon' => '🏆'])
+
+                @if ($me->isSuperAdmin())
+                    @include('partials.nav-link', ['route' => 'super-admin.index', 'label' => 'Super Admin', 'icon' => '🛡️'])
+                @endif
+
+                {{-- Profile group --}}
+                <details class="group" {{ $profileOpen ? 'open' : '' }}>
+                    <summary class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide text-slate-500 hover:bg-slate-100 cursor-pointer list-none">
+                        <span class="text-base">⭐</span><span>Profile</span>
+                        <span class="ml-auto text-slate-400 transition-transform group-open:rotate-90">›</span>
+                    </summary>
+                    <div class="mt-1 space-y-1">
+                        @foreach ($profileItems as [$route, $label, $icon])
+                            @include('partials.nav-link', ['route' => $route, 'label' => $label, 'icon' => $icon, 'sub' => true])
+                        @endforeach
+                    </div>
+                </details>
             </nav>
             <div class="p-3 border-t border-slate-100">
                 <form method="POST" action="{{ route('logout') }}">
@@ -71,6 +109,7 @@
                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-none rounded-full px-1.5 py-0.5">{{ $unread > 9 ? '9+' : $unread }}</span>
                     @endif
                 </a>
+                <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1" title="Your Keens balance">🪙 {{ number_format(auth()->user()->keens ?? 0) }}</span>
                 <button type="button" onclick="(function(){var d=document.documentElement.classList.toggle('dark');try{localStorage.setItem('theme',d?'dark':'light');}catch(e){}})()" class="text-xl" title="Toggle dark mode">🌓</button>
                 <a href="{{ route('settings') }}" class="text-xl" title="Settings">⚙️</a>
                 <span class="text-slate-500 hidden sm:inline">{{ auth()->user()->name ?? '' }}</span>
@@ -88,7 +127,22 @@
             @endif
             @if (session('celebrate'))
                 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
-                <script>window.addEventListener('load',function(){if(window.confetti){confetti({particleCount:130,spread:75,origin:{y:0.6},colors:['#1cb0f6','#1899d6','#ddf4ff','#ffd900']});}});</script>
+                <img id="celebMascot" src="{{ asset('ant-k/kandfriendsceleb.png') }}" alt=""
+                     class="fixed left-1/2 bottom-0 z-50 w-80 max-w-[80vw] pointer-events-none drop-shadow-2xl"
+                     style="transform: translate(-50%, 110%); opacity: 0; transition: transform .45s cubic-bezier(.2,.8,.3,1.2), opacity .45s;">
+                <script>
+                    window.addEventListener('load', function () {
+                        if (window.confetti) {
+                            confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 }, colors: ['#1cb0f6','#1899d6','#ddf4ff','#ffd900'] });
+                        }
+                        var k = document.getElementById('celebMascot');
+                        if (k) {
+                            requestAnimationFrame(function () { k.style.transform = 'translate(-50%, 6%)'; k.style.opacity = '1'; });
+                            setTimeout(function () { k.style.transform = 'translate(-50%, 110%)'; k.style.opacity = '0'; }, 3200);
+                            setTimeout(function () { k.remove(); }, 3700);
+                        }
+                    });
+                </script>
             @endif
             @if ($errors->any())
                 <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm">
@@ -104,15 +158,15 @@
 <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-slate-200 grid grid-cols-5">
     @php
         $tabs = [
-            ['dashboard', 'Home', '🏠'],
-            ['pockets.index', 'Pockets', '👛'],
-            ['adashi.index', 'Adashi', '🔄'],
-            ['discover', 'Discover', '🧭'],
-            ['profile', 'Profile', '⭐'],
+            ['dashboard', 'Home', '🏠', null],
+            ['pockets.index', 'Pocket', '👛', 'adashi.*'],
+            ['plans.index', 'Shopping', '🛒', null],
+            ['discover', 'Discover', '🧭', null],
+            ['profile', 'Profile', '⭐', null],
         ];
     @endphp
-    @foreach ($tabs as [$route, $label, $icon])
-        @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*'); @endphp
+    @foreach ($tabs as [$route, $label, $icon, $extra])
+        @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*') || ($extra && request()->routeIs($extra)); @endphp
         <a href="{{ route($route) }}" class="flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold uppercase {{ $active ? 'text-brand-dark' : 'text-slate-400' }}">
             <span class="text-xl">{{ $icon }}</span>{{ $label }}
         </a>

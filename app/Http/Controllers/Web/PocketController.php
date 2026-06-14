@@ -51,6 +51,12 @@ class PocketController extends Controller
 
         $user = auth()->user();
 
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $cost = $coins->cost('pocket', (int) $data['max_keens']);
+        if (!$coins->canAfford($user, $cost)) {
+            return back()->withErrors(['name' => "This pocket costs {$cost} Keens — you have {$coins->balance($user)}."])->withInput();
+        }
+
         $pocket = DB::transaction(function () use ($data, $user) {
             $pocket = new Pocket();
             $pocket->user_id = $user->id;
@@ -82,7 +88,9 @@ class PocketController extends Controller
             return $pocket;
         });
 
-        return redirect()->route('pockets.show', $pocket->id)->with('status', 'Pocket created.');
+        $coins->charge($user, $cost, 'Create pocket: '.$pocket->title);
+
+        return redirect()->route('pockets.show', $pocket->id)->with('status', 'Pocket created.'.($cost ? " ({$cost} Keens)" : ''));
     }
 
     public function show($id)
@@ -100,6 +108,11 @@ class PocketController extends Controller
         $hasPending = $members->where('user_id', $user->id)->where('status', 0)->isNotEmpty();
         $isOwner = $pocket->user_id == $user->id;
 
+        // Public view facts (for non-members): admin trust + how many hands remain.
+        $reputation = app(\App\Services\Reputation\ReputationService::class)->forUser($pocket->user_id);
+        $handsUsed = (int) PocketSlot::where(['pocket_id' => $pocket->id, 'status' => 1])->sum('hand_count');
+        $handsLeft = (int) $pocket->max_keens === 0 ? null : max(0, (int) $pocket->max_keens - $handsUsed);
+
         $invoices = Invoice::query()
             ->join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
             ->where('pocket_slots.pocket_id', $pocket->id)
@@ -107,6 +120,16 @@ class PocketController extends Controller
             ->select('invoices.*')->orderByDesc('invoices.id')->get();
 
         $owner = User::find($pocket->user_id);
+
+        // Owner: every member's pending (unverified) invoice, to mark as paid.
+        $pendingApprovals = $isOwner ? Invoice::query()
+            ->join('pocket_slots', 'pocket_slots.id', '=', 'invoices.pocket_slot_id')
+            ->join('users', 'users.id', '=', 'pocket_slots.user_id')
+            ->where('pocket_slots.pocket_id', $pocket->id)
+            ->where('invoices.payment_status', 'Not Paid')
+            ->select('invoices.id', 'invoices.invoice_no', 'invoices.amount', 'users.name')
+            ->orderByDesc('invoices.id')->get() : collect();
+
         $walletEnabled = app(\App\Services\Wallet\WalletService::class)->enabled();
         $shoppingItems = \App\Models\ShoppingItem::where('pocket_id', $pocket->id)->orderBy('id')->get();
 
@@ -156,7 +179,7 @@ class PocketController extends Controller
             ->select('disputes.*', 'users.name as raiser_name')
             ->orderByRaw("disputes.status = 'OPEN' desc")->orderByDesc('disputes.id')->get() : collect();
 
-        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating', 'mySlot', 'myAccounts', 'canChat', 'messages', 'canDispute', 'disputes'));
+        return view('pockets.show', compact('pocket', 'members', 'isMember', 'hasPending', 'isOwner', 'invoices', 'owner', 'walletEnabled', 'shoppingItems', 'contributed', 'target', 'progress', 'contributors', 'charity', 'charityEnabled', 'adminRating', 'myRating', 'mySlot', 'myAccounts', 'canChat', 'messages', 'canDispute', 'disputes', 'reputation', 'handsLeft', 'pendingApprovals'));
     }
 
     /** A member picks which saved account to receive this pocket's cashback/payout into. */
@@ -351,6 +374,88 @@ class PocketController extends Controller
         return back()->with('status', $pocket->open_purchasing_item
             ? 'Members can now suggest shopping items.'
             : 'Shopping suggestions are now closed.');
+    }
+
+    /** Clone a pocket's settings + active members into a fresh pocket for this year. */
+    public function clone(Request $request, $id)
+    {
+        $src = Pocket::findOrFail($id);
+        $owner = auth()->user();
+        abort_unless($src->user_id == $owner->id, 403, 'Only the owner can clone this pocket.');
+
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'year' => 'required|integer|min:2020|max:2100',
+            'amount_per_hand' => 'required|integer|min:1',
+            'month_count' => 'required|integer|min:1|max:60',
+            'max_keens' => 'required|integer|min:0',
+            'members' => 'nullable|array', // user_ids of members to carry over
+            'members.*' => 'integer',
+        ]);
+
+        // Only the chosen members are carried over.
+        $keep = collect($data['members'] ?? []);
+        $sourceSlots = PocketSlot::where(['pocket_id' => $src->id, 'status' => 1])
+            ->when($keep->isNotEmpty(), fn ($q) => $q->whereIn('user_id', $keep))->get();
+        $capacity = max(1, (int) $sourceSlots->sum('hand_count'));
+
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $cost = $coins->cost('pocket', $capacity);
+        if (!$coins->canAfford($owner, $cost)) {
+            return back()->withErrors(['clone' => "Cloning costs {$cost} Keens — you have {$coins->balance($owner)}."]);
+        }
+
+        $new = DB::transaction(function () use ($src, $data, $sourceSlots) {
+            $p = new Pocket();
+            foreach (['description', 'start_month', 'status', 'open_purchasing_item', 'guarantor_required',
+                'members_visible', 'charity_enabled', 'charity_donors_visible', 'bank', 'nuban', 'account_name', 'rules'] as $f) {
+                $p->$f = $src->$f;
+            }
+            $p->user_id = $src->user_id;
+            $p->title = $data['title'];
+            $p->year = $data['year'];
+            $p->amount_per_hand = $data['amount_per_hand'];
+            $p->per_hand_allowed = (string) $data['amount_per_hand'];
+            $p->month_count = $data['month_count'];
+            $p->max_keens = $data['max_keens'];
+            $p->save();
+
+            $item = new PocketItem();
+            $item->pocket_id = $p->id;
+            $item->item_id = 1;
+            $item->save();
+
+            $n = 1;
+            foreach ($sourceSlots as $s) {
+                $ns = new PocketSlot();
+                $ns->pocket_id = $p->id;
+                $ns->user_id = $s->user_id;
+                $ns->slot_number = $n++;
+                $ns->hand_count = $s->hand_count;
+                $ns->amount_paying = $s->hand_count * $p->amount_per_hand;
+                $ns->status = 1;
+                $ns->comment = '';
+                $ns->save();
+            }
+
+            return $p;
+        });
+
+        $coins->charge($owner, $cost, 'Clone pocket: '.$new->title);
+
+        return redirect()->route('pockets.show', $new->id)->with('status', 'Pocket cloned.'.($cost ? " ({$cost} Keens)" : ''));
+    }
+
+    /** Owner sets the group rules (free-form contract members agree to). */
+    public function saveRules(Request $request, $id)
+    {
+        $pocket = Pocket::findOrFail($id);
+        abort_unless($pocket->user_id == auth()->id(), 403, 'Only the pocket owner can set rules.');
+        $data = $request->validate(['rules' => 'nullable|string|max:5000']);
+        $pocket->rules = $data['rules'] ?? null;
+        $pocket->save();
+
+        return back()->with('status', 'Group rules updated.');
     }
 
     /** Owner toggles whether members can see each other's hand counts. */

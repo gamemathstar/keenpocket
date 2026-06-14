@@ -10,8 +10,11 @@
 <body class="h-full">
 <div class="min-h-full flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-md">
+        <div class="mb-4 rounded-2xl overflow-hidden border border-slate-200 bg-white">
+            <img src="{{ asset('ant-k/kandfriendsnormal.png') }}" alt="K and friends" class="w-full">
+        </div>
         <div class="flex items-center justify-center mb-6">
-            <img src="{{ asset('images/keenpocket-lockup.svg') }}" alt="KeenPocket" class="h-16">
+            <img src="{{ asset('images/keenpocket-lockup.svg') }}" alt="KeenPocket" class="h-14">
         </div>
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
             @if ($errors->any())

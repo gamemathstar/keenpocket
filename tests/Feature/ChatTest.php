@@ -65,6 +65,25 @@ class ChatTest extends TestCase
         $this->actingAs($owner)->get("/pockets/{$pocket->id}")->assertStatus(200)->assertSee('Salam everyone');
     }
 
+    public function test_feed_returns_new_messages_after_id()
+    {
+        $owner = $this->makeUser();
+        $pocket = $this->pocketWith($owner);
+        $member = $this->makeUser();
+        $this->addMember($pocket, $member);
+
+        $this->actingAs($member)->postJson("/chat/pocket/{$pocket->id}", ['body' => 'first'])
+            ->assertStatus(200)->assertJson(['mine' => true]);
+
+        $feed = $this->actingAs($owner)->getJson("/chat/pocket/{$pocket->id}/messages");
+        $feed->assertStatus(200)->assertJsonFragment(['body' => 'first']);
+        $lastId = $feed->json('0.id');
+
+        // Nothing new after the last id.
+        $this->actingAs($owner)->getJson("/chat/pocket/{$pocket->id}/messages?after={$lastId}")
+            ->assertStatus(200)->assertExactJson([]);
+    }
+
     public function test_non_member_cannot_post()
     {
         $owner = $this->makeUser();

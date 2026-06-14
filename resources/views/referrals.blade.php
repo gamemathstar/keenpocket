@@ -3,6 +3,14 @@
 @section('heading', 'Invite & earn')
 
 @section('content')
+    <div class="bg-gradient-to-br from-sky-400 to-blue-600 text-white rounded-2xl p-5 mb-6 flex items-center gap-4 overflow-hidden">
+        <div class="flex-1">
+            <h2 class="text-xl font-extrabold">Bring your circle along 🎁</h2>
+            <p class="text-sm text-white/90 mt-1">Saving is better together — invite friends and family to join you on KeenPocket.</p>
+        </div>
+        <img src="{{ asset('ant-k/kandfriendsceleb.png') }}" alt="K and friends" class="hidden sm:block h-28 -mb-5 -mr-2 drop-shadow">
+    </div>
+
     <div class="grid lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
             <h3 class="font-semibold mb-1">Your invite link</h3>

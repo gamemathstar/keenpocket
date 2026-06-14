@@ -131,4 +131,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(BankAccount::class)->orderByDesc('is_default')->orderBy('id');
     }
+
+    public function school()
+    {
+        return $this->hasOne(School::class, 'owner_id');
+    }
+
+    /** Students where this user is the parent. */
+    public function children()
+    {
+        return $this->hasMany(Student::class, 'parent_id');
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return (bool) ($this->is_super_admin ?? false)
+            || in_array($this->email, config('school.super_admins', []), true);
+    }
+
+    public function canCreateSchool(): bool
+    {
+        return $this->isSuperAdmin() || (bool) ($this->can_create_school ?? false);
+    }
 }

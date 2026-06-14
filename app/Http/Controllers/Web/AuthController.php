@@ -25,13 +25,15 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Accept either an email or a phone number in the single "login" field.
-        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
+        // The single "login" field accepts an email, phone number, or username.
+        $login = trim($data['login']);
+        $user = User::where('email', $login)->orWhere('phone_number', $login)->orWhere('username', $login)->first();
 
-        if (!Auth::attempt([$field => $data['login'], 'password' => $data['password']], $request->boolean('remember'))) {
-            return back()->withErrors(['login' => 'Invalid credentials. Check your phone/email and password.'])->onlyInput('login');
+        if (!$user || !\Illuminate\Support\Facades\Hash::check($data['password'], $user->password)) {
+            return back()->withErrors(['login' => 'Invalid credentials. Check your phone/email/username and password.'])->onlyInput('login');
         }
 
+        Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));

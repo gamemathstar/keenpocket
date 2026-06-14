@@ -3,6 +3,9 @@
 @section('heading', 'Pocket')
 
 @section('content')
+@if (!$isMember && !$isOwner)
+    @include('pockets._public')
+@else
     <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
         <div class="flex items-start justify-between gap-4">
             <div>
@@ -84,12 +87,110 @@
                             <input name="guarantor_contact" class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand" placeholder="guarantor@example.com">
                         </div>
                     @endif
+                    @if ($pocket->rules)
+                        <div class="rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-600 px-3 py-2.5 whitespace-pre-line"><span class="font-semibold">Group rules:</span> {{ $pocket->rules }}</div>
+                    @endif
                     <x-terms-notice variant="join" />
                     <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Request to join</button>
                 </form>
             @endif
         @endif
     </div>
+
+    {{-- Group rules + owner tools --}}
+    @if ($pocket->rules || $isOwner)
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="font-semibold">📋 Group rules</h3>
+                @if ($isOwner)
+                    <div class="flex gap-2">
+                        <button type="button" onclick="document.getElementById('rulesModal').classList.remove('hidden')" class="btn-soft text-sm">Edit rules</button>
+                        <button type="button" onclick="document.getElementById('cloneModal').classList.remove('hidden')" class="btn-soft text-sm">⧉ Clone</button>
+                    </div>
+                @endif
+            </div>
+            @if ($pocket->rules)
+                <p class="text-sm text-slate-600 whitespace-pre-line">{{ $pocket->rules }}</p>
+            @else
+                <p class="text-sm text-slate-400">No rules set. Add the group's agreement (contribution dates, penalties for lateness, etc.).</p>
+            @endif
+        </div>
+        @if ($isOwner)
+            <div id="rulesModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onclick="if(event.target===this)this.classList.add('hidden')">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100">
+                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                        <span class="font-semibold">Group rules</span>
+                        <button type="button" onclick="document.getElementById('rulesModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <form method="POST" action="{{ route('pockets.rules', $pocket->id) }}" class="p-5 space-y-3">
+                        @csrf
+                        <textarea name="rules" rows="6" maxlength="5000" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="e.g. Contributions due by the 5th. Two missed payments → review by the group.">{{ $pocket->rules }}</textarea>
+                        <button class="w-full rounded-lg bg-brand text-white font-medium py-2.5">Save rules</button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Clone modal: adjust settings + choose which members to carry over --}}
+            <div id="cloneModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onclick="if(event.target===this)this.classList.add('hidden')">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100 shrink-0">
+                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                        <span class="font-semibold">Clone pocket</span>
+                        <button type="button" onclick="document.getElementById('cloneModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <form method="POST" action="{{ route('pockets.clone', $pocket->id) }}" class="p-5 space-y-3 overflow-y-auto">
+                        @csrf
+                        <input name="title" value="{{ $pocket->title }} (copy)" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="Title">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="block text-xs font-medium mb-1">Year</label><input type="number" name="year" value="{{ (int) date('Y') }}" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                            <div><label class="block text-xs font-medium mb-1">₦/hand</label><input type="number" name="amount_per_hand" value="{{ $pocket->amount_per_hand }}" min="1" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                            <div><label class="block text-xs font-medium mb-1">Months</label><input type="number" name="month_count" value="{{ $pocket->month_count }}" min="1" class="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"></div>
+                        </div>
+                        <div><label class="block text-xs font-medium mb-1">Max members (0 = ∞)</label><input type="number" name="max_keens" value="{{ $pocket->max_keens }}" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></div>
+                        <div>
+                            <p class="text-xs font-medium mb-1">Carry over members</p>
+                            <div class="max-h-40 overflow-y-auto space-y-1 rounded-lg border border-slate-200 p-2">
+                                @forelse ($members->where('status', 1) as $m)
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" name="members[]" value="{{ $m->user_id }}" checked class="rounded border-slate-300 text-brand focus:ring-brand">
+                                        <span>{{ $m->name }} <span class="text-xs text-slate-400">· {{ (int) $m->hand_count }} hand(s)</span></span>
+                                    </label>
+                                @empty
+                                    <p class="text-xs text-slate-400">No active members.</p>
+                                @endforelse
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Uncheck anyone you don't want in the new pocket.</p>
+                        </div>
+                        <button class="w-full rounded-lg bg-brand text-white font-medium py-2.5">Create clone</button>
+                    </form>
+                </div>
+            </div>
+        @endif
+    @endif
+
+    {{-- Owner: members' payments awaiting approval --}}
+    @if ($isOwner)
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+            <h3 class="font-semibold mb-3">Payments to approve
+                @if ($pendingApprovals->isNotEmpty())<span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{{ $pendingApprovals->count() }}</span>@endif
+            </h3>
+            @forelse ($pendingApprovals as $inv)
+                <div class="py-2 flex items-center justify-between text-sm border-b border-slate-100 last:border-0">
+                    <span><span class="font-medium">{{ $inv->name }}</span> <span class="text-xs text-slate-400">· {{ $inv->invoice_no }}</span></span>
+                    <span class="flex items-center gap-3">
+                        <span class="font-medium">₦{{ number_format($inv->amount) }}</span>
+                        <form method="POST" action="{{ route('invoices.markPaid', $inv->id) }}">
+                            @csrf
+                            <button class="text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1">Mark paid</button>
+                        </form>
+                    </span>
+                </div>
+            @empty
+                <p class="text-sm text-slate-500">No payments awaiting approval. 🎉</p>
+            @endforelse
+        </div>
+    @endif
 
     <div class="grid lg:grid-cols-2 gap-6">
         {{-- Members --}}
@@ -351,5 +452,5 @@
             <a href="{{ route('charity.setup', $pocket->id) }}" class="inline-block rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Set up charity</a>
         </div>
     @endif
-
+@endif
 @endsection
