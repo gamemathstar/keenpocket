@@ -25,6 +25,10 @@
             @yield('content')
         </div>
         <p class="text-center text-xs text-slate-400 mt-6">Save together — pockets &amp; adashi made easy.</p>
+        <p class="text-center text-xs text-slate-400 mt-2">
+            <a href="{{ route('terms') }}" class="hover:underline">Terms</a> ·
+            <a href="{{ route('privacy') }}" class="hover:underline">Privacy</a>
+        </p>
     </div>
 </div>
 </body>

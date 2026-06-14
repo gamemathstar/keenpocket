@@ -184,6 +184,10 @@
                             @csrf
                             <button class="text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1">Mark paid</button>
                         </form>
+                        <form method="POST" action="{{ route('invoices.decline', $inv->id) }}" onsubmit="return confirm('Decline this payment request?')">
+                            @csrf
+                            <button class="text-xs rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 px-3 py-1">Decline</button>
+                        </form>
                     </span>
                 </div>
             @empty

@@ -19,9 +19,12 @@
                    class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand"
                    placeholder="••••••••">
         </div>
-        <label class="flex items-center gap-2 text-sm text-slate-600">
-            <input type="checkbox" name="remember" class="rounded border-slate-300 text-brand focus:ring-brand"> Remember me
-        </label>
+        <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 text-sm text-slate-600">
+                <input type="checkbox" name="remember" class="rounded border-slate-300 text-brand focus:ring-brand"> Remember me
+            </label>
+            <a href="{{ route('password.request') }}" class="text-sm text-brand-dark hover:underline">Forgot password?</a>
+        </div>
         <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5 transition">Sign in</button>
     </form>
 

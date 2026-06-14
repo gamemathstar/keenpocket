@@ -25,6 +25,19 @@
             </div>
             <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Save coin settings</button>
         </form>
+
+        <form method="POST" action="{{ route('super-admin.keens') }}" class="flex flex-wrap items-end gap-2 border-t border-slate-100 pt-4 mt-4">
+            @csrf
+            <div class="flex-1 min-w-[12rem]">
+                <label class="block text-xs font-medium mb-1">Top up a user (phone / email / username)</label>
+                <input name="contact" required class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand" placeholder="08012345678">
+            </div>
+            <div>
+                <label class="block text-xs font-medium mb-1">Keens</label>
+                <input type="number" name="amount" min="1" value="50" class="w-28 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand focus:ring-brand">
+            </div>
+            <button class="btn-soft text-sm">🪙 Grant</button>
+        </form>
     </div>
 
     <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">

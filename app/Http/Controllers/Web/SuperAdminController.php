@@ -57,6 +57,25 @@ class SuperAdminController extends Controller
         return back()->with('status', 'Coin settings saved.');
     }
 
+    /** Grant Keens to a user (top-up), found by phone / email / username. */
+    public function grantKeens(Request $request)
+    {
+        $this->guard();
+        $data = $request->validate([
+            'contact' => 'required|string|max:255',
+            'amount' => 'required|integer|min:1|max:1000000',
+        ]);
+        $c = trim($data['contact']);
+        $user = User::where('phone_number', $c)->orWhere('email', $c)->orWhere('username', $c)->first();
+        if (!$user) {
+            return back()->withErrors(['contact' => 'No user found with that phone, email or username.']);
+        }
+
+        app(CoinService::class)->grant($user, (int) $data['amount'], 'Super-admin top-up');
+
+        return back()->with('status', "Granted {$data['amount']} Keens to {$user->name} (new balance {$user->fresh()->keens}).");
+    }
+
     public function grant($id)
     {
         $this->guard();

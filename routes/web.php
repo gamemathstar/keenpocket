@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\DiscoverController;
 use App\Http\Controllers\Web\InvoiceController;
 use App\Http\Controllers\Web\KycWebController;
 use App\Http\Controllers\Web\NotificationController;
+use App\Http\Controllers\Web\PasswordResetController;
 use App\Http\Controllers\Web\PayoutsController;
 use App\Http\Controllers\Web\PocketController;
 use App\Http\Controllers\Web\ProfileController;
@@ -26,12 +27,22 @@ use Illuminate\Support\Facades\Route;
 // Landing → app or login.
 Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'login'));
 
+// Public legal pages.
+Route::view('/terms', 'legal.terms')->name('terms');
+Route::view('/privacy', 'legal.privacy')->name('privacy');
+
 // Guest (session) auth.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuth::class, 'showLogin'])->name('login');
     Route::post('/login', [WebAuth::class, 'login']);
     Route::get('/register', [WebAuth::class, 'showRegister'])->name('register');
     Route::post('/register', [WebAuth::class, 'register']);
+
+    // Forgot / reset password (emailed link).
+    Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequest'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showReset'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 });
 
 // Authenticated app.
@@ -44,6 +55,7 @@ Route::middleware('auth')->group(function () {
     // School fee-management module
     Route::get('/super-admin', [\App\Http\Controllers\Web\SuperAdminController::class, 'index'])->name('super-admin.index');
     Route::post('/super-admin/coins', [\App\Http\Controllers\Web\SuperAdminController::class, 'saveCoins'])->name('super-admin.coins');
+    Route::post('/super-admin/keens', [\App\Http\Controllers\Web\SuperAdminController::class, 'grantKeens'])->name('super-admin.keens');
     Route::post('/super-admin/{id}/grant', [\App\Http\Controllers\Web\SuperAdminController::class, 'grant'])->name('super-admin.grant');
     Route::post('/super-admin/{id}/revoke', [\App\Http\Controllers\Web\SuperAdminController::class, 'revoke'])->name('super-admin.revoke');
     Route::get('/my-children', [\App\Http\Controllers\Web\SchoolController::class, 'children'])->name('school.children');
@@ -86,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/pockets/{id}/invoices/preview', [InvoiceController::class, 'preview'])->name('invoices.preview');
     Route::post('/pockets/{id}/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
     Route::post('/invoices/{id}/mark-paid', [InvoiceController::class, 'markPaid'])->name('invoices.markPaid');
+    Route::post('/invoices/{id}/decline', [InvoiceController::class, 'decline'])->name('invoices.decline');
     Route::post('/invoices/{id}/pay-wallet', [InvoiceController::class, 'payWallet'])->name('invoices.payWallet');
 
     // Pocket shopping list (group buying)

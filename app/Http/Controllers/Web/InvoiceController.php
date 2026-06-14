@@ -145,6 +145,22 @@ class InvoiceController extends Controller
         return back()->with('status', 'Payment approved.')->with('celebrate', true);
     }
 
+    /** Pocket owner declines (removes) a member's pending invoice. */
+    public function decline($invoiceId)
+    {
+        $invoice = Invoice::findOrFail($invoiceId);
+        $pocket = $this->pocketForInvoice($invoice);
+        abort_unless($pocket && $pocket->user_id == auth()->id(), 403, 'Only the pocket owner can decline payments.');
+        abort_if($invoice->payment_status === 'Paid', 422, 'A paid invoice cannot be declined.');
+
+        DB::transaction(function () use ($invoice) {
+            InvoiceItem::where('invoice_id', $invoice->id)->delete();
+            $invoice->delete();
+        });
+
+        return back()->with('status', 'Payment request declined.');
+    }
+
     /** Member pays their own invoice from wallet balance. */
     public function payWallet($invoiceId, WalletService $wallet, MarkInvoicePaid $markPaid)
     {
