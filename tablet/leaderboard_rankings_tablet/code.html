@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket - Rewards &amp; Rankings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#e0e3e5",
+            "on-primary-fixed-variant": "#004c6e",
+            "on-primary-container": "#00405d",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#930014",
+            "secondary-fixed": "#ffdf92",
+            "primary-fixed-dim": "#88ceff",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#755b00",
+            "inverse-primary": "#88ceff",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "secondary-fixed-dim": "#f4bf00",
+            "on-secondary-fixed-variant": "#594400",
+            "on-tertiary-container": "#7e000f",
+            "surface-container-high": "#e6e8ea",
+            "on-secondary-fixed": "#241a00",
+            "outline": "#6e7881",
+            "surface-container": "#eceef0",
+            "tertiary-fixed-dim": "#ffb3ae",
+            "primary": "#006590",
+            "background": "#f7f9fb",
+            "on-surface-variant": "#3e4850",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "on-surface": "#191c1e",
+            "surface": "#f7f9fb",
+            "surface-bright": "#f7f9fb",
+            "outline-variant": "#bdc8d2",
+            "surface-dim": "#d8dadc",
+            "tertiary": "#bb1522",
+            "on-tertiary-fixed": "#410004",
+            "tertiary-fixed": "#ffdad7",
+            "on-primary-fixed": "#001e2e",
+            "inverse-surface": "#2d3133",
+            "on-background": "#191c1e",
+            "inverse-on-surface": "#eff1f3",
+            "tertiary-container": "#ff8079",
+            "surface-tint": "#006590",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#1cb0f6",
+            "on-error": "#ffffff",
+            "primary-fixed": "#c8e6ff",
+            "error-container": "#ffdad6",
+            "secondary-container": "#fec700",
+            "on-secondary-container": "#6e5400"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px",
+            "candy": "1.5rem"
+          },
+          "spacing": {
+            "container-max": "1200px",
+            "unit": "4px",
+            "margin-mobile": "20px",
+            "gutter": "16px",
+            "margin-desktop": "40px"
+          },
+          "fontFamily": {
+            "label-bold": ["Nunito Sans"],
+            "headline-md": ["Nunito Sans"],
+            "headline-lg": ["Nunito Sans"],
+            "headline-lg-mobile": ["Nunito Sans"],
+            "display": ["Nunito Sans"],
+            "body-lg": ["Nunito Sans"],
+            "body-md": ["Nunito Sans"]
+          },
+          "fontSize": {
+            "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+            "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background-color: #f7f9fb;
+    }
+
+    .candy-button {
+      transition: all 0.1s ease;
+      position: relative;
+    }
+
+    .candy-button:hover {
+      transform: translateY(2px);
+    }
+
+    .candy-button:active {
+      transform: translateY(4px);
+      box-shadow: none !important;
+    }
+
+    .candy-card {
+      box-shadow: 0 7px 0 0 #e0e3e5;
+    }
+
+    .candy-card-primary {
+      box-shadow: 0 7px 0 0 #004c6e;
+    }
+
+    .podium-1 { height: 160px; box-shadow: 0 7px 0 0 #e0e3e5; }
+    .podium-2 { height: 120px; box-shadow: 0 7px 0 0 #e0e3e5; }
+    .podium-3 { height: 90px; box-shadow: 0 7px 0 0 #e0e3e5; }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #bdc8d2;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="text-on-background">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex h-screen w-64 bg-surface-container-lowest dark:bg-surface-container-low border-r-4 border-surface-variant dark:border-outline-variant flex-col p-4 gap-2 sticky top-0">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Mr. K Mascot" class="w-full h-full object-cover" data-alt="A friendly, expressive blue mascot character named Mr. K, designed in a playful 3D-inspired vector style. The mascot has large, warm eyes and a joyful smile, standing against a bright, minimalist background with vibrant yellow coin-like elements that reinforce a gamified finance aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuBi_nTbCizdJGpJPAfKT1xNTLyt0j1EcCGwXfjFdgjkuL9DsK-LsSLbAYalpofmO63V9ZuNRlwWgawL8bEpLDXi1Yf6kmT5x6Y8vwBJWO8Pv4kKnjWmBrt8g96_8fHN_TtFJEq73WmMgy7CTbaslfNHiD3trfmbsa7_7EXDTI1uaKOYU5RS0BdsiZZsid5HKlvCLVGXeEml-C3QNYnkEJDrWR4bCfvXtS9Dv3XoLUU36lBaMWEpejLupeA8kH33uE2ewx2YRAleI"/>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md text-primary">KeenPocket</h1>
+<p class="text-[10px] font-label-bold text-on-surface-variant opacity-70">Save together, grow together</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="font-body-md">Pockets</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-body-md">Adashi Groups</span>
+</a>
+<!-- Rewards is active -->
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-on-primary-container/20 scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="font-label-bold">Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<button class="candy-button mt-auto bg-secondary-container text-on-secondary-container font-label-bold py-4 rounded-xl border-b-4 border-on-secondary-container/30">
+        Create Pocket
+      </button>
+</aside>
+<main class="flex-grow flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full bg-background dark:bg-background py-2 sticky top-0 z-10">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-16">
+<div class="md:hidden">
+<h1 class="text-headline-md font-headline-md text-primary">KeenPocket</h1>
+</div>
+<div class="hidden md:block">
+<h2 class="text-headline-md font-headline-md text-on-surface">Leaderboard</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden bg-surface-container">
+<img alt="User profile" data-alt="A professional headshot of a friendly user for an application interface, featuring soft natural lighting and a clean, neutral background. The person has a warm expression, suitable for a companion-led gamified financial application with a clean light-mode aesthetic and a vibrant primary blue color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIoiAr9l4T5QhPe0MWVQNez7JEwPZ2_53dBs4eOE9yeUBzmQ7hxV2IMGfPHCZtmNBwrWYuS7xN14urlLh2lx1s1T9l2Sh8z7PoJmvxHxsrtcgd_HuOJwoJ8hX9arDQSsfgRtWr58a49Zfi0XQMHndPfPLLxKRoe5rlEZ7HQTR-3_wTaZIj2SDH3N3x8KylzHOKH_aS-Nw_REQ9WkCBf75u-v29WHJgmL5Lg2oiUmuUEYk7wU-x8Jgj6VtqByJAjkAqN-7ocrJDNO8"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="px-margin-desktop py-6 max-w-container-max w-full mx-auto grid grid-cols-12 gap-8">
+<!-- Main Content (Leaderboard) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-8">
+<!-- Podium Section -->
+<section class="bg-surface-container-lowest rounded-candy p-8 candy-card border-2 border-surface-variant/20">
+<div class="flex items-end justify-center gap-4 md:gap-12 pb-4">
+<!-- Rank 2 -->
+<div class="flex flex-col items-center gap-3">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-4 border-surface-variant overflow-hidden">
+<img alt="Jordan" data-alt="A profile avatar for a leaderboard participant named Jordan, showing a cheerful face in a circular frame. The image has a vibrant and high-energy feel, utilizing soft shadows and warm studio lighting to match the playful, candy-like visual style of the application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPRG4E8-m9_gTvLO25kyFP3rCgkmE2IVRGE4dwfnTRpCLId2bnAbDR3-xEVXVVuGtvgsKjhUkE8aF8hbW8DxStAc6T4B1TNdJF1cd4KtZafp278RANW0vAnXVX_MfzxNr39gFUz-uajJjk6Q69jG9RSYYjnlm8c0qT6rLinP6sNhMou7J6TxRknk09c8-WsWhY-egYUkXM6n3yqySuftJfELilCsk2QpWHXQgl_MVLQmndgqrr_JZZOOm4Ky1gRsGAzY3YLuU9tO0"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-surface-variant text-on-surface-variant w-8 h-8 rounded-full flex items-center justify-center font-label-bold text-sm border-2 border-white">2</div>
+</div>
+<div class="text-center">
+<p class="font-label-bold text-on-surface">Jordan</p>
+<p class="text-primary font-bold text-sm">8,450 pts</p>
+</div>
+<div class="podium-2 w-24 bg-surface-container-high rounded-t-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant opacity-30 text-4xl" data-icon="workspace_premium">workspace_premium</span>
+</div>
+</div>
+<!-- Rank 1 -->
+<div class="flex flex-col items-center gap-3">
+<div class="relative">
+<div class="w-24 h-24 rounded-full border-4 border-secondary-container overflow-hidden scale-110">
+<img alt="Sarah" data-alt="A radiant profile portrait of Sarah, the leaderboard winner, with a glowing smile. The background is softly blurred with hints of vibrant blue and sunny yellow, fitting the 'Duolingo energy' of the brand identity. The lighting is crisp and optimistic, emphasizing her top status in the community." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBB9YUHAdLowmCi0Ux1aFvWE-IvWkwZ7ECfRZ9YWp1Bh0vM_5A5ORwX7RbNC5wdTboQxNWrnruhZMWux-cAm9GRK7OoA9lYE6mz6QopQ9lOTtq-bFrJ4lUHLgXOoizP9g_JfvixgwJvJ5o-L_UD8JcebkdhVd2wuaKfPXKt03Rdhd9gR3tQ9LB3nAm6GpWcULF3-5kpP5rsJbCvg4OUMHrbTOKMoGPIgggCdg2xoHl4rw_DiokHM42CUKar2RixyPL2alzy1G0Y3fc"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-secondary-container text-on-secondary-container w-10 h-10 rounded-full flex items-center justify-center font-label-bold text-lg border-2 border-white shadow-sm">1</div>
+<div class="absolute -top-6 left-1/2 -translate-x-1/2">
+<span class="material-symbols-outlined text-secondary-container text-4xl drop-shadow-md" data-icon="hotel_class" style="font-variation-settings: 'FILL' 1;">hotel_class</span>
+</div>
+</div>
+<div class="text-center mt-2">
+<p class="font-label-bold text-headline-md text-on-surface">Sarah</p>
+<p class="text-primary font-black text-lg">12,200 pts</p>
+</div>
+<div class="podium-1 w-32 bg-primary-container/10 border-x-2 border-t-2 border-primary-container/20 rounded-t-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-5xl" data-icon="trophy" style="font-variation-settings: 'FILL' 1;">trophy</span>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="flex flex-col items-center gap-3">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-4 border-tertiary-container overflow-hidden">
+<img alt="Mike" data-alt="A portrait of Mike, a leaderboard competitor, for a friendly social app. The visual style is tactile and playful with vibrant colors and chunky structural elements in the background. The lighting is bright and cheerful, reinforcing a rewarding and gamified experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjDVn_Byo-eh2IVMkdg_Qhjn1RHnyTaEHZLkoBvhJ5c9o3T6APdefoZDAwPaWrOT12hwA-n9L9VbeoS3NuDFEf4YYByGH2ce4rBiN0mPfBTrP4f9zdRdp0AASn-npuNzacMBQ1wBvfZXjbjmU1FNtR4rVmQbyr-08992AwWw6CUmUIv-cYgVjPJSO_N5wC3CH_OfeCPCBagWPuSw13N6v3JMJoGg9Q37St07zK2UB4IE0aWqivZeLmRK9Dl3eWJqrF4zILE_QS6xI"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-tertiary-container text-on-tertiary-container w-8 h-8 rounded-full flex items-center justify-center font-label-bold text-sm border-2 border-white">3</div>
+</div>
+<div class="text-center">
+<p class="font-label-bold text-on-surface">Mike</p>
+<p class="text-primary font-bold text-sm">7,900 pts</p>
+</div>
+<div class="podium-3 w-24 bg-surface-container-high rounded-t-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant opacity-30 text-3xl" data-icon="star">star</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Rankings List -->
+<section class="bg-surface-container-lowest rounded-candy p-6 candy-card border-2 border-surface-variant/20 flex flex-col gap-4">
+<h3 class="font-label-bold text-on-surface-variant px-2">RECENTLY CLIMBED</h3>
+<div class="flex flex-col gap-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+<!-- Row Item -->
+<div class="flex items-center justify-between p-4 bg-background rounded-2xl border-b-2 border-surface-variant/30 hover:bg-surface-variant/20 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-on-surface-variant w-6 text-center">4</span>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="Casey" data-alt="A circular profile photo for an app user named Casey. The lighting is soft and even, highlighting a friendly face. The overall aesthetic is clean and modern, set against a simple white background that emphasizes the chunky, physical nature of the UI cards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATyYfmTs5n4GJnpQTYMW4vNRh5qZrSb_7R6RklJI7Tkn_vBKegroZW58Qn450wr8ND3FcGWumq77cd8iVc9dIy2wDiQlXMEhGNR4V9xhyXR_Ffb9ZbS8gTOKsYSw4410KH7mLn6tcoTUu18ynT5LcnLzdR_2z6GWMSD4vu_cV1DWQqgDcZl4KrlZUPAWjfBGW8A6y0KxRMpDdjRptQu6Fo14vCodov9QhLjW7uVxPVpu3CIIdQWFkDaWg-vM0J6IiF31Xco93c9mw"/>
+</div>
+<span class="font-label-bold text-on-surface">Casey</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-body-md text-on-surface-variant font-bold">6,400 <span class="text-[10px] uppercase">pts</span></span>
+<span class="material-symbols-outlined text-green-500" data-icon="arrow_upward">arrow_upward</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-background rounded-2xl border-b-2 border-surface-variant/30 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-on-surface-variant w-6 text-center">5</span>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="Sam" data-alt="A cheerful portrait of Sam for an application leaderboard. The lighting is warm and approachable, supporting a tactile and physical digital environment. The color scheme features friendly blues and yellows, maintaining a high-energy and optimistic brand feeling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaJ0_cHPJschGzA48g78V6LppPCGvUXb4UQvE0R_QU0qkI6egNXHgvdGLnIwtPGEr4SBh8gme3HkjA_KsgEPuuVjNeO_7CWt_ZH-vxpJWZOu9xSLCpauJqnINlizDF2JHYK5RxsDN1l3x3-HqppR6hhhGySqMMLz_dPYghijExqqmwYoY3VVZAJHvtc0cROLPLv91sUAkWAKoSKgtruvaqFUUKB3vt1fXQvAG8h7ldM3B5AML6oWEf6PKvE9efYngfTee_mXRr2s8"/>
+</div>
+<span class="font-label-bold text-on-surface">Sam</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-body-md text-on-surface-variant font-bold">5,820 <span class="text-[10px] uppercase">pts</span></span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-30" data-icon="horizontal_rule">horizontal_rule</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-background rounded-2xl border-b-2 border-surface-variant/30 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-on-surface-variant w-6 text-center">6</span>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="Riley" data-alt="A close-up portrait of Riley, a user in a gamified finance app. The image features high-key lighting and a soft, clean aesthetic. The visual context is optimistic and playful, with chunky borders and vibrant blue accents integrated into the surrounding UI components." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyuM-h8-k80S3W6ipHlUlvWRDPvq0H94h6NbEwbsJY5zAkfvlft1V1EcjkFcUB6cxx_3t4J6Qe5q0rVj4S8IVmHi_0q0dSCXFGHIJ2gcvVGhLroU3AVvTvKVX8r0CWiX_-UNME1iAoE5-zo0huKx7oPwPuOizCPBGrL5l9J-pU_Lb9c-YbppBWKd8zgnI-RsstGXX7LPtLVIzgKnj8LZDW7zbq05cRCIP2FoALIObg4WYDwgx5fcRrD6vARr2SkzNhxZnaflaROf0"/>
+</div>
+<span class="font-label-bold text-on-surface">Riley</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-body-md text-on-surface-variant font-bold">5,100 <span class="text-[10px] uppercase">pts</span></span>
+<span class="material-symbols-outlined text-green-500" data-icon="arrow_upward">arrow_upward</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-background rounded-2xl border-b-2 border-surface-variant/30 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-on-surface-variant w-6 text-center">7</span>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<div class="w-full h-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">AL</div>
+</div>
+<span class="font-label-bold text-on-surface">Alex</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-body-md text-on-surface-variant font-bold">4,990 <span class="text-[10px] uppercase">pts</span></span>
+<span class="material-symbols-outlined text-red-500" data-icon="arrow_downward">arrow_downward</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Rail -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- Standing Card -->
+<div class="bg-primary-container text-on-primary-container rounded-candy p-6 candy-card-primary flex flex-col gap-6">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-label-bold opacity-80 uppercase tracking-widest text-xs">Your Standing</h3>
+<p class="text-display font-display leading-none mt-2">#42</p>
+<p class="font-body-md mt-1">Top 15% this week!</p>
+</div>
+<div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<div class="bg-white/10 p-4 rounded-2xl border border-white/20">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="bolt" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-bold">Focus Mode</span>
+</div>
+<!-- Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-white/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary-container"></div>
+</label>
+</div>
+<p class="text-xs opacity-70">Focus mode boosts your points by 1.2x during group savings sessions.</p>
+</div>
+</div>
+<!-- Weekly Stats -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-candy candy-card border-2 border-surface-variant/20 flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+<div>
+<p class="text-xs font-label-bold text-on-surface-variant">Points Earned</p>
+<p class="text-headline-md font-headline-md text-on-surface">1,240</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-candy candy-card border-2 border-surface-variant/20 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="handshake" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<div>
+<p class="text-xs font-label-bold text-on-surface-variant">Contributions</p>
+<p class="text-headline-md font-headline-md text-on-surface">12</p>
+</div>
+</div>
+</div>
+<!-- Decorative/Promo Illustration -->
+<div class="bg-secondary-fixed rounded-candy p-6 overflow-hidden relative candy-card border-2 border-surface-variant/20 min-h-[220px] flex items-center justify-center">
+<div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+<img alt="Keen Coin Illustration" class="w-48 h-48 object-contain drop-shadow-2xl relative z-1" data-alt="A stylized 3D rendered yellow coin with the letter 'K' embossed on its surface, representing the 'Keen' currency. The coin has a smooth, candy-like finish with glossy highlights, sitting against a bright and optimistic background. The overall style is playful and tactile, aligning with a gamified financial application’s high-energy visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ9TvcGjOek5AcnFZyRTD_Fxt41dkcMboG9zjvwDL5rebvJSUsEFjo4rv7JpMQE_vcW_nY6XFtMHakY32RYbZqLxD-XDR-MSsddEa23gXPYiZIuslMMSsOGZZaYS0-41PKXlCNYtV9Wr-bfPxmsdaJ9lfJDoSrcf-uneGHqWWz6RRojIm7Ll_hHT5S55oCDBUVAiX1Oh1HnkDkjB6RoyvjEh25w9V5_kZiN70FqG3vEpBLwoyGadTfH-hgUwUp9rtLOgr5pA4o13s"/>
+<div class="absolute bottom-4 left-4 right-4 z-2 bg-white/90 backdrop-blur-sm p-3 rounded-xl border border-white">
+<p class="text-xs font-label-bold text-secondary text-center">Refer a friend to get 500 Keens! 🪙</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // Simple micro-interaction for ranking list
+    document.querySelectorAll('.ranking-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        item.classList.add('translate-x-2');
+      });
+      item.addEventListener('mouseleave', () => {
+        item.classList.remove('translate-x-2');
+      });
+    });
+
+    // Theme toggle logic (if needed, defaults to light)
+    const toggleTheme = () => {
+      document.documentElement.classList.toggle('dark');
+    };
+  </script>
+</body></html>

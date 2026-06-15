@@ -1,0 +1,414 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Manage Adashi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#006590",
+                        "outline-variant": "#bdc8d2",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#88ceff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdf92",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#00405d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fec700",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#241a00",
+                        "on-background": "#191c1e",
+                        "primary-fixed": "#c8e6ff",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-container": "#ff8079",
+                        "tertiary": "#bb1522",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#001e2e",
+                        "secondary": "#755b00",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .candy-button {
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bdc8d2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Navigation Shell (SideNavBar) -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low border-r-4 border-surface-variant shadow-[4px_0px_0px_0px_rgba(0,101,144,0.1)] z-50">
+<div class="flex flex-col gap-4 p-6 h-full">
+<div class="mb-8 flex items-center gap-3">
+<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-[0_4px_0_0_#004c6e]">
+<img alt="KeenPocket Mascot" class="w-8 h-8 filter brightness-0 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANbHDloWse1pFqEgNNjQ53tqsQpibL8Cc5gIiQv6JAnKuA9A-q7EUFFunDBojYv749EVkNEHbRqGy6SMX1pjB4Nn3YsCXhKnaIqmqIOQNYQ8AVYUgE7OgYAFdcbVHhX8bPmZn6M1jkt65sBnvG9Y9vBXF3AJ1tkYsVkdi_Saqlk0PaGImLpTF9PujOJHAWHkVtJc5FE6j5hERsgUBgEskrcdeZd1fMXLz8fQiAu1ZT6TFOc4QVyZ4WF5M3aohjN-GE9cOZz9DmhMo">
+</div>
+<div>
+<h1 class="font-display text-headline-md text-primary leading-none">Adashi Wallet</h1>
+<p class="font-label-bold text-[12px] text-on-surface-variant">Managing your savings</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] font-label-bold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-transform hover:scale-[1.02] font-label-bold" href="#">
+<span class="material-symbols-outlined">group</span>
+                    My Groups
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-transform hover:scale-[1.02] font-label-bold" href="#">
+<span class="material-symbols-outlined">explore</span>
+                    Explore
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-transform hover:scale-[1.02] font-label-bold" href="#">
+<span class="material-symbols-outlined">payments</span>
+                    Contributions
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-transform hover:scale-[1.02] font-label-bold" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<button class="candy-button mt-6 bg-secondary-container text-on-secondary-container font-label-bold py-3 px-4 rounded-xl shadow-[0_4px_0_0_#6e5400] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                New Group
+            </button>
+<div class="mt-auto border-t-2 border-surface-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container rounded-xl transition-transform hover:scale-[1.02] font-label-bold" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Log out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 h-screen flex flex-col relative">
+<!-- Header Console -->
+<header class="flex justify-between items-center px-margin-desktop py-6 bg-surface w-full border-b-4 border-surface-variant sticky top-0 z-40">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">Manage Adashi</h2>
+<p class="font-body-md text-on-surface-variant">Circle: Wealth Creators 2024</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<button class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<span class="absolute top-2 right-2 w-3 h-3 bg-error rounded-full border-2 border-surface"></span>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-primary">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a friendly young male administrator in a brightly lit, modern office setting. He is wearing a minimalist navy blue polo shirt. The lighting is soft and natural, emphasizing a high-energy yet approachable professional vibe. The overall aesthetic is clean and modern, matching a premium fintech application interface with primary blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2GcKN_uCgnrT87qFU5-2zVV12B2Byp70WMvn15XeBiQRSrSesQ--vbOd-m6QfAH2C2pMiohwqOoB6fgeh5LPfhNJEhAzpoe15Je8t51oMHKJjT6KwYDLIJdbhGK-LgCupJJxknsTLpAFE_9qE1Yr5RxQk-Khh0glqsQhTaEoxXdP-jD_3clrT7St0i_N7lgErTl8SvHyF82y_cRK3I83s70aitFTeu-QJu97WSbVKj_E2Fe_SWf2wRdgocV9hQAkddjpKAm06CQA">
+</div>
+</div>
+</header>
+<!-- Admin Workspace Layout -->
+<div class="flex-1 overflow-y-auto p-gutter custom-scrollbar pb-32">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter max-w-container-max mx-auto">
+<!-- Left Pane: Roster & Add Member -->
+<div class="lg:col-span-5 flex flex-col gap-gutter">
+<!-- Circle Members Roster -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 shadow-[0_7px_0_0_#e0e3e5] border border-surface-variant">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">groups</span>
+                                Circle Members
+                            </h3>
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed rounded-full font-label-bold text-[12px]">8 / 12 Members</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b-2 border-surface-variant">
+<th class="py-3 font-label-bold text-on-surface-variant uppercase text-[12px] tracking-wider">Pos</th>
+<th class="py-3 font-label-bold text-on-surface-variant uppercase text-[12px] tracking-wider">Member</th>
+<th class="py-3 font-label-bold text-on-surface-variant uppercase text-[12px] tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md">
+<tr class="border-b border-surface-variant">
+<td class="py-4 font-bold text-primary">01</td>
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high"></div>
+                                            Sarah J.
+                                        </td>
+<td class="py-4">
+<span class="px-3 py-1 bg-secondary-container/20 text-on-secondary-container rounded-full text-[12px] font-bold border border-secondary-container">Received</span>
+</td>
+</tr>
+<tr class="border-b border-surface-variant">
+<td class="py-4 font-bold text-primary">02</td>
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high"></div>
+                                            Michael R.
+                                        </td>
+<td class="py-4">
+<span class="px-3 py-1 bg-primary-container/20 text-on-primary-container rounded-full text-[12px] font-bold border border-primary-container">Active</span>
+</td>
+</tr>
+<tr class="border-b border-surface-variant">
+<td class="py-4 font-bold text-primary">03</td>
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high"></div>
+                                            Anita W.
+                                        </td>
+<td class="py-4">
+<span class="px-3 py-1 bg-primary-container/20 text-on-primary-container rounded-full text-[12px] font-bold border border-primary-container">Active</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Add Member Form -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 shadow-[0_7px_0_0_#e0e3e5] border border-surface-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Add Member</h3>
+<form class="flex flex-col gap-4">
+<div>
+<label class="font-label-bold text-on-surface-variant block mb-2">Member Email or Username</label>
+<input class="w-full rounded-xl border-2 border-outline-variant focus:border-primary focus:ring-4 focus:ring-primary/10 p-3 outline-none transition-all" placeholder="e.g. mr.k@keenpocket.com" type="text">
+</div>
+<div class="flex gap-4">
+<div class="flex-1">
+<label class="font-label-bold text-on-surface-variant block mb-2">Rotation Slot</label>
+<select class="w-full rounded-xl border-2 border-outline-variant focus:border-primary focus:ring-4 focus:ring-primary/10 p-3 outline-none transition-all">
+<option>Next Available (04)</option>
+<option>Manual Select</option>
+</select>
+</div>
+<div class="flex-1 flex items-end">
+<button class="candy-button w-full bg-primary text-on-primary font-label-bold py-3.5 rounded-xl shadow-[0_4px_0_0_#004c6e]" type="button">
+                                        Send Invite
+                                    </button>
+</div>
+</div>
+</form>
+</section>
+</div>
+<!-- Right Pane: Verify & Overrides -->
+<div class="lg:col-span-7 flex flex-col gap-gutter">
+<!-- Verify Payments -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 shadow-[0_7px_0_0_#e0e3e5] border border-surface-variant">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+                                Verify Payments
+                            </h3>
+<button class="candy-button px-6 py-2 bg-secondary-container text-on-secondary-container font-label-bold rounded-xl shadow-[0_4px_0_0_#6e5400]">
+                                Reconcile &amp; Rotate
+                            </button>
+</div>
+<div class="space-y-3">
+<!-- Payment Item -->
+<div class="p-4 rounded-2xl border-2 border-surface-variant flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-primary font-bold">DP</div>
+<div>
+<p class="font-body-lg text-on-surface">David Peterson</p>
+<p class="font-label-bold text-primary">$500.00 • Contribution</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="candy-button w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center shadow-[0_4px_0_0_#ba1a1a]">
+<span class="material-symbols-outlined">close</span>
+</button>
+<button class="candy-button w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_4px_0_0_#004c6e]">
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</div>
+<!-- Payment Item -->
+<div class="p-4 rounded-2xl border-2 border-surface-variant flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-primary font-bold">EM</div>
+<div>
+<p class="font-body-lg text-on-surface">Elena Martinez</p>
+<p class="font-label-bold text-primary">$500.00 • Contribution</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="candy-button w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center shadow-[0_4px_0_0_#ba1a1a]">
+<span class="material-symbols-outlined">close</span>
+</button>
+<button class="candy-button w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_4px_0_0_#004c6e]">
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Admin Overrides -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 shadow-[0_7px_0_0_#e0e3e5] border border-surface-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Admin Overrides</h3>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-primary/5 hover:border-primary group transition-all">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">swap_horiz</span>
+<span class="font-label-bold text-on-surface-variant">Set Receiver</span>
+</button>
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-error/5 hover:border-error group transition-all">
+<span class="material-symbols-outlined text-error group-hover:scale-110 transition-transform">person_off</span>
+<span class="font-label-bold text-on-surface-variant">Deactivate</span>
+</button>
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-secondary/5 hover:border-secondary group transition-all">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform">update</span>
+<span class="font-label-bold text-on-surface-variant">Reschedule</span>
+</button>
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-primary/5 hover:border-primary group transition-all">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">edit_calendar</span>
+<span class="font-label-bold text-on-surface-variant">Cycle Length</span>
+</button>
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-primary/5 hover:border-primary group transition-all">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">history</span>
+<span class="font-label-bold text-on-surface-variant">Audit Log</span>
+</button>
+<button class="p-4 rounded-2xl border-2 border-surface-variant flex flex-col items-center gap-3 hover:bg-error/5 hover:border-error group transition-all">
+<span class="material-symbols-outlined text-error group-hover:scale-110 transition-transform">delete_forever</span>
+<span class="font-label-bold text-on-surface-variant">Dissolve Circle</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Bottom Rail: Export/Clone -->
+<footer class="fixed bottom-0 right-0 left-64 bg-surface p-6 border-t-4 border-surface-variant flex justify-between items-center z-40">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 font-label-bold text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">download</span>
+                    Export Ledger (CSV)
+                </button>
+<button class="flex items-center gap-2 font-label-bold text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">content_copy</span>
+                    Clone Settings
+                </button>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="font-label-bold text-[12px] text-on-surface-variant">Current Rotation</p>
+<p class="font-body-lg text-primary">Slot 03 of 12</p>
+</div>
+<div class="w-32 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[25%] rounded-full"></div>
+</div>
+</div>
+</footer>
+<!-- Mascot Feedback (Mr. K) -->
+<div class="fixed bottom-32 right-12 flex items-end gap-4 pointer-events-none group">
+<div class="bg-surface-container-highest p-4 rounded-[1.5rem] rounded-br-none shadow-xl border-2 border-primary mb-12 max-w-xs animate-bounce opacity-0 group-hover:opacity-100 transition-opacity">
+<p class="font-label-bold text-primary">Everything looks great, Captain! David and Elena are ready to be verified.</p>
+</div>
+<div class="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center shadow-[0_7px_0_0_#004c6e] pointer-events-auto cursor-help">
+<img alt="Mr. K Mascot" class="w-16 h-16" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHkxQp3xnFHGJ0GTDX_2I1EZASGQ8q4kynAaUxw2ZTiHBkUNeAAvN7uEDxH1GxcGjMmLVZgWuQ1sX0WZyTupD1zsegXO3gesF-Fu2rxlmc41DHMoC1ZRFWItSA0f7Pj0bIL1HBHFlYEaaj5QmIti_Ae8LMVJralsOIT-gAht7PrXU4NAik51OuWggj321ZtzNr07co57z53ik-L3yiv5CTBLNuuyzwQtZtC19vWPl5sCtNRkCf0v08UCPAAlnDg8-QVDIAuoOHVKA">
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for buttons
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translateY(4px)';
+                button.style.boxShadow = 'none';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(0)';
+                // Refresh dynamic shadow based on background or hardcoded if needed
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Toggle mobile menu logic could go here, but prompt specifically asked for Tablet/iPad SideNav
+    </script>
+</body></html>

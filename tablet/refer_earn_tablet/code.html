@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket - Refer &amp; Earn</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-primary-container": "#00405d",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "secondary-fixed": "#ffdf92",
+                    "primary-fixed-dim": "#88ceff",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary": "#755b00",
+                    "inverse-primary": "#88ceff",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-secondary-fixed-variant": "#594400",
+                    "on-tertiary-container": "#7e000f",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary-fixed": "#241a00",
+                    "outline": "#6e7881",
+                    "surface-container": "#eceef0",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "primary": "#006590",
+                    "background": "#f7f9fb",
+                    "on-surface-variant": "#3e4850",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191c1e",
+                    "surface": "#f7f9fb",
+                    "surface-bright": "#f7f9fb",
+                    "outline-variant": "#bdc8d2",
+                    "surface-dim": "#d8dadc",
+                    "tertiary": "#bb1522",
+                    "on-tertiary-fixed": "#410004",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-primary-fixed": "#001e2e",
+                    "inverse-surface": "#2d3133",
+                    "on-background": "#191c1e",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#ff8079",
+                    "surface-tint": "#006590",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#1cb0f6",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#c8e6ff",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#fec700",
+                    "on-secondary-container": "#6e5400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1200px",
+                    "unit": "4px",
+                    "margin-mobile": "20px",
+                    "gutter": "16px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"],
+                    "display": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; background-color: #f7f9fb; }
+        
+        .candy-button {
+            position: relative;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+        }
+        .candy-button-shadow {
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.15);
+        }
+        .candy-button-primary {
+            background-color: #006590;
+            border-bottom: 4px solid #004c6e;
+        }
+        .candy-button-primary:active {
+            border-bottom: 0px solid transparent;
+        }
+        .candy-button-secondary {
+            background-color: #fec700;
+            border-bottom: 4px solid #6e5400;
+        }
+        .candy-button-secondary:active {
+            border-bottom: 0px solid transparent;
+        }
+        .candy-button-whatsapp {
+            background-color: #25D366;
+            border-bottom: 4px solid #128C7E;
+        }
+        .candy-button-whatsapp:active {
+            border-bottom: 0px solid transparent;
+        }
+
+        .chunky-card {
+            background: white;
+            border-radius: 1.5rem;
+            border-bottom: 7px solid #e0e3e5;
+            transition: border-color 0.2s ease;
+        }
+        .chunky-card:hover {
+            border-color: #bdc8d2;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (Authority: JSON & Style Guidance) -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-surface-container-lowest border-r-4 border-surface-variant p-4 gap-2 shrink-0 sticky top-0">
+<div class="flex flex-col items-center gap-2 mb-8 px-2">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-primary-container/20 flex items-center justify-center border-4 border-primary-container">
+<img alt="Mr. K Mascot" class="w-full h-full object-cover" data-alt="A friendly, high-quality 3D rendered blue mascot character with a joyful expression and big expressive eyes, designed in a soft, rounded aesthetic similar to modern mobile app mascots. The character is set against a clean white studio background with soft directional lighting, emphasizing its tactile, candy-like smooth texture and professional character design for a fintech brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-XhT0clzcU6Li-moPSmlj-tvM8B18pHF-uqwui0kWcFgxMh3HExMMwS29P-8bXIlzuvdx7E0CU1_r0J1tcJhkd8nD1Xkj90KpUH0CnTMedT6T9C7-m6KnMS5n1u88nCO14StojE8P0zg_BJoWZQtGmp0KdctKi2-RSKInuhGob8EOsu6zFKwjVScI1sLXrHSM-xm9ijlNSHXCDyeul1myYeoLlkHy4QBzp-oNeh8Ov5YDvSVim5eC-Sc831VJ34Lai90I9zSwjmA"/>
+</div>
+<h1 class="text-headline-md font-headline-md text-primary">KeenPocket</h1>
+<p class="text-body-md text-on-surface-variant text-center leading-tight">Save together, grow together</p>
+</div>
+<nav class="flex flex-col gap-2">
+<!-- Active State Logic applied to 'Settings' or equivalent -->
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<!-- Active Tab: Refer & Earn (Mapping to Settings/Growth context) -->
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-on-primary-container/20 scale-95" href="#">
+<span class="material-symbols-outlined fill-icon">loyalty</span>
+<span class="font-label-bold text-label-bold">Refer &amp; Earn</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="candy-button candy-button-secondary w-full py-3 rounded-xl text-on-secondary-container font-label-bold text-label-bold">
+                Create Pocket
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="bg-background w-full py-2 flex justify-between items-center px-6 md:px-margin-desktop sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="md:hidden text-primary text-headline-md font-headline-md">KeenPocket</span>
+<h2 class="hidden md:block text-headline-md font-headline-md text-primary">Refer Circle</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full hover:bg-surface-variant/50 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-primary fill-icon">notifications</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full hover:bg-surface-variant/50 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-primary">help</span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A clean, professional close-up headshot of a person with a friendly and trustworthy expression, set against a blurred modern office background. The lighting is soft and flattering, emphasizing clarity and professionalism. The image has a light, airy aesthetic that perfectly matches the clean light-mode UI design of the fintech application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzHNLpAd3T_B_KFHZmYO--8nisyU551luwLqJQIsd-3ZHbzcXqrAaMxM29d-7jC2xzblV4sGcBvcY6pCCOj7WKmu9zvsKwTg6xu_rFQ6YUEW5fMCW5-qu6WrTr50RS6yeYSmg1soqRw-fsVB2cVGWIRF8js85YjRCoF-vwYMAuD5DzuftGE3TZtr7AsgYepCgubAdPC24OEi-5asJcknUHsXkBnlciAIl3PKnY1rXG4V4QZy35S9CZCqWsSX4RdGuJrQLHDjhUOJg"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-6 md:p-margin-desktop w-full max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Pane (Lg: Col-7) -->
+<div class="lg:col-span-7 flex flex-col gap-8">
+<!-- Hero Banner -->
+<section class="chunky-card overflow-hidden bg-primary-fixed border-primary-fixed-dim/30 p-8 flex items-center justify-between relative group">
+<div class="flex-1 z-10">
+<h3 class="text-headline-lg font-headline-lg text-on-primary-fixed-variant mb-2">Bring your circle along 🎁</h3>
+<p class="text-body-lg text-on-primary-fixed-variant/80 mb-6">Earn ₹500 for every referral who joins a pocket.</p>
+<div class="flex items-center gap-2 bg-white/40 w-max px-4 py-2 rounded-full border border-white/50 backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary fill-icon">stars</span>
+<span class="font-label-bold text-primary">Limited Time Offer</span>
+</div>
+</div>
+<div class="w-40 h-40 shrink-0 relative transition-transform group-hover:scale-110 duration-500">
+<img alt="Referral Mascot" class="w-full h-full object-contain" data-alt="A cheerful and energetic 3D robot mascot, Mr. K, designed with a smooth blue metallic texture and expressive digital eyes. The mascot is holding a golden coin with a prominent K logo, surrounded by floating 3D gift boxes and sparkling confetti. The background is a soft, pale blue gradient, creating a celebratory and high-engagement atmosphere consistent with a gamified referral dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Jq5dcfNW7tv1Ni9yQXykARzbZG5uKmqQZB4oQJbI6nWsqGoM991KiHJ_kzHl84G_VsD1gHWTfS4_moWDxCRtzLySz1j1PW8t8zGb126fyqgZBgzH6RmRif6U1PeR3ImyCXjN4YlxM7RAvXW1Supd-sAZG6NJQVHF_OATujRBlxPDbIjlVnhfg4EDRAC6GMnsDKOsqVpdVa2g2aaKGg8yVT3p5NMPK0JrQF0O_qrMWW4eherddyFzVwBETVuRb3IgTl6imRjEq20"/>
+</div>
+</section>
+<!-- Invite Link & Code -->
+<section class="chunky-card p-8 flex flex-col gap-6">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2 uppercase tracking-wider">Your Invite Link</label>
+<div class="flex items-center gap-4">
+<div class="flex-1 bg-surface-container-low border-2 border-outline-variant rounded-2xl p-4 font-body-md text-on-surface truncate">
+                                keenpocket.app/refer/sarah_k_2291
+                            </div>
+<button class="candy-button candy-button-primary px-8 py-4 rounded-2xl text-on-primary font-label-bold text-label-bold">
+                                Copy
+                            </button>
+</div>
+</div>
+<div class="flex flex-col md:flex-row md:items-center gap-6">
+<div class="flex-1">
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2 uppercase tracking-wider">Referral Code</label>
+<div class="bg-surface-container-highest border-2 border-dashed border-outline rounded-2xl p-4 flex items-center justify-between">
+<span class="font-display text-headline-md tracking-widest text-on-surface">KEEN-9921</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors">content_copy</span>
+</div>
+</div>
+</div>
+<button class="candy-button candy-button-whatsapp w-full py-5 rounded-2xl text-white font-headline-md flex items-center justify-center gap-3">
+<svg class="w-8 h-8 fill-current" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.515 0 11.86-5.335 11.863-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+                        Share on WhatsApp
+                    </button>
+</section>
+</div>
+<!-- Right Pane (Lg: Col-5) -->
+<div class="lg:col-span-5 flex flex-col gap-8">
+<!-- Impact Stats Grid (Bento Style) -->
+<section class="grid grid-cols-3 gap-4">
+<div class="chunky-card bg-white p-4 flex flex-col items-center justify-center text-center">
+<span class="text-display font-display text-primary leading-none">8</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase mt-2">Invited</span>
+</div>
+<div class="chunky-card bg-secondary-fixed p-4 flex flex-col items-center justify-center text-center border-secondary-fixed-dim/40">
+<span class="text-display font-display text-secondary leading-none">3</span>
+<span class="font-label-bold text-label-bold text-secondary uppercase mt-2">Qualified</span>
+</div>
+<div class="chunky-card bg-tertiary-fixed p-4 flex flex-col items-center justify-center text-center border-tertiary-fixed-dim/40">
+<span class="text-display font-display text-tertiary leading-none">1</span>
+<span class="font-label-bold text-label-bold text-tertiary uppercase mt-2">Rewarded</span>
+</div>
+</section>
+<!-- Your Circle List -->
+<section class="chunky-card flex-1 flex flex-col">
+<div class="p-6 border-b border-surface-variant">
+<h4 class="text-headline-md font-headline-md text-on-surface">Your Circle</h4>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Tunde (Pending) -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center font-headline-md text-on-surface-variant">T</div>
+<div>
+<p class="font-label-bold text-on-surface">Tunde Adebayo</p>
+<p class="text-body-md text-on-surface-variant">Pending account setup</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-[12px] font-label-bold">PENDING</span>
+</div>
+<!-- Chidi (Qualified) -->
+<div class="flex items-center justify-between p-4 bg-secondary-container/10 border border-secondary-container/20 rounded-2xl hover:bg-secondary-container/20 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center font-headline-md text-on-secondary-container">C</div>
+<div>
+<p class="font-label-bold text-on-surface">Chidi Okoro</p>
+<p class="text-body-md text-on-surface-variant">First deposit made</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[12px] font-label-bold">QUALIFIED</span>
+</div>
+<!-- Sarah (Rewarded) -->
+<div class="flex items-center justify-between p-4 bg-primary-container/10 border border-primary-container/20 rounded-2xl hover:bg-primary-container/20 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center font-headline-md text-on-primary-container">S</div>
+<div>
+<p class="font-label-bold text-on-surface">Sarah Williams</p>
+<p class="text-body-md text-on-surface-variant">Rewards paid out</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-[12px] font-label-bold">REWARDED</span>
+<p class="text-label-bold text-primary mt-1">₹500.00</p>
+</div>
+</div>
+</div>
+<!-- Invite More CTA -->
+<div class="p-6">
+<button class="candy-button candy-button-secondary w-full py-4 rounded-2xl text-on-secondary-container font-headline-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">person_add</span>
+                            Invite More Friends
+                        </button>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translateY(4px)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(0px)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0px)';
+            });
+        });
+    </script>
+</body></html>

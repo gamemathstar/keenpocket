@@ -5,7 +5,7 @@
 @section('content')
     <p class="text-sm text-slate-500 mb-6">People who named you as their guarantor. Recommend someone you trust — the pocket admin then makes the final decision.</p>
 
-    <div class="bg-white rounded-xl border border-slate-200 p-5 max-w-3xl">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 max-w-3xl">
         <ul class="divide-y divide-slate-100">
             @forelse ($requests as $r)
                 <li class="py-3 flex flex-wrap items-center justify-between gap-3">

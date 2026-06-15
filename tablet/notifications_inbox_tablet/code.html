@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket - Notifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#bb1522",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#ffdf92",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#3e4850",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "outline-variant": "#bdc8d2",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-tint": "#006590",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "on-secondary-fixed-variant": "#594400",
+                        "inverse-primary": "#88ceff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#ff8079",
+                        "secondary": "#755b00",
+                        "tertiary-fixed": "#ffdad7",
+                        "primary": "#006590",
+                        "on-secondary-fixed": "#241a00",
+                        "secondary-container": "#fec700",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#410004",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#00405d",
+                        "primary-fixed": "#c8e6ff",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "on-primary-fixed": "#001e2e",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-bright": "#f7f9fb",
+                        "primary-container": "#1cb0f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .candy-button {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.1);
+        }
+        .candy-button:hover {
+            transform: translateY(1px);
+            box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.1);
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 transparent;
+        }
+        .chunky-card {
+            box-shadow: 0 7px 0 0 #e0e3e5;
+            transition: all 0.2s ease;
+        }
+        .chunky-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 0 0 #e0e3e5;
+        }
+        .chunky-card.selected {
+            border: 2px solid #006590;
+            box-shadow: 0 7px 0 0 #1cb0f6;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #bdc8d2; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Left Rail) -->
+<nav class="fixed left-0 top-0 h-full w-64 flex flex-col p-6 z-50 bg-surface-container-lowest border-r-2 border-surface-variant shadow-sm">
+<div class="mb-10">
+<h1 class="font-display text-headline-lg text-primary">KeenPocket</h1>
+<p class="text-on-surface-variant font-label-bold">Manage your wealth</p>
+</div>
+<div class="space-y-2 flex-grow">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<!-- Pockets -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<!-- Adashi Groups -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="group_work">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<!-- Wallet -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<!-- Settings (Inferred Active due to Notifications being a sub-category or primary tab elsewhere, but for this UX we map to Settings) -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</div>
+<button class="candy-button mt-auto bg-primary text-on-primary py-4 rounded-xl font-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+            New Pocket
+        </button>
+</nav>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin-desktop h-20 w-full ml-64 bg-surface border-b-2 border-surface-variant fixed top-0 z-40">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary">Notifications Inbox</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full cursor-pointer transition-colors" data-icon="search">search</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined text-primary p-2 rounded-full cursor-pointer bg-surface-container-low" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2.5 h-2.5 bg-tertiary rounded-full border-2 border-surface"></span>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary-container object-cover" data-alt="A professional headshot of a friendly young executive in a bright, high-key studio setting. The lighting is soft and warm, reflecting a clean and modern aesthetic suitable for a financial application's profile section. The background is a minimalist, softly blurred corporate office environment in light blue and white tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBS6k8mu1bF9eiw9P8dvcyGhLaL6psmmx5zoLlNZd-cwM8mUWm47MzwbD5VY_prNJsPaDJJCG24oePptUUG8Eyqna_WMYstEWMLesgfbd7Oa1ikFI5z8-0DL0Q9sZbW1rAxMjqcQ9DkNx202gTZ8mBdaC4XLcgv7Rf1H-CeznXslcDX97g_YWDxr0BqCTo6LTCmlKR2QIxvFhchyfJaYPbCCSZzBn28Qd1oCejtqBVDKUDU9QT6rybILal3V95zNUP_-slVY_uIaY"/>
+</div>
+</header>
+<!-- Main Split View Layout -->
+<main class="ml-64 pt-20 h-screen flex overflow-hidden">
+<!-- Left Pane: Notification List (1/3) -->
+<aside class="w-1/3 flex flex-col border-r-2 border-surface-variant bg-surface-container-lowest overflow-hidden">
+<!-- Filter Bar -->
+<div class="p-6 pb-2">
+<div class="flex gap-2 p-1 bg-surface-container rounded-2xl">
+<button class="flex-1 py-2 px-4 rounded-xl font-label-bold text-label-bold bg-white shadow-sm text-primary">All</button>
+<button class="flex-1 py-2 px-4 rounded-xl font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-low transition-colors">Unread</button>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="flex-grow overflow-y-auto p-4 space-y-4 custom-scrollbar">
+<!-- Notification Item 1 (Selected) -->
+<div class="chunky-card selected bg-white p-4 rounded-xl cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-primary text-body-md font-bold">Payment Success</h3>
+<span class="text-[12px] text-on-surface-variant font-medium">2m ago</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-1">Your pocket "Summer Vibes" has been funded...</p>
+</div>
+</div>
+</div>
+<!-- Notification Item 2 -->
+<div class="chunky-card bg-white p-4 rounded-xl cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="group_work">group_work</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-on-surface text-body-md font-bold">New Adashi Invite</h3>
+<span class="text-[12px] text-on-surface-variant font-medium">1h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-1">Sarah invited you to "Paris Dream" group.</p>
+</div>
+</div>
+</div>
+<!-- Notification Item 3 -->
+<div class="chunky-card bg-white p-4 rounded-xl cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-on-surface text-body-md font-bold">Security Alert</h3>
+<span class="text-[12px] text-on-surface-variant font-medium">4h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-1">New login detected from Safari on iPad.</p>
+</div>
+</div>
+</div>
+<!-- Notification Item 4 -->
+<div class="chunky-card bg-white p-4 rounded-xl cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-on-surface text-body-md font-bold">Support Update</h3>
+<span class="text-[12px] text-on-surface-variant font-medium">Yesterday</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-1">Mr. K has responded to your inquiry.</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Pane: Notification Detail (2/3) -->
+<section class="flex-1 bg-surface-bright overflow-y-auto custom-scrollbar">
+<div class="p-margin-desktop max-w-3xl mx-auto">
+<!-- Detail Header -->
+<div class="flex justify-between items-start mb-8">
+<div class="flex gap-6 items-center">
+<div class="w-16 h-16 rounded-2xl bg-primary-container flex items-center justify-center text-white scale-110 shadow-lg">
+<span class="material-symbols-outlined" data-icon="payments" style="font-size: 32px;">payments</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Payment Success</h2>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="flex items-center gap-1 font-label-bold"><span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span> Oct 24, 2023 • 10:32 AM</span>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[12px] font-bold">TRANSACTION</span>
+</div>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Message Body -->
+<div class="chunky-card bg-white p-8 rounded-[1.5rem] mb-8">
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed mb-6">
+                        Great news! Your scheduled contribution of <span class="text-primary font-bold">$250.00</span> to the <span class="font-bold">"Summer Vibes Beach House"</span> Pocket has been successfully processed. 
+                    </p>
+<p class="text-on-surface-variant font-body-md leading-relaxed">
+                        Your total balance in this pocket is now <span class="font-bold text-on-surface">$2,450.00</span>. You are currently 82% of the way to your goal! Keep up the great saving momentum.
+                    </p>
+<!-- Progress Visualization -->
+<div class="mt-8 p-6 bg-surface-container-low rounded-2xl">
+<div class="flex justify-between items-end mb-3">
+<span class="font-label-bold text-primary">Goal Progress</span>
+<span class="font-headline-md text-headline-md text-primary">82%</span>
+</div>
+<div class="h-4 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 82%;"></div>
+</div>
+<div class="flex justify-between mt-2 text-[12px] font-bold text-on-surface-variant">
+<span>$2,450.00 saved</span>
+<span>Target: $3,000.00</span>
+</div>
+</div>
+</div>
+<!-- Related Entity Context (Pocket/Group Info) -->
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="chunky-card bg-white p-6 rounded-2xl flex items-center gap-4">
+<img alt="Summer Vibes" class="w-16 h-16 rounded-xl object-cover" data-alt="A vibrant, sunny digital illustration of a beach house with palm trees and a clear blue sky. The style is playful and high-contrast, matching a 'candy-coated' UI theme with bold primary blues and sunny yellows. Soft glowing shadows create a 3D depth effect." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxukulUb_RQ90ZsohU8h73HwOVL1ABclSM4Jp76N9uM8QRqtRBAg5WVhNdNjXRrc-LNkU0_kCj8QRSvrXvnZeeCBGBe6f0q4ljYgzn_BFWxxfsJFOI88jgsvWaSjw-nw02bGeGdgS_XAfueU6QpTNtcvwKhIQihVKFKxy_hP-3dHz_ieGmLJ3vocNimd0CBu9XFDD8S_Xt6ZJtKF3JVu2A5wKlsVch1T3q0HD2Psnkv3ZNObaScsDmPbjowpszTIzkJ8_3-aBOePw"/>
+<div>
+<p class="text-[12px] font-bold text-on-surface-variant uppercase tracking-wider">Related Pocket</p>
+<h4 class="font-body-lg text-on-surface">Summer Vibes</h4>
+<p class="text-sm text-primary font-bold">View details →</p>
+</div>
+</div>
+<div class="chunky-card bg-white p-6 rounded-2xl flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="text-[12px] font-bold text-on-surface-variant uppercase tracking-wider">Source Account</p>
+<h4 class="font-body-lg text-on-surface">Main Wallet (*8821)</h4>
+<p class="text-sm text-on-surface-variant font-medium">Auto-debit active</p>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex gap-4">
+<button class="candy-button flex-1 bg-primary text-on-primary py-4 rounded-xl font-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+                        View Receipt
+                    </button>
+<button class="candy-button flex-1 bg-surface-container-lowest border-2 border-surface-variant text-on-surface-variant py-4 rounded-xl font-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                        Mark as Read
+                    </button>
+<button class="candy-button w-14 bg-error-container text-error py-4 rounded-xl font-label-bold flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Mascot Tip -->
+<div class="mt-12 flex items-center gap-6 p-6 bg-primary-fixed rounded-[2rem] border-2 border-primary-container relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="lightbulb">lightbulb</span>
+</div>
+<div class="w-20 h-20 flex-shrink-0 flex items-center justify-center bg-white rounded-full shadow-md z-10">
+<img alt="Mr. K" class="w-12 h-12" data-alt="A friendly, stylized 3D mascot penguin named Mr. K wearing a professional but playful small bowtie. He has a warm, encouraging smile and large, expressive eyes. The character is rendered with soft, toy-like textures and vibrant colors that fit perfectly within a high-energy, playful fintech app environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvuoOkXR8ZJOWFkZjKIAO8Q7INsS8Vy7CR_Sc8udYf6sf_kWP0KZZVAgkgYGlAlVo2FjWBkvPiI3Bt14Buall7IZhcYWm6akVZ4VNPDquiqajWbsM4vv0m8jd20pOowPcbFpK-jcViiGhaPW3jXwKPqTvhvpBsEF4RhGG3DN54eL9btBSKLrVUsit4s2Xkoksn_pdaLebYIaWnv5WT21x_czO1HadkiMv1EjIel3xHcndKkRJMeluNmavCgPhlRcuLBOVfA59p48I"/>
+</div>
+<div class="z-10">
+<h5 class="font-body-lg text-on-primary-fixed-variant font-bold">Mr. K's Tip:</h5>
+<p class="text-on-primary-fixed-variant opacity-80">You're saving faster than 90% of users this month! Want to increase your weekly goal by $10 to finish even earlier?</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Micro-interaction: Toggle selection state in the list
+        document.querySelectorAll('.chunky-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // For demonstration, only toggle among list items
+                if (this.closest('aside')) {
+                    document.querySelectorAll('aside .chunky-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                }
+            });
+        });
+    </script>
+</body></html>

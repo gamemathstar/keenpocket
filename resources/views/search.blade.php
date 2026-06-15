@@ -16,7 +16,7 @@
         <h3 class="font-semibold mb-2">Pockets ({{ $pockets->count() }})</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
             @forelse ($pockets as $p)
-                <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-brand transition">
+                <a href="{{ route('pockets.show', $p->id) }}" class="block bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-4 hover:border-brand transition">
                     <div class="font-medium truncate">{{ $p->title }}</div>
                     <div class="text-xs text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand</div>
                 </a>
@@ -28,7 +28,7 @@
         <h3 class="font-semibold mb-2">Adashi ({{ $adashis->count() }})</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             @forelse ($adashis as $a)
-                <a href="{{ route('adashi.show', $a->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-brand transition">
+                <a href="{{ route('adashi.show', $a->id) }}" class="block bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-4 hover:border-brand transition">
                     <div class="font-medium truncate">{{ $a->name }}</div>
                     <div class="text-xs text-slate-500 mt-1">₦{{ number_format($a->amount_per_cycle) }}/cycle</div>
                 </a>

@@ -3,6 +3,15 @@
 @section('heading', 'Notifications')
 
 @section('content')
+    {{-- Hero --}}
+    <section class="bg-brand-light rounded-[2rem] border-b-8 border-brand p-6 sm:p-7 mb-6 max-w-2xl flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-dark leading-tight">Notifications 🔔</h2>
+            <p class="text-slate-600 mt-1">{{ $unreadCount ? $unreadCount.' unread message'.($unreadCount === 1 ? '' : 's') : "You're all caught up." }}</p>
+        </div>
+        <x-mascot :size="80" class="hidden sm:block drop-shadow-xl" />
+    </section>
+
     <div class="flex items-center justify-between mb-5 max-w-2xl">
         <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 text-sm">
             <a href="{{ route('notifications.index') }}" class="px-3 py-1.5 rounded-md {{ $filter === 'all' ? 'bg-brand-light text-brand-dark font-medium' : 'text-slate-500' }}">All</a>
@@ -16,7 +25,7 @@
         @endif
     </div>
 
-    <div class="max-w-2xl bg-white rounded-xl border border-slate-200 divide-y divide-slate-100">
+    <div class="max-w-2xl bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 divide-y divide-slate-100">
         @forelse ($notifications as $n)
             <div class="px-4 py-3 flex gap-3 {{ $n->status === 'Not Read' ? 'bg-brand-light/30' : '' }}">
                 <span class="mt-1.5 h-2 w-2 rounded-full shrink-0 {{ $n->status === 'Not Read' ? 'bg-brand' : 'bg-transparent' }}"></span>

@@ -3,9 +3,29 @@
 @section('heading', 'Profile')
 
 @section('content')
+    {{-- Hero --}}
+    <section class="bg-brand-light rounded-[2rem] border-b-8 border-brand p-6 sm:p-7 mb-6 flex flex-wrap items-center gap-5">
+        <div class="rounded-full ring-4 ring-white shrink-0"><x-avatar :user="$user" :size="72" /></div>
+        <div class="min-w-0">
+            <h2 class="text-2xl font-extrabold text-brand-dark truncate">{{ $user->name }}</h2>
+            <p class="text-slate-600 text-sm">{{ $user->phone_number }}</p>
+            <span class="inline-block mt-1 text-xs px-3 py-1 rounded-full bg-white text-brand-dark font-bold uppercase tracking-wide">{{ $rep['band'] }}</span>
+        </div>
+        <div class="sm:ml-auto flex gap-3">
+            <div class="rounded-2xl bg-white px-4 py-2 text-center">
+                <div class="text-xl font-extrabold text-brand-dark">{{ $rep['score'] }}</div>
+                <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wide">reputation</div>
+            </div>
+            <div class="rounded-2xl bg-white px-4 py-2 text-center">
+                <div class="text-xl font-extrabold text-amber-500">{{ $rep['rating_average'] ? $rep['rating_average'].'★' : '—' }}</div>
+                <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wide">rating</div>
+            </div>
+        </div>
+    </section>
+
     <div class="grid lg:grid-cols-3 gap-6">
         {{-- Identity + reputation --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <div class="flex items-center gap-3 mb-4">
                 <x-avatar :user="$user" :size="56" />
                 <div>
@@ -47,7 +67,7 @@
         </div>
 
         {{-- Badges --}}
-        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div class="lg:col-span-2 bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold">Achievements</h3>
                 @if ($profile)<span class="text-sm text-slate-500">{{ $profile['streak'] }} 🔥 streak · ₦{{ number_format($profile['total_contributed']) }} saved</span>@endif

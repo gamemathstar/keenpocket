@@ -12,7 +12,7 @@
     </div>
 
     <div class="grid lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div class="lg:col-span-2 bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Your invite link</h3>
             <p class="text-slate-500 text-sm mb-4">Share it — when a friend joins their first pocket or adashi, your referral counts.</p>
 
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-3">Your impact</h3>
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between"><span class="text-slate-500">Invited</span><span class="font-semibold">{{ $stats['invited'] }}</span></div>
@@ -41,7 +41,7 @@
     </div>
 
     <h3 class="font-semibold mt-8 mb-3">People you invited</h3>
-    <div class="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100 max-w-2xl">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 divide-y divide-slate-100 max-w-2xl">
         @forelse ($invitees as $i)
             <div class="px-4 py-3 flex items-center justify-between text-sm">
                 <span>{{ $i->name ?? 'New user' }}</span>

@@ -4,7 +4,7 @@
 
 @section('content')
     <a href="{{ route('pockets.show', $pocket->id) }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Back to {{ $pocket->title }}</a>
-    <div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
+    <div class="max-w-lg bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
         <p class="text-sm text-slate-500 mb-4">Contributing to <span class="font-medium text-slate-700">{{ $pocket->title }}</span> — ₦{{ number_format($monthly) }} per month. Enter how much you're paying; we'll split it across the months you owe.</p>
         <form method="POST" action="{{ route('invoices.preview', $pocket->id) }}" class="space-y-4">
             @csrf

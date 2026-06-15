@@ -95,7 +95,13 @@ class PlanTest extends TestCase
 
         $plan = Plan::create(['owner_id' => $owner->id, 'title' => 'Shared', 'status' => 'ACTIVE']);
 
-        $this->actingAs($owner)->post("/plans/{$plan->id}/share", ['contact' => 'spouse@example.com'])->assertRedirect();
+        // Sharing is friends-only: a non-friend can't be added.
+        $this->actingAs($owner)->post("/plans/{$plan->id}/share", ['friend_id' => $spouse->id])->assertSessionHasErrors('friend_id');
+        $this->assertDatabaseMissing('plan_collaborators', ['plan_id' => $plan->id, 'user_id' => $spouse->id]);
+
+        // Become friends, then share by one click.
+        \App\Models\Friendship::create(['user_id' => $owner->id, 'friend_id' => $spouse->id, 'status' => 'accepted']);
+        $this->actingAs($owner)->post("/plans/{$plan->id}/share", ['friend_id' => $spouse->id])->assertRedirect();
         $this->assertDatabaseHas('plan_collaborators', ['plan_id' => $plan->id, 'user_id' => $spouse->id]);
 
         // Collaborator can view and add items.

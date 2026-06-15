@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Reputation Hub | KeenPocket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .candy-button {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+        }
+        .gauge-container {
+            position: relative;
+            width: 280px;
+            height: 140px;
+            overflow: hidden;
+        }
+        .gauge-path {
+            fill: none;
+            stroke: #eceef0;
+            stroke-width: 24;
+            stroke-linecap: round;
+        }
+        .gauge-fill {
+            fill: none;
+            stroke: #1cb0f6;
+            stroke-width: 24;
+            stroke-linecap: round;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+        .card-shadow {
+            box-shadow: 0 7px 0 0 #e0e3e5;
+        }
+        .card-interactive:hover {
+            border-color: #006590;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#88ceff",
+                        "primary-fixed": "#c8e6ff",
+                        "on-surface-variant": "#3e4850",
+                        "outline": "#6e7881",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-container": "#ff8079",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-container": "#00405d",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#594400",
+                        "outline-variant": "#bdc8d2",
+                        "secondary-fixed": "#ffdf92",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary": "#bb1522",
+                        "background": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#410004",
+                        "on-secondary-container": "#6e5400",
+                        "secondary-container": "#fec700",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#006590",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-primary-fixed": "#001e2e",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary": "#755b00",
+                        "on-tertiary-container": "#7e000f",
+                        "primary": "#006590",
+                        "surface-bright": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#241a00",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "on-primary-fixed-variant": "#004c6e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "margin-desktop": "40px",
+                        "gutter": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "display": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface dark:bg-inverse-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-72 flex flex-col border-r-4 border-surface-container-highest dark:border-surface-variant bg-surface dark:bg-inverse-surface px-4 py-6 z-[60] overflow-y-auto">
+<div class="mb-10 px-4">
+<h1 class="text-headline-md font-display font-black text-primary dark:text-inverse-primary">KeenPocket</h1>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl border-b-4 border-on-primary-fixed-variant translate-y-[4px] border-b-0 transition-all duration-75" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-surface-variant">
+<div class="flex items-center gap-3 px-4 mb-6">
+<img alt="User profile photo" class="w-10 h-10 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFcqX4y-GeJas8-FK1s0AV_QWkc3zETuX5wpKYQzqqwnMRWojWEoE3qIZhuBK2gLjQE0sKkdeXr9hgPqqpk5A9pyBjSJCrF2DWhbknLLeQDr2aaUnCbndCQ-MdlR7ZFx9OFIrlWN3QENYRTq1PauyB0F08QUfXlRHHAtxGW2Ls3KCTy5xxahpaEjegRxUgKe7GPdZXrTMc4G8prhVMfEmJQIw9BaqCChyeNvwy_K5tJdSdsE8cdzrE1AyXJ2Lo_I0ezR9xg1IWdEc">
+<div>
+<p class="font-label-bold text-label-bold">Alex Rivers</p>
+<p class="text-[12px] text-on-surface-variant opacity-70">Reputation: Gold Tier</p>
+</div>
+</div>
+<button class="w-full candy-button bg-secondary-container text-on-secondary-container font-label-bold text-label-bold py-3 rounded-xl border-b-4 border-secondary mb-4 hover:translate-y-[1px] transition-all">
+                Create New Pocket
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span>Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-sm text-error" href="#">
+<span class="material-symbols-outlined text-sm">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-[calc(100%-18rem)] ml-72 px-8 py-4 sticky top-0 z-50 bg-surface dark:bg-inverse-surface border-b-4 border-surface-container-highest dark:border-surface-variant">
+<div class="flex items-center gap-8">
+<h2 class="text-headline-md font-headline-md font-extrabold text-primary">Reputation Hub</h2>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">History</a>
+<a class="text-primary font-extrabold border-b-4 border-primary pb-1" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low rounded-full px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-48" placeholder="Search members..." type="text">
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-72 w-[calc(100%-18rem)] min-h-[calc(100vh-80px)] p-8">
+<div class="max-w-[1000px] mx-auto space-y-8">
+<!-- Hero Reputation Section -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-10 card-shadow flex flex-col md:flex-row items-center gap-12 border-2 border-surface-variant">
+<div class="flex-shrink-0 flex flex-col items-center">
+<div class="gauge-container mb-4">
+<svg class="w-full h-full" viewBox="0 0 160 80">
+<path class="gauge-path" d="M 20 70 A 60 60 0 0 1 140 70"></path>
+<path class="gauge-fill" d="M 20 70 A 60 60 0 0 1 140 70" id="trustScoreGauge"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-end pb-2">
+<span class="text-display font-display text-primary leading-none">942</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant tracking-widest uppercase">Trust Score</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-primary-container/20 px-4 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="text-primary font-bold text-label-bold">Top 1% Reliable Payer</span>
+</div>
+</div>
+<div class="flex-grow space-y-6">
+<div>
+<h3 class="text-headline-lg font-headline-lg text-on-surface">Excellent Standing</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-md">Alex has maintained a flawless reputation for 18 months, with zero missed contributions and a 100% group completion rate.</p>
+</div>
+<div class="flex gap-4">
+<button class="candy-button bg-primary text-on-primary px-8 py-3.5 rounded-xl font-label-bold text-label-bold border-b-4 border-on-primary-fixed-variant flex items-center gap-2">
+<span class="material-symbols-outlined">verified</span>
+                            Vouch for Alex
+                        </button>
+<button class="candy-button bg-surface text-primary border-2 border-primary/20 px-8 py-3.5 rounded-xl font-label-bold text-label-bold border-b-4 border-primary/30 flex items-center gap-2">
+<span class="material-symbols-outlined">person_add</span>
+                            Invite to Group
+                        </button>
+</div>
+</div>
+</section>
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Left Column: Stats & Reliability -->
+<div class="md:col-span-5 space-y-8">
+<!-- Reliability Card -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-6 card-shadow border-2 border-surface-variant">
+<h4 class="text-headline-md font-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">analytics</span>
+                            Reliability Stats
+                        </h4>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Payment Consistency</span>
+<span class="font-label-bold text-label-bold text-primary">99.2%</span>
+</div>
+<div class="h-4 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 99.2%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-4">
+<div class="bg-surface-container rounded-2xl p-4 text-center">
+<p class="text-headline-md font-headline-md text-primary">24</p>
+<p class="text-label-bold font-label-bold text-on-surface-variant opacity-70">Groups Joined</p>
+</div>
+<div class="bg-surface-container rounded-2xl p-4 text-center">
+<p class="text-headline-md font-headline-md text-secondary">24</p>
+<p class="text-label-bold font-label-bold text-on-surface-variant opacity-70">Completed</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mascot Card -->
+<div class="bg-primary-container/10 rounded-[1.5rem] p-8 relative overflow-hidden border-2 border-primary-container/30">
+<div class="relative z-10">
+<p class="text-body-lg font-body-lg text-primary-container mb-2">Mr. K Says:</p>
+<h5 class="text-headline-md font-headline-md text-on-primary-container">"You're a financial superstar, Alex! Keep it up."</h5>
+</div>
+<img alt="Mascot Mascot Mr. K smiling" class="absolute -bottom-2 -right-2 w-32 h-32 opacity-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3L6-m5BCbOERnjSrbCxrAKp23UNgNRZVtNMceBNJUHfk-qIeWghonia_vCoVtBxWxXVY_PRnSclyYnPqHjznecJPB6G4EMDGRG5RMJQRNLxgIyACioGjzGaFZoOknJcC0topsTzvgEy0-QwMRHONMx_kskrKe0316TQIeTebl6EvntdUqEF_S4Mepw6hCNrq1tUN30zfGGnbOe0NMjqX94guedcTmQzhrOvgejYnJR87LC_mKxvRHxKQs4KW81g-Je2sObNuPpNw">
+</div>
+</div>
+<!-- Right Column: Recent Ratings Feed -->
+<div class="md:col-span-7 space-y-6">
+<div class="flex justify-between items-center mb-2">
+<h4 class="text-headline-md font-headline-md">Recent Ratings</h4>
+<button class="text-primary font-label-bold text-label-bold hover:underline">View All</button>
+</div>
+<!-- Rating Item 1 -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-6 card-shadow border-2 border-surface-variant flex gap-4 card-interactive transition-all">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A detailed digital portrait of a friendly professional woman with a warm smile, set against a soft blurred background of a modern workspace with teal and amber accents. The style is clean, vibrant, and optimistic, matching a high-end fintech app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaxH5IskjQblLLUQWRSTq-JCFgW_-0-s8fok9bk5Wm4puk05M9DK9YWrShzw1cNodLGIlp5jKZt7v444DQia8sKoK0g19vJHuXe4Itm2PVQ7G0WDTOW9iFUzMfb8PpYGq2kJtoqU3Ma8mA1alHFxb4Ok1k6iBqDiH2WkY58gjjmrZzjEj-A8eEBTQx9lFDHD39xXrhbHwmqQxCycKEQk4sg78kzSw5I-zha7vpDcIiBBWj6OTFJ1OZy7G7VWgBfCOrY5x6bl4yTWI">
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h5 class="font-label-bold text-label-bold text-on-surface">Jessica D.</h5>
+<p class="text-sm text-on-surface-variant">Lagos Business Circle</p>
+</div>
+<div class="flex text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant italic">"Alex is incredibly reliable. Always makes contributions ahead of schedule. A true pleasure to have in our Adashi group!"</p>
+<div class="mt-3 flex gap-2">
+<span class="bg-surface-container-high text-[11px] px-2 py-0.5 rounded text-on-surface-variant font-bold">Punctual</span>
+<span class="bg-surface-container-high text-[11px] px-2 py-0.5 rounded text-on-surface-variant font-bold">Communicative</span>
+</div>
+</div>
+</div>
+<!-- Rating Item 2 -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-6 card-shadow border-2 border-surface-variant flex gap-4 card-interactive transition-all">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a cheerful young man with glasses, looking directly at the camera with a confident expression. The lighting is bright and cheerful with soft shadows, set in a minimalist studio environment. The colors are dominated by warm yellows and soft blues, creating a friendly and trustworthy vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU15jmf3CaTUgYXFy7g5CU-f37jJq15G_zcX4b3PjOkAqvpo6F-eUbV0xNIoIbgVF2Oj-53wm6XJbHqY9AgoPp6FY_nQ4wBIbp1-y1FHJrDXj0ph4situGHN7GgXtFPOT36zAY5n8CFcQ9USKPQQkCDBmyFoGX8GlJCYwRj7fNKQDKG7gzE6DjdPVV2XCknzVdPDImkeXvkW7nYUmWcaNDwKhgOUp61M53HoCx0u8S91O-7sGdnhaitxtOgeL9-GzPxWUiw3bo-T8">
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h5 class="font-label-bold text-label-bold text-on-surface">Marcus K.</h5>
+<p class="text-sm text-on-surface-variant">Family Savings Pocket</p>
+</div>
+<div class="flex text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant italic">"Never had a single issue in 12 months. Alex helps keep the group morale high with consistency."</p>
+</div>
+</div>
+<!-- Trust Factor Card -->
+<div class="bg-secondary/5 rounded-[1.5rem] p-6 border-2 border-secondary/20">
+<h6 class="font-label-bold text-label-bold text-secondary mb-4 uppercase tracking-wider">Top Trust Factors</h6>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm">schedule</span>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Early Payer</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm">handshake</span>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">10+ Vouches</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm">lock</span>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">KYC Verified</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm">trending_up</span>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Long Tenure</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Animate the gauge on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const gauge = document.getElementById('trustScoreGauge');
+            // Offset for 94.2% of the semi-circle
+            // Full semi-circle is 188.5 approx (pi * 60)
+            // But we used dasharray 377 as a generic high number
+            // Let's use a simpler calculation: 377 is total, so (1 - 0.942) * 188.5
+            // Path length is roughly 188.
+            setTimeout(() => {
+                gauge.style.strokeDashoffset = '190'; // Adjusted visually for a high score
+            }, 300);
+        });
+
+        // Micro-interactions for navigation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === '#') e.preventDefault();
+            });
+        });
+    </script>
+</body></html>

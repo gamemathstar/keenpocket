@@ -1,0 +1,299 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#eceef0",
+                      "on-tertiary-fixed-variant": "#930014",
+                      "tertiary-fixed": "#ffdad7",
+                      "surface-container-highest": "#e0e3e5",
+                      "tertiary": "#bb1522",
+                      "primary-fixed-dim": "#88ceff",
+                      "on-secondary-container": "#6e5400",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#3e4850",
+                      "tertiary-container": "#ff8079",
+                      "primary-container": "#1cb0f6",
+                      "surface-container-low": "#f2f4f6",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#001e2e",
+                      "secondary": "#755b00",
+                      "surface-bright": "#f7f9fb",
+                      "on-tertiary-container": "#7e000f",
+                      "on-secondary-fixed-variant": "#594400",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#2d3133",
+                      "secondary-fixed-dim": "#f4bf00",
+                      "surface-variant": "#e0e3e5",
+                      "on-primary-container": "#00405d",
+                      "surface-container-high": "#e6e8ea",
+                      "secondary-container": "#fec700",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#c8e6ff",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-secondary-fixed": "#241a00",
+                      "on-background": "#191c1e",
+                      "tertiary-fixed-dim": "#ffb3ae",
+                      "primary": "#006590",
+                      "secondary-fixed": "#ffdf92",
+                      "error": "#ba1a1a",
+                      "on-surface": "#191c1e",
+                      "surface-dim": "#d8dadc",
+                      "outline": "#6e7881",
+                      "on-tertiary-fixed": "#410004",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#f7f9fb",
+                      "surface-tint": "#006590",
+                      "outline-variant": "#bdc8d2",
+                      "background": "#f7f9fb",
+                      "inverse-primary": "#88ceff",
+                      "error-container": "#ffdad6",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-desktop": "40px",
+                      "container-max": "1200px",
+                      "margin-mobile": "20px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Nunito Sans"],
+                      "display": ["Nunito Sans"],
+                      "body-lg": ["Nunito Sans"],
+                      "body-md": ["Nunito Sans"],
+                      "label-bold": ["Nunito Sans"],
+                      "headline-lg": ["Nunito Sans"],
+                      "headline-lg-mobile": ["Nunito Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .candy-button {
+            transition: all 0.1s ease;
+            position: relative;
+            top: 0;
+        }
+        .candy-button:active {
+            top: 4px;
+            box-shadow: none !important;
+        }
+        .candy-shadow-primary {
+            box-shadow: 0 4px 0 0 #004c6e;
+        }
+        .candy-shadow-surface {
+            box-shadow: 0 4px 0 0 #bdc8d2;
+        }
+        .inner-recessed {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar - Shared Component -->
+<aside class="h-screen flex flex-col p-spacing-margin-desktop bg-surface-container-low dark:bg-surface-dim h-full w-72 flex-shrink-0 border-r-4 border-surface-variant dark:border-outline-variant hidden md:flex">
+<div class="mb-10">
+<h1 class="font-display text-display text-primary dark:text-primary-fixed-dim">KeenPocket</h1>
+<p class="font-label-bold text-on-surface-variant opacity-70">Premium Member</p>
+</div>
+<nav class="flex-grow space-y-2">
+<!-- Home -->
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">home</span>
+<span class="font-label-bold">Home</span>
+</a>
+<!-- My Pockets - ACTIVE (Primary intent for contribution is within pockets) -->
+<a class="flex items-center gap-4 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-4 py-3 border-b-4 border-on-primary-fixed-variant translate-y-1 transition-all duration-100" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-bold">My Pockets</span>
+</a>
+<!-- Adashi Groups -->
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">group</span>
+<span class="font-label-bold">Adashi Groups</span>
+</a>
+<!-- Wallet -->
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+<span class="font-label-bold">Wallet</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+<span class="font-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-2 border-t-2 border-surface-variant pt-6">
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold">Help</span>
+</a>
+<a class="flex items-center gap-4 text-on-tertiary px-4 py-2 bg-tertiary rounded-lg candy-button candy-shadow-surface hover:brightness-110" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-grow relative overflow-y-auto bg-surface-bright p-6 md:p-12 flex items-center justify-center">
+<!-- Atmospheric Background Decor -->
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary-container opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary-container opacity-10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+<!-- Modal-Style Wide Layout -->
+<div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+<!-- Left Section: Goal Info & Progress -->
+<div class="lg:col-span-5 space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-[1.5rem] border-b-[7px] border-surface-variant">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 bg-secondary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl">savings</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">December Turkey Fund</h2>
+<p class="text-on-surface-variant font-label-bold">Target: ₦150,000</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-display text-primary text-3xl">₦85,000</span>
+<span class="font-label-bold text-on-surface-variant">56% Complete</span>
+</div>
+<!-- Progress Bar -->
+<div class="h-6 w-full bg-surface-container rounded-full inner-recessed relative overflow-hidden">
+<div class="absolute h-full bg-primary-container rounded-full border-r-4 border-on-primary-fixed-variant" style="width: 56%"></div>
+</div>
+<div class="pt-2">
+<p class="text-on-surface-variant text-sm">
+                                    Only <span class="font-bold text-on-surface">₦65,000</span> more to reach your delicious holiday target!
+                                </p>
+</div>
+</div>
+</div>
+<!-- Mr. K Encouragement Card -->
+<div class="bg-primary-fixed text-on-primary-fixed p-6 rounded-[1.5rem] border-b-[7px] border-on-primary-fixed-variant flex items-center gap-6">
+<div class="w-20 h-20 flex-shrink-0 bg-white rounded-full flex items-center justify-center border-4 border-on-primary-fixed-variant overflow-hidden">
+<img alt="Mr. K Mascot" class="w-14 h-14" data-alt="A friendly, expressive blue bird mascot with large optimistic eyes and a small tuft of feathers on its head. The mascot is illustrated in a clean, vector 2D style with thick outlines and vibrant gradients, similar to modern educational app characters. It wears a tiny golden crown and a small backpack, looking directly at the viewer with a cheerful and encouraging smile against a bright white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT-7MGKGEZNH7FTG-C_D_TXAd4LkByGBWKV2l0J06aEmdWkEQN9FEGEd9M1CAaN64nBamLp7oAiQ8QYf9nOcDIOFyKlcguCMqDqmzvH7ft09U9aFnaqRRsKh-S8NrE0dG7cqwaSBBxUKEUA8oMZquvsepc8kDQfJUO9J5xCvqbS5cYFxQlOTIyc5ZKEV7md3d_g8pWX7GyGY9Kw__GkS2mpm6odqUWsMrwfUVrxWX__1xNbtWcMQtN-fwoOjkcLNZvA1gaml7fCNs">
+</div>
+<div class="space-y-1">
+<p class="font-headline-md text-lg italic">"Every kobo counts! You're making Mr. K proud today."</p>
+<p class="text-sm opacity-80 font-label-bold">— Chief Encouragement Officer</p>
+</div>
+</div>
+</div>
+<!-- Right Section: Main Action Area -->
+<div class="lg:col-span-7 bg-white p-10 rounded-[1.5rem] border-b-[7px] border-surface-variant shadow-xl">
+<div class="text-center mb-10">
+<h3 class="font-headline-md text-headline-md text-on-surface">Enter Contribution</h3>
+<p class="text-on-surface-variant">How much are we adding to the pocket today?</p>
+</div>
+<div class="space-y-8">
+<!-- Large Input -->
+<div class="relative group">
+<span class="absolute left-6 top-1/2 -translate-y-1/2 font-display text-4xl text-outline-variant group-focus-within:text-primary transition-colors">₦</span>
+<input class="w-full pl-16 pr-6 py-8 text-display font-display text-primary bg-surface-container-low border-4 border-surface-variant rounded-[1.5rem] focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 outline-none transition-all text-center placeholder:text-outline-variant/30" type="text" value="12,500">
+</div>
+<!-- Quick Selection Chips -->
+<div class="grid grid-cols-3 gap-3">
+<button class="candy-button bg-surface-container hover:bg-surface-container-high py-4 rounded-xl border-b-4 border-outline-variant font-label-bold text-on-surface-variant active:border-b-0">
+                                +1,000
+                            </button>
+<button class="candy-button bg-surface-container hover:bg-surface-container-high py-4 rounded-xl border-b-4 border-outline-variant font-label-bold text-on-surface-variant active:border-b-0">
+                                +5,000
+                            </button>
+<button class="candy-button bg-surface-container hover:bg-surface-container-high py-4 rounded-xl border-b-4 border-outline-variant font-label-bold text-on-surface-variant active:border-b-0">
+                                +10,000
+                            </button>
+</div>
+<!-- Charity Toggle Section -->
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-center justify-between border-2 border-dashed border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-tertiary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div>
+<p class="font-label-bold text-on-surface">Add a charity donation</p>
+<p class="text-xs text-on-surface-variant">Donate ₦100 to Education Fund</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value="">
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Submit CTA -->
+<button class="w-full candy-button bg-primary-container py-6 rounded-[1.5rem] candy-shadow-primary text-white font-headline-md text-headline-md hover:brightness-110 flex items-center justify-center gap-3">
+<span>Confirm Contribution</span>
+<span class="material-symbols-outlined text-3xl">arrow_forward</span>
+</button>
+<p class="text-center text-on-surface-variant font-label-bold text-sm">
+                            Funds will be debited from your <span class="text-primary">Primary Wallet</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Floating Decoration -->
+<div class="hidden xl:block absolute top-10 right-20 pointer-events-none opacity-20 transform rotate-12">
+<span class="material-symbols-outlined text-[120px] text-primary">currency_exchange</span>
+</div>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translateY(4px)';
+                // We let the CSS candy-button:active handle the border-bottom shift
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(0)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Numeric input formatting (simulated)
+        const input = document.querySelector('input');
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value) {
+                value = parseInt(value).toLocaleString();
+                e.target.value = value;
+            }
+        });
+    </script>
+</body></html>

@@ -9,6 +9,9 @@ use App\Services\PushNotificationService;
 class Notification extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['user_id', 'sender_id', 'title', 'body', 'type', 'model_id', 'status'];
+
     const PERSONAL_MESSAGE = "Personal Message";
     const PAYMENT_RECEIVED = "Payment Received";
     const PAYMENT_MADE = "Payment Made";

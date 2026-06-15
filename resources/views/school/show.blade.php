@@ -4,25 +4,37 @@
 
 @section('content')
     {{-- Header --}}
-    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 overflow-hidden mb-6">
         @if ($school->background_image)
             <div class="h-28 bg-slate-100"><img src="{{ asset('storage/'.$school->background_image) }}" class="w-full h-full object-cover" alt=""></div>
         @endif
-        <div class="p-5 flex items-center gap-4">
+        <div class="p-5 flex flex-wrap items-center gap-4">
             @if ($school->logo)
-                <img src="{{ asset('storage/'.$school->logo) }}" class="h-14 w-14 rounded-xl object-cover border border-slate-200" alt="">
+                <img src="{{ asset('storage/'.$school->logo) }}" class="h-14 w-14 rounded-2xl object-cover border border-slate-200" alt="">
+            @else
+                <div class="bg-sky-100 rounded-2xl h-14 w-14 shrink-0 flex items-center justify-center text-2xl">🏫</div>
             @endif
-            <div>
-                <h2 class="text-2xl font-semibold">{{ $school->name }}</h2>
+            <div class="min-w-0 flex-1">
+                <h2 class="text-2xl font-extrabold truncate">{{ $school->name }}</h2>
                 <p class="text-xs text-slate-400">{{ $school->address }}@if($school->contact) · {{ $school->contact }}@endif</p>
                 @if ($school->nuban)<p class="text-xs text-slate-500">Fees to: {{ $school->account_name }} · {{ $school->bank }} · <span class="font-mono">{{ $school->nuban }}</span></p>@endif
+            </div>
+            <div class="flex gap-2">
+                <div class="rounded-2xl bg-slate-50 px-4 py-2 text-center">
+                    <div class="text-xl font-extrabold text-slate-800">{{ $classes->count() }}</div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wide">classes</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 px-4 py-2 text-center">
+                    <div class="text-xl font-extrabold text-slate-800">{{ $students->count() }}</div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wide">students</div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
         {{-- Classes & per-term fees --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
             <h3 class="font-semibold mb-3">Classes &amp; fees</h3>
             @forelse ($classes as $class)
                 <div class="border border-slate-100 rounded-lg p-3 mb-3">
@@ -66,7 +78,7 @@
         </div>
 
         {{-- Students --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
             <h3 class="font-semibold mb-3">Students ({{ $students->count() }})</h3>
             <ul class="divide-y divide-slate-100 mb-3 max-h-72 overflow-y-auto">
                 @forelse ($students as $st)
@@ -95,7 +107,7 @@
     @if ($students->isNotEmpty())
         <div class="grid lg:grid-cols-2 gap-6 mt-6">
             {{-- Record a payment --}}
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
                 <h3 class="font-semibold mb-3">Record a payment</h3>
                 <form method="POST" action="{{ route('school.payments.store', $school->id) }}" class="grid grid-cols-2 gap-2">
                     @csrf
@@ -111,7 +123,7 @@
             </div>
 
             {{-- Set a payment plan --}}
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
                 <h3 class="font-semibold mb-3">Set a payment plan</h3>
                 <form method="POST" action="{{ route('school.plan', $school->id) }}" class="grid grid-cols-2 gap-2">
                     @csrf

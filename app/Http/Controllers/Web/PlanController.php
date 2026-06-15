@@ -76,7 +76,20 @@ class PlanController extends Controller
         $collaborators = $plan->collaborators()->get();
         $isOwner = $plan->owner_id == auth()->id();
 
-        return view('plans.show', compact('plan', 'items', 'summary', 'collaborators', 'isOwner'));
+        // Friends you can one-click share with (accepted, not already on the plan).
+        $friends = collect();
+        if ($isOwner) {
+            $me = auth()->id();
+            $friendIds = \App\Models\Friendship::where('status', 'accepted')
+                ->where(fn ($q) => $q->where('user_id', $me)->orWhere('friend_id', $me))
+                ->get()->map(fn ($f) => $f->user_id == $me ? $f->friend_id : $f->user_id)->unique();
+            $friends = User::whereIn('id', $friendIds)
+                ->whereNotIn('id', $collaborators->pluck('id'))
+                ->where('id', '!=', $plan->owner_id)
+                ->orderBy('name')->get();
+        }
+
+        return view('plans.show', compact('plan', 'items', 'summary', 'collaborators', 'isOwner', 'friends'));
     }
 
     public function storeItem(Request $request, $id)
@@ -166,22 +179,24 @@ class PlanController extends Controller
         $plan = $this->accessiblePlan($id);
         abort_unless($plan->owner_id == auth()->id(), 403, 'Only the plan owner can share it.');
 
-        $data = $request->validate(['contact' => 'required|string|max:255']);
-        $contact = trim($data['contact']);
+        $data = $request->validate(['friend_id' => 'required|integer']);
+        $me = auth()->id();
 
-        $user = User::where('email', $contact)->first()
-            ?? User::where('phone_number', 'LIKE', '%'.PhoneNumber::normalize($contact).'%')->first();
+        // You can only share with someone who is your accepted friend.
+        $isFriend = \App\Models\Friendship::where('status', 'accepted')
+            ->where(function ($q) use ($me, $data) {
+                $q->where(['user_id' => $me, 'friend_id' => $data['friend_id']])
+                  ->orWhere(['user_id' => $data['friend_id'], 'friend_id' => $me]);
+            })->exists();
 
-        if (!$user) {
-            return back()->withErrors(['contact' => 'No KeenPocket user found with that phone or email.']);
+        if (!$isFriend) {
+            return back()->withErrors(['friend_id' => 'You can only share with your friends. Add them on the Friends page first.']);
         }
-        if ($user->id == $plan->owner_id) {
-            return back()->withErrors(['contact' => 'You already own this plan.']);
-        }
 
-        $plan->collaborators()->syncWithoutDetaching([$user->id]);
+        $plan->collaborators()->syncWithoutDetaching([$data['friend_id']]);
+        $user = User::find($data['friend_id']);
 
-        return back()->with('status', $user->name.' can now collaborate on this plan.');
+        return back()->with('status', ($user->name ?? 'Your friend').' can now collaborate on this plan.');
     }
 
     public function unshare($id, $userId)

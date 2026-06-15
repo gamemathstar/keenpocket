@@ -48,23 +48,47 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'phone_number' => 'required|string|max:20|unique:users,phone_number',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'required|string|max:20',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'username' => $data['phone_number'],
-            'phone_number' => $data['phone_number'],
-            'password' => bcrypt($data['password']),
-        ]);
+        // A placeholder account (created when a school/pocket/adashi admin adds
+        // someone by phone) has email == phone and can be claimed here.
+        $existing = User::where('phone_number', $data['phone_number'])->first();
+        $isPlaceholder = $existing && $existing->email === $existing->phone_number;
+
+        if ($existing && !$isPlaceholder) {
+            return back()->withErrors(['phone_number' => 'This phone number is already registered. Try logging in.'])->withInput();
+        }
+        if (User::where('email', $data['email'])->when($existing, fn ($q) => $q->where('id', '!=', $existing->id))->exists()) {
+            return back()->withErrors(['email' => 'That email is already in use.'])->withInput();
+        }
+
+        if ($isPlaceholder) {
+            // Claim it — keep their groups/children, set real email + password.
+            $existing->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]);
+            $user = $existing;
+            $welcome = 'Welcome to KeenPocket! Your account is now set up.';
+        } else {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'username' => $data['phone_number'],
+                'phone_number' => $data['phone_number'],
+                'password' => bcrypt($data['password']),
+            ]);
+            $welcome = 'Welcome to KeenPocket!';
+        }
 
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('status', 'Welcome to KeenPocket!');
+        return redirect()->route('dashboard')->with('status', $welcome);
     }
 
     public function logout(Request $request)

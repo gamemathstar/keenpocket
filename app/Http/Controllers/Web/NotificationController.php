@@ -30,6 +30,11 @@ class NotificationController extends Controller
         }
         $n->update(['status' => 'Read']);
 
+        // Friend requests/acceptances live on the Friends page.
+        if (str_starts_with((string) $n->type, 'Friend')) {
+            return redirect()->route('friends.index');
+        }
+
         $uid = auth()->id();
         $mid = $n->model_id;
         if ($mid) {

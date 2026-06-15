@@ -4,7 +4,7 @@
 
 @section('content')
     <a href="{{ route('invoices.create', $pocket->id) }}" class="inline-flex items-center text-sm text-brand-dark hover:underline mb-4">← Edit amount</a>
-    <div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
+    <div class="max-w-lg bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
         <h2 class="text-lg font-semibold mb-1">How your ₦{{ number_format($total) }} is split</h2>
         <p class="text-sm text-slate-500 mb-4">We filled the months you owe ({{ $pocket->title }}). Adjust any amount before saving.</p>
 

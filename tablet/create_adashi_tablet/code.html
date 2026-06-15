@@ -1,0 +1,293 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Create Adashi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#006590",
+                        "outline-variant": "#bdc8d2",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#88ceff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdf92",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#00405d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fec700",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#241a00",
+                        "on-background": "#191c1e",
+                        "primary-fixed": "#c8e6ff",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-container": "#ff8079",
+                        "tertiary": "#bb1522",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#001e2e",
+                        "secondary": "#755b00",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .candy-button {
+            transition: all 0.1s ease-in-out;
+            position: relative;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        
+        .physical-card {
+            box-shadow: 0 7px 0 0 #e0e3e5;
+            transition: transform 0.2s ease;
+        }
+        .physical-card:focus-within {
+            box-shadow: 0 7px 0 0 #1cb0f6;
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #1cb0f6;
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen overflow-x-hidden">
+<!-- Persistent SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low dark:bg-surface-container-lowest border-r-4 border-surface-variant dark:border-outline shadow-[4px_0px_0px_0px_rgba(0,101,144,0.1)] z-50 p-gutter gap-4">
+<div class="mb-8 px-2">
+<h1 class="font-display text-headline-md text-primary">Adashi Wallet</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant opacity-70">Managing your savings</p>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Active State: Determined as 'My Groups' since we are creating a group/circle -->
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>My Groups</span>
+</a>
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span>Explore</span>
+</a>
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Contributions</span>
+</a>
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t-2 border-surface-variant pt-4">
+<a class="flex items-center gap-3 p-4 font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] active:shadow-none" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Log out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-margin-desktop min-h-screen flex items-center justify-center">
+<div class="container max-w-container-max flex flex-col md:flex-row items-center md:items-start gap-12">
+<!-- Left Column: Mascot & Instructions -->
+<div class="w-full md:w-2/5 flex flex-col items-center md:items-start text-center md:text-left gap-6">
+<div class="relative">
+<!-- Mascot Container -->
+<div class="w-48 h-48 md:w-64 md:h-64 bg-secondary-fixed rounded-full flex items-center justify-center shadow-[0_8px_0_0_#f4bf00]">
+<img alt="Mr. K Mascot" class="w-40 h-40 md:w-52 md:h-52" data-alt="A friendly and optimistic mascot character named Mr. K, designed with a rounded, 3D candy-like aesthetic. He has a bright, smiling face, expressive eyes, and a soft yellow body that glows warmly. Mr. K is cheering enthusiastically, standing in a dynamic pose that suggests encouragement and success. The background is a clean, minimalist studio setting with soft pastel lighting that matches the playful Duolingo energy of the interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1dun2c0N9sVO50kdb49SPvAZawJgJURgtDZuqJIDXJFqVbEyCGk7MDjsS1LM0clhQj5SqJFpzhfwoc4P1u-QNuTr2-GxQ0Q4dI9MQ-4Akif03EO5KOflk0zF245w9wMmx9jmY79duzJPG6axQlODlvDloMRWQ-pNS7djJt5S4HGCBsXUKMrofpz0vYs4Zplfijt_92k9TQx6EsgzHvhz6BlOJW6XjyGmqdZ00asXS3yabvFSyaJdS-H6ZzmCMT4pCpGgSb5e3vPM">
+</div>
+<!-- Chat Bubble -->
+<div class="absolute -top-10 -right-4 md:-right-12 bg-white p-4 rounded-2xl shadow-[0_6px_0_0_#e0e3e5] border-2 border-surface-variant">
+<p class="font-headline-md text-primary">Let's set up your circle!</p>
+<div class="absolute -bottom-2 left-8 w-4 h-4 bg-white border-r-2 border-b-2 border-surface-variant rotate-45"></div>
+</div>
+</div>
+<div class="space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Create your Adashi</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Gather your friends, set your cycle, and start saving together. It’s easy and transparent!</p>
+<div class="inline-flex items-center gap-2 bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-full font-label-bold">
+<span class="material-symbols-outlined text-sm" data-icon="note_stack">note_stack</span>
+<span>Costs 1 Keen note</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Fields -->
+<div class="w-full md:w-3/5">
+<form class="physical-card bg-surface-container-lowest p-8 rounded-[1.5rem] border-2 border-surface-variant space-y-6" id="create-adashi-form">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Group Identity -->
+<div class="col-span-full space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Adashi Name</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md" placeholder="e.g. Vacation Savings 2024" required="" type="text">
+</div>
+<!-- Financial Terms -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">₦ per cycle</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">₦</span>
+<input class="w-full h-14 pl-10 pr-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md" placeholder="0.00" required="" type="number">
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Cycle duration (days)</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md" placeholder="30" required="" type="number">
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Start date</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md" required="" type="date">
+</div>
+<!-- Toggle Interaction -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Rotation mode</label>
+<div class="flex items-center gap-4 h-14">
+<span class="font-body-md text-on-surface-variant">Manual</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox">
+<div class="toggle-label w-14 h-8 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 shadow-md"></div>
+</div>
+</label>
+<span class="font-body-md text-primary font-bold">Auto</span>
+</div>
+</div>
+</div>
+<!-- Bank Details Section -->
+<div class="pt-4 border-t-2 border-surface-variant space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Payout Details</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Bank</label>
+<select class="w-full h-14 px-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1.5rem]" style="background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 fill=%22none%22 viewBox=%220%22%3E%3Cpath stroke=%22%236E7881%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22m6 9 6 6 6-6%22%2F%3E%3C%2Fsvg%3E');">
+<option>Access Bank</option>
+<option>GTBank</option>
+<option>Zenith Bank</option>
+<option>Kuda MFB</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">NUBAN</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-outline-variant focus:border-primary-container focus:ring-4 focus:ring-primary-container/20 transition-all font-body-md" maxlength="10" placeholder="0123456789" type="text">
+</div>
+<div class="col-span-full space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block px-1">Account name</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-surface-variant bg-surface-container-low text-on-surface-variant font-body-md" placeholder="Verified account name" readonly="" type="text">
+</div>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="pt-6">
+<button class="candy-button w-full h-16 bg-primary text-on-primary rounded-2xl font-headline-md shadow-[0_7px_0_0_#004c6e] flex items-center justify-center gap-3 hover:scale-[1.01] transition-transform" type="submit">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                            Create Adashi
+                        </button>
+<p class="text-center mt-4 text-on-surface-variant font-label-bold opacity-60">You can add members on the next step</p>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Floating Atmosphere Elements -->
+<div class="fixed top-20 right-10 w-24 h-24 bg-primary-container/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+<div class="fixed bottom-20 left-80 w-40 h-40 bg-secondary-container/10 rounded-full blur-3xl -z-10 animate-bounce" style="animation-duration: 10s"></div>
+<script>
+        // Micro-interaction for form submission
+        document.getElementById('create-adashi-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> Setting up...';
+            btn.classList.add('opacity-80');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Ready!';
+                btn.classList.remove('bg-primary');
+                btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                btn.style.boxShadow = '0 7px 0 0 #6e5400';
+            }, 1500);
+        });
+
+        // Numeric validation for NUBAN
+        const nubanInput = document.querySelector('input[placeholder="0123456789"]');
+        nubanInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body></html>

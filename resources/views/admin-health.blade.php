@@ -15,7 +15,7 @@
         <h3 class="font-semibold text-slate-700 mb-3">Pockets</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             @foreach ($pockets as $row)
-                <a href="{{ route('pockets.show', $row->pocket->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-brand transition">
+                <a href="{{ route('pockets.show', $row->pocket->id) }}" class="block bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-4 hover:border-brand transition">
                     <div class="font-semibold truncate">{{ $row->pocket->title }}</div>
                     <div class="text-xs text-slate-400 mb-2">{{ $row->members }} members</div>
                     <div class="flex justify-between text-xs text-slate-500 mb-1"><span>Collected</span><span>{{ $row->percent }}%</span></div>
@@ -35,7 +35,7 @@
         <h3 class="font-semibold text-slate-700 mb-3">Adashis</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($adashis as $row)
-                <a href="{{ route('adashi.show', $row->adashi->id) }}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-brand transition">
+                <a href="{{ route('adashi.show', $row->adashi->id) }}" class="block bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-4 hover:border-brand transition">
                     <div class="font-semibold truncate">{{ $row->adashi->name }}</div>
                     <div class="text-xs text-slate-400 mb-2">{{ $row->paid }}/{{ $row->members }} paid this cycle</div>
                     <div class="flex justify-between text-xs text-slate-500 mb-1"><span>Cycle collected</span><span>{{ $row->percent }}%</span></div>

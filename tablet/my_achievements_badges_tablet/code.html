@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Achievements - KeenPocket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-primary-container": "#00405d",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "secondary-fixed": "#ffdf92",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary": "#755b00",
+                        "inverse-primary": "#88ceff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-tertiary-container": "#7e000f",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed": "#241a00",
+                        "outline": "#6e7881",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "background": "#f7f9fb",
+                        "on-surface-variant": "#3e4850",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#bdc8d2",
+                        "surface-dim": "#d8dadc",
+                        "tertiary": "#bb1522",
+                        "on-tertiary-fixed": "#410004",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-primary-fixed": "#001e2e",
+                        "inverse-surface": "#2d3133",
+                        "on-background": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-container": "#ff8079",
+                        "surface-tint": "#006590",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1cb0f6",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#c8e6ff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#fec700",
+                        "on-secondary-container": "#6e5400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; background-color: #f7f9fb; }
+        
+        .candy-button {
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .chunky-card {
+            border-radius: 1.5rem;
+            box-shadow: 0 7px 0 0 #e0e3e5;
+        }
+
+        .chunky-card-primary {
+            border-radius: 1.5rem;
+            box-shadow: 0 7px 0 0 #004c6e;
+        }
+
+        .badge-locked {
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .progress-bar-container {
+            height: 16px;
+            background: #e0e3e5;
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-indicator {
+            height: 100%;
+            background: #1cb0f6;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 rounded-r-xl bg-surface-container-lowest border-r-4 border-surface-variant flex flex-col p-4 gap-2 shrink-0 z-20">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center overflow-hidden">
+<img alt="Mr. K Mascot" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVNCf2SU-IMinFTYiWpTYcoK_JC3B5k0V2JA9k0yuSx2beZTrFrNO3AWSARvy6prjxghWMDN9K9l8vvGEMX8YchZgFsOHQHYLKTFydsLQ8md0yTion59JW9yLlgz3gUZMGOMKiRRbTb8RLmgATa3B2_2umQNi08B7bt1V3XCxekL5UAPh102OelHXdEs7iIJ6iKurX2b2a-b8qB9739SlUSz1rMxEIY4DX2NPdTR6-fVT_nRSfc3FNRNtcx1Cn9wHlS0TGiHVR6tY"/>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md text-primary">KeenPocket</h1>
+<p class="text-[10px] font-label-bold text-on-surface-variant uppercase tracking-wider">Save together, grow together</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-on-primary-container/20 active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined fill-icon">emoji_events</span>
+<span class="font-label-bold text-label-bold">Achievements</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-variant rounded-xl transition-all mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="mt-4 candy-button bg-secondary-container text-on-secondary-container font-label-bold py-3 rounded-xl border-b-4 border-on-secondary-container/30">
+                Create Pocket
+            </button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="w-full py-2 bg-background flex justify-between items-center px-margin-desktop z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-headline-md font-headline-md text-primary">My Achievements</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-primary">help</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="User profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHLZpMagb5zMFGGoQ87D8GMF8LpBYjtWeU72yzMi8mUfDPyezHSJfgvo8f6ltqeFULgyo6-pEXXLkipLJz46VemUhzfuBersdU9lhi1MAKzOexCL4BpzcHegaH0QFmmwUpAb_lbVSsQJmxTG8Rcc76vanP6VqwToHNsU90vcfUuWqDTSKOELE44e5KwWU-dOYRCUGfR0pdGvhzLCbrbj_Xx9SmmQJBa-uyCO20zDzURaG1xJyuHBw9m1MdEqdYysFG158yhZhHjnc"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-margin-desktop grid grid-cols-12 gap-8">
+<!-- Left Column (Grid Span 5) -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+<!-- Current Momentum Card -->
+<div class="chunky-card bg-surface-container-lowest p-6 border-2 border-surface-variant">
+<div class="flex items-start justify-between mb-4">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface">Current Momentum</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">You're staying consistent!</p>
+</div>
+<div class="w-12 h-12 bg-tertiary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl fill-icon">local_fire_department</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mb-4">
+<span class="text-display font-display text-primary">5-week</span>
+<span class="text-headline-md font-headline-md text-on-surface-variant pb-2">streak</span>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-label-bold font-label-bold text-on-surface-variant">
+<span>5 / 7 days this week</span>
+<span>71%</span>
+</div>
+<div class="progress-bar-container">
+<div class="progress-bar-indicator" style="width: 71.4%"></div>
+</div>
+</div>
+</div>
+<!-- Safety Net Card -->
+<div class="chunky-card bg-surface-container-low p-6 border-2 border-surface-variant">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">ac_unit</span>
+</div>
+<h3 class="text-body-lg font-body-lg text-on-surface">Safety Net</h3>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-display font-display text-on-surface">2</p>
+<p class="text-label-bold font-label-bold text-on-surface-variant uppercase">Freezes available</p>
+</div>
+<button class="candy-button bg-primary text-on-primary px-6 py-3 rounded-xl border-b-4 border-on-primary-fixed-variant/50 font-label-bold">
+                                Buy More
+                            </button>
+</div>
+</div>
+<!-- Your Badges Grid -->
+<div class="space-y-4">
+<h3 class="text-headline-md font-headline-md text-on-surface">Your Badges</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Badge 1 -->
+<div class="chunky-card bg-surface-container-lowest p-4 border-2 border-surface-variant text-center flex flex-col items-center gap-2">
+<div class="w-16 h-16 bg-secondary-fixed rounded-full flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-secondary-fixed text-4xl fill-icon">verified</span>
+</div>
+<span class="text-label-bold font-label-bold">Reliable Payer</span>
+</div>
+<!-- Badge 2 -->
+<div class="chunky-card bg-surface-container-lowest p-4 border-2 border-surface-variant text-center flex flex-col items-center gap-2">
+<div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-primary-fixed text-4xl fill-icon">stars</span>
+</div>
+<span class="text-label-bold font-label-bold">Top Organizer</span>
+</div>
+<!-- Badge 3 -->
+<div class="chunky-card bg-surface-container-lowest p-4 border-2 border-surface-variant text-center flex flex-col items-center gap-2">
+<div class="w-16 h-16 bg-tertiary-fixed rounded-full flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-4xl fill-icon">group_add</span>
+</div>
+<span class="text-label-bold font-label-bold">Recruiter</span>
+</div>
+<!-- Badge 4 Locked -->
+<div class="chunky-card bg-surface-container-lowest p-4 border-2 border-surface-variant text-center flex flex-col items-center gap-2 badge-locked">
+<div class="w-16 h-16 bg-outline-variant rounded-full flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl">lock</span>
+</div>
+<span class="text-label-bold font-label-bold">Big Saver</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Grid Span 7) -->
+<div class="col-span-12 lg:col-span-7 flex flex-col gap-8">
+<!-- Achievement Progress Hero -->
+<div class="chunky-card-primary bg-primary text-on-primary p-10 relative overflow-hidden flex flex-col md:flex-row items-center gap-8">
+<!-- Decorative background element -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+<div class="relative z-10 shrink-0">
+<img alt="Mr. K Mascot holding a gold trophy with a wide celebratory smile" class="w-48 h-48 drop-shadow-2xl object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLuvajqHJQ5QZJuO4iy5Fj1ymfx4bVpFwocbz-BL1i706P5EnGaoU_KbszRb6mDyLBVZBmbt5W8zwFwEqKFNHCjcpPjUe-ThFa1PJG9Q63Imq6POYmIuV8R5eUTSP7zIBU3I64_EdKSAQM98wVqoo28XiPKNiiMRuOhcnXkCPoSSJHQW1wdmuauyOQTUxBn2bLmX0SPC3eHAArSocdbq_V5tH1Ma9AtxdLgZFWcKzHamXl0l1p8hyEhGLGw"/>
+</div>
+<div class="relative z-10 text-center md:text-left">
+<h2 class="text-display font-display mb-4">You're on a roll!</h2>
+<p class="text-body-lg font-body-lg mb-8 opacity-90 leading-relaxed">
+                                Keep contributing for 2 more weeks to unlock <span class="font-black underline decoration-secondary-container decoration-4 underline-offset-4">'Elite Saver'</span>.
+                            </p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<div class="bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/30 flex items-center gap-2">
+<span class="material-symbols-outlined fill-icon text-secondary-container">workspace_premium</span>
+<span class="font-label-bold">Elite Goal: 14/16 Days</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Progress Visualization -->
+<div class="chunky-card bg-surface-container-lowest border-2 border-surface-variant p-8">
+<h4 class="text-headline-md font-headline-md text-on-surface mb-6">Upcoming Milestones</h4>
+<div class="space-y-6">
+<div class="flex items-center gap-6 group">
+<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center shrink-0 border-b-4 border-on-secondary-container/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-on-secondary-container text-2xl">rocket_launch</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-body-lg font-body-lg">Consistent Contributor</span>
+<span class="text-label-bold font-label-bold text-primary">85%</span>
+</div>
+<div class="progress-bar-container">
+<div class="progress-bar-indicator" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6 group">
+<div class="w-14 h-14 rounded-2xl bg-primary-container flex items-center justify-center shrink-0 border-b-4 border-on-primary-container/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-on-primary-container text-2xl">shield_with_heart</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-body-lg font-body-lg">Group Guardian</span>
+<span class="text-label-bold font-label-bold text-primary">40%</span>
+</div>
+<div class="progress-bar-container">
+<div class="progress-bar-indicator" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pro Tip Card -->
+<div class="mt-auto chunky-card bg-primary-fixed border-2 border-primary/20 p-6 flex items-start gap-6 relative overflow-hidden group">
+<div class="absolute right-0 bottom-0 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-[120px]">lightbulb</span>
+</div>
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-primary text-3xl">psychology</span>
+</div>
+<div>
+<span class="inline-block bg-primary text-on-primary text-[10px] font-label-bold px-3 py-1 rounded-full uppercase tracking-widest mb-2">Pro Tip</span>
+<p class="text-body-lg font-body-lg text-on-primary-fixed-variant">
+                                Setting up automatic savings boosts your streak reliability by <span class="font-black text-primary">40%</span>!
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translateY(4px)';
+                button.style.boxShadow = '0 0 0 0 rgba(0, 0, 0, 0.2)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(0px)';
+                button.style.boxShadow = '0 4px 0 0 rgba(0, 0, 0, 0.2)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0px)';
+                button.style.boxShadow = '0 4px 0 0 rgba(0, 0, 0, 0.2)';
+            });
+        });
+    </script>
+</body></html>

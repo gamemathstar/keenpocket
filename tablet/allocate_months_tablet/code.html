@@ -1,0 +1,367 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#bb1522",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-container": "#ff8079",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#001e2e",
+                        "secondary": "#755b00",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#00405d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fec700",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#c8e6ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#241a00",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "secondary-fixed": "#ffdf92",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#006590",
+                        "outline-variant": "#bdc8d2",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#88ceff",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .candy-button {
+            transition: transform 0.1s ease-out;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+        }
+        .candy-button:active .border-b-shadow {
+            border-bottom-width: 0px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bdc8d2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-hidden flex">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-72 flex-shrink-0 flex flex-col p-spacing-margin-desktop bg-surface-container-low dark:bg-surface-dim border-r-4 border-surface-variant dark:border-outline-variant">
+<div class="mb-10">
+<h1 class="font-display text-display text-primary dark:text-primary-fixed-dim">KeenPocket</h1>
+</div>
+<nav class="flex-grow space-y-2">
+<!-- Active Tab: Home (Context: Allocating funds for a goal) -->
+<a class="flex items-center gap-4 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-4 py-3 border-b-4 border-on-primary-fixed-variant translate-y-1 transition-all duration-100" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">My Pockets</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t-2 border-surface-variant pt-6 space-y-2">
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold">Help</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold text-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-grow flex flex-col h-screen relative bg-surface-bright">
+<!-- Top Header Area -->
+<header class="w-full px-spacing-margin-desktop py-8 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<!-- Mr. K Mascot (Success State) -->
+<div class="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center relative shadow-[0_4px_0_0_#004c6e]">
+<img alt="Mr. K Mascot smiling" class="w-20 h-20" data-alt="A friendly, rounded green mascot character with large expressive eyes and a wide, cheerful smile, standing in a triumphant pose against a clean, light blue circular background. The character has a playful, 3D aesthetic similar to high-quality educational apps, with vibrant lighting and soft, smooth textures that convey optimism and success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8Ig3TwAnPQiyfo5nB4aQNTX41R118yOMooarUNfsqxp416mhxiuFS4lhJoj1jxh5jDbQb693ksFq5vZvg76NLq3ldK5sVi0Rk5KQkjzxSm46xypHda0NzN8OXShks2xHQXzMKNgls6UbzIpcUMoM5BI-apsWv0-JyzmBlASnkarsebmcF3HJiTyz3vhOlWuC8i5GXkBVkVJmrpECDfgUzuSU0Ni5DNkpdy4fkn31GX1sIvQh6bFF7dWliyABEv4Tbdzk79H3jnXQ">
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Great Progress!</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">You've allocated <span class="text-primary font-black">N10,000</span> of <span class="font-black">N10,000</span></p>
+<!-- Progress Bar -->
+<div class="mt-4 w-64 h-4 bg-surface-container rounded-full overflow-hidden border-2 border-surface-variant">
+<div class="h-full bg-secondary-container w-full rounded-full transition-all duration-700"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-3 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="p-3 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="px-spacing-margin-desktop pb-24 overflow-y-auto custom-scrollbar flex-grow">
+<!-- Info Box -->
+<div class="mb-8 p-6 bg-secondary-fixed text-on-secondary-fixed rounded-[1.5rem] border-b-[7px] border-secondary flex items-start gap-4 shadow-xl">
+<span class="material-symbols-outlined text-secondary text-3xl">info</span>
+<div>
+<p class="font-label-bold text-label-bold">Confirmation Required</p>
+<p class="font-body-md text-body-md opacity-90">Once submitted, your pocket organiser will need to confirm the transaction before it is finalized in your history.</p>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+                Months Pending
+                <span class="bg-primary text-on-primary px-3 py-1 rounded-full text-sm">6 months</span>
+</h3>
+<!-- Bento-style Grid of Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- January Card (Allocated) -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">January</span>
+<span class="bg-success/10 text-primary-container font-label-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Ready
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-surface-container rounded-xl border-2 border-primary focus:ring-4 focus:ring-primary/20 outline-none font-label-bold" readonly="" type="text" value="2,000">
+</div>
+</div>
+</div>
+<!-- February Card -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">February</span>
+<span class="text-on-surface-variant font-label-bold px-2 py-1 rounded-md flex items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-sm">pending</span> Pending
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-white rounded-xl border-2 border-outline-variant focus:border-primary transition-colors outline-none font-label-bold" placeholder="Enter amount" type="text" value="2,000">
+</div>
+</div>
+</div>
+<!-- March Card -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">March</span>
+<span class="text-on-surface-variant font-label-bold px-2 py-1 rounded-md flex items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-sm">pending</span> Pending
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-white rounded-xl border-2 border-outline-variant focus:border-primary transition-colors outline-none font-label-bold" placeholder="Enter amount" type="text" value="2,000">
+</div>
+</div>
+</div>
+<!-- April Card -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">April</span>
+<span class="text-on-surface-variant font-label-bold px-2 py-1 rounded-md flex items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-sm">pending</span> Pending
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-white rounded-xl border-2 border-outline-variant focus:border-primary transition-colors outline-none font-label-bold" placeholder="Enter amount" type="text" value="2,000">
+</div>
+</div>
+</div>
+<!-- May Card -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">May</span>
+<span class="text-on-surface-variant font-label-bold px-2 py-1 rounded-md flex items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-sm">pending</span> Pending
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-white rounded-xl border-2 border-outline-variant focus:border-primary transition-colors outline-none font-label-bold" placeholder="Enter amount" type="text" value="2,000">
+</div>
+</div>
+</div>
+<!-- June Card (Empty State example) -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant hover:border-primary-container transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="font-display text-2xl text-on-surface">June</span>
+<span class="text-on-surface-variant font-label-bold px-2 py-1 rounded-md flex items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+                        </span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-on-surface-variant font-body-md">
+<span>Target:</span>
+<span class="font-black">N2,000</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">N</span>
+<input class="w-full pl-8 pr-4 py-3 bg-white rounded-xl border-2 border-outline-variant focus:border-primary transition-colors outline-none font-label-bold" placeholder="Enter amount" type="text" value="0">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom CTA -->
+<footer class="absolute bottom-0 left-0 right-0 p-8 flex justify-center lg:justify-end bg-gradient-to-t from-surface-bright via-surface-bright to-transparent">
+<button class="candy-button relative group">
+<div class="absolute inset-0 bg-[#004c6e] rounded-full translate-y-1 border-b-shadow"></div>
+<div class="relative bg-primary-container text-on-primary-container font-headline-md px-12 py-4 rounded-full border-b-4 border-transparent flex items-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+                    Submit contribution
+                </div>
+</button>
+</footer>
+</main>
+<script>
+        // Interactive Candy Button Simulation
+        const buttons = document.querySelectorAll('.candy-button');
+        buttons.forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.classList.add('translate-y-1');
+                const shadow = btn.querySelector('.border-b-shadow');
+                if(shadow) shadow.style.borderBottomWidth = '0px';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.classList.remove('translate-y-1');
+                const shadow = btn.querySelector('.border-b-shadow');
+                if(shadow) shadow.style.borderBottomWidth = '4px';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.classList.remove('translate-y-1');
+            });
+        });
+
+        // Numeric Input Simulation for Cards
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            if(!input.hasAttribute('readonly')) {
+                input.addEventListener('focus', () => {
+                    input.parentElement.parentElement.parentElement.classList.add('border-primary-container');
+                    input.parentElement.parentElement.parentElement.classList.add('shadow-2xl');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.parentElement.parentElement.classList.remove('border-primary-container');
+                    input.parentElement.parentElement.parentElement.classList.remove('shadow-2xl');
+                });
+            }
+        });
+    </script>
+</body></html>

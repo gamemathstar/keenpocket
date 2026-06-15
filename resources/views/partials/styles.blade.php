@@ -91,6 +91,15 @@
     a.kp-photo-card:hover { transform: translateY(-3px); box-shadow: 0 20px 34px -14px rgba(28, 176, 246, .55); }
     .dark .kp-photo-card { border-color: #334155; }
 
+    /* "Candy depth" cards — flat bottom shadow, tablet-mockup style */
+    .card-depth { box-shadow: 0 7px 0 0 #e2e8f0; }
+    .card-depth-brand { box-shadow: 0 7px 0 0 var(--brand-dark); }
+    .dark .card-depth { box-shadow: 0 7px 0 0 #334155; }
+    a.card-depth, button.card-depth { transition: transform .1s ease, box-shadow .1s ease; }
+    a.card-depth:hover, button.card-depth:hover { transform: translateY(2px); box-shadow: 0 5px 0 0 #e2e8f0; }
+    .kp-hero-bounce { animation: kpHeroBounce 3s ease-in-out infinite; }
+    @keyframes kpHeroBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
     /* Consistent custom dropdowns (replace the native OS chevron) */
     select {
         -webkit-appearance: none;

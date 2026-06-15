@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Create Grocery Plan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error": "#ffffff",
+            "surface-tint": "#006590",
+            "secondary": "#755b00",
+            "secondary-container": "#fec700",
+            "inverse-primary": "#88ceff",
+            "surface-bright": "#f7f9fb",
+            "surface": "#f7f9fb",
+            "tertiary": "#bb1522",
+            "surface-variant": "#e0e3e5",
+            "on-tertiary-container": "#7e000f",
+            "on-secondary-fixed": "#241a00",
+            "on-secondary-fixed-variant": "#594400",
+            "primary-container": "#1cb0f6",
+            "outline-variant": "#bdc8d2",
+            "secondary-fixed": "#ffdf92",
+            "inverse-surface": "#2d3133",
+            "on-surface-variant": "#3e4850",
+            "on-surface": "#191c1e",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#001e2e",
+            "primary": "#006590",
+            "tertiary-container": "#ff8079",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e6e8ea",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#f2f4f6",
+            "secondary-fixed-dim": "#f4bf00",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#c8e6ff",
+            "on-secondary-container": "#6e5400",
+            "surface-dim": "#d8dadc",
+            "primary-fixed-dim": "#88ceff",
+            "tertiary-fixed": "#ffdad7",
+            "inverse-on-surface": "#eff1f3",
+            "on-error-container": "#93000a",
+            "tertiary-fixed-dim": "#ffb3ae",
+            "on-tertiary-fixed-variant": "#930014",
+            "surface-container": "#eceef0",
+            "on-primary-fixed-variant": "#004c6e",
+            "on-primary": "#ffffff",
+            "surface-container-highest": "#e0e3e5",
+            "on-background": "#191c1e",
+            "on-primary-container": "#00405d",
+            "error": "#ba1a1a",
+            "outline": "#6e7881",
+            "on-tertiary-fixed": "#410004",
+            "background": "#f7f9fb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "container-max": "1200px",
+            "margin-mobile": "20px",
+            "margin-desktop": "40px",
+            "unit": "4px",
+            "gutter": "16px"
+          },
+          "fontFamily": {
+            "headline-md": ["Nunito Sans"],
+            "label-bold": ["Nunito Sans"],
+            "headline-lg": ["Nunito Sans"],
+            "body-lg": ["Nunito Sans"],
+            "headline-lg-mobile": ["Nunito Sans"],
+            "body-md": ["Nunito Sans"],
+            "display": ["Nunito Sans"]
+          },
+          "fontSize": {
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+            "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background-color: #f7f9fb;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .candy-button {
+      position: relative;
+      transition: all 0.1s ease;
+      cursor: pointer;
+    }
+    .candy-button:active {
+      transform: translateY(4px);
+      box-shadow: none !important;
+    }
+    .candy-card {
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 7px 0 0 #e0e3e5;
+      transition: border-color 0.2s ease;
+    }
+    .candy-card:focus-within {
+      border: 2px solid #006590;
+    }
+    .inner-recessed {
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .custom-toggle:checked + .toggle-bg {
+      background-color: #1cb0f6;
+    }
+    .custom-toggle:checked + .toggle-bg .toggle-dot {
+      transform: translateX(100%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low border-r-4 border-outline-variant p-gutter z-40">
+<div class="mb-8 px-2">
+<h1 class="text-headline-md font-headline-md font-black text-primary">KeenPocket</h1>
+<p class="text-label-bold font-label-bold text-on-surface-variant opacity-70">Community Finance</p>
+</div>
+<nav class="flex flex-col gap-unit flex-grow">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<!-- Active Tab: Pockets (Logic: Grocery Plan falls under Pockets/Budgeting) -->
+<a class="flex items-center gap-3 p-3 bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="mt-auto candy-button w-full bg-primary py-4 rounded-xl text-white font-black text-label-bold shadow-[0_4px_0_0_#004c6e] uppercase tracking-wider">
+      New Pocket
+    </button>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-margin-desktop">
+<!-- Top Bar Navigation (Contextual) -->
+<header class="flex items-center justify-between mb-12">
+<div class="flex items-center gap-4">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-high text-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface leading-none">Grocery Plan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Savings Cockpit • Design your budget flow</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-white px-4 py-2 rounded-full border-2 border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-bold text-label-bold text-on-surface">1,240 XP</span>
+</div>
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYRvfWSeSJ_kqIWOM5HwKmaXZQDE4K8WpRatMsqfTieve-ZTzX3VKlhhJhLNooZoolywUn_lCu_rVP55rWbAmi03P_-gQWP_gSpJ1Jep6U2q6Dvg8pVCcacO5N9OfSKysPiPWt03p40AL80-VfRcV1rTsC03FMgc6WgNRmC1S6obEd7T6BLWfYrgitXh3qzcmmSMg1gevBdV11yvCfArh-LhpxvIMj52-POCzFwCR2c2XGnu64ictaiXecF-asqHQZyuXjBzcYR64">
+</div>
+</div>
+</header>
+<!-- Bento Grid Cockpit Layout -->
+<div class="max-w-4xl mx-auto grid grid-cols-12 gap-gutter">
+<!-- Mascot Guidance Card -->
+<div class="col-span-12 candy-card p-gutter flex items-center gap-6 border-b-[7px] border-surface-variant">
+<div class="w-24 h-24 flex-shrink-0 bg-primary-container/20 rounded-full flex items-center justify-center relative overflow-hidden">
+<img alt="Mr. K Mascot" class="w-20 h-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcQmwCGZDUoLl-foclCHFxfh02Lt2-KI7DwRVfRuYeFYZYeE5rwoDlvwFmmWQgJrhwFtrIUUrFAoKigGVWT3e7vHOAPhV1C1nhR-1eEGjV2b0boSob3jH-j3fk8VlAGtBeF8aAaTgZQkF2KGBjyXG3Ve_tw4nfx1yiQqSpl6UkdEK_3SpasqNQta3H5lYoptKLxJcZCVPuVrlKN9jn5--yPmhOe2yyp8h4qeTBT72iYr1qvIDb2tUAnQhT8AKkxNWH6aZvCCmRBbI">
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-md text-headline-md text-primary">Ready to save, Chef?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Setting a clear period and budget helps me find the best deals for your household this season!</p>
+</div>
+</div>
+<!-- Main Creation Form -->
+<div class="col-span-12 candy-card p-10 border-b-[7px] border-surface-variant">
+<form class="space-y-8">
+<!-- Plan Title -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant ml-2">PLAN TITLE</label>
+<input class="w-full bg-surface-container-low border-2 border-outline-variant rounded-2xl p-4 text-body-lg font-body-lg focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" placeholder="e.g., Monthly Family Bulk Buy" type="text">
+</div>
+<!-- Period Toggle & Dates -->
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant ml-2">PERIOD TYPE</label>
+<div class="flex p-1 bg-surface-container-high rounded-2xl gap-1 h-[60px]">
+<button class="flex-1 bg-white rounded-xl shadow-sm text-primary font-black text-label-bold" type="button">MONTH</button>
+<button class="flex-1 text-on-surface-variant font-bold text-label-bold hover:bg-surface-variant rounded-xl transition-colors" type="button">YEAR</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant ml-2">MONTH</label>
+<select class="w-full bg-surface-container-low border-2 border-outline-variant rounded-2xl p-4 font-body-lg text-on-surface focus:border-primary outline-none appearance-none">
+<option>October</option>
+<option>November</option>
+<option>December</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant ml-2">YEAR</label>
+<select class="w-full bg-surface-container-low border-2 border-outline-variant rounded-2xl p-4 font-body-lg text-on-surface focus:border-primary outline-none appearance-none">
+<option>2023</option>
+<option>2024</option>
+<option>2025</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Budget Target -->
+<div class="space-y-2">
+<div class="flex justify-between items-end ml-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant">TARGET BUDGET</label>
+<span class="text-primary font-black text-headline-md">$450.00</span>
+</div>
+<div class="relative flex items-center">
+<span class="absolute left-4 font-black text-primary text-xl">$</span>
+<input class="w-full bg-surface-container-low border-2 border-outline-variant rounded-2xl p-4 pl-10 text-body-lg font-body-lg focus:border-primary outline-none" placeholder="0.00" type="number">
+</div>
+<div class="h-4 bg-surface-container-highest rounded-full overflow-hidden mt-4 inner-recessed">
+<div class="h-full bg-primary w-2/3 rounded-full"></div>
+</div>
+</div>
+<!-- Toggles & Smart Info -->
+<div class="grid grid-cols-2 gap-8 pt-4">
+<div class="candy-card p-6 border-b-[4px] border-outline-variant bg-surface-bright flex items-center justify-between">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Carry over deferred items</p>
+<p class="text-xs text-on-surface-variant">Move unused budget from last month</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only custom-toggle" type="checkbox">
+<div class="w-12 h-7 bg-surface-variant rounded-full transition-colors toggle-bg relative">
+<div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform toggle-dot shadow-sm"></div>
+</div>
+</label>
+</div>
+<div class="candy-card p-6 border-b-[4px] border-secondary-container bg-secondary-fixed/20 flex gap-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<div>
+<p class="font-label-bold text-label-bold text-secondary">Smart Tip: Star Priority</p>
+<p class="text-xs text-on-secondary-container">Mark items with a <span class="font-black">Star Priority</span> to ensure they are funded first in your "Savings Cockpit".</p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-4 pt-8">
+<button class="flex-1 bg-surface-container-highest py-5 rounded-2xl font-black text-on-surface-variant candy-button border-b-[6px] border-outline-variant uppercase" type="button">
+              Save Draft
+            </button>
+<button class="flex-[2] bg-primary-container py-5 rounded-2xl font-black text-white candy-button border-b-[6px] border-[#004c6e] uppercase text-lg shadow-lg" type="submit">
+              Create My Plan
+            </button>
+</div>
+</form>
+</div>
+<!-- Visual Summary (Sidebar of the cockpit) -->
+<div class="col-span-12 grid grid-cols-3 gap-gutter">
+<div class="candy-card p-6 border-b-[7px] border-primary/20 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-2" style="font-size: 32px;">calendar_month</span>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Plan Duration</p>
+<p class="text-body-lg font-black text-on-surface">31 Days</p>
+</div>
+<div class="candy-card p-6 border-b-[7px] border-secondary/20 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">shopping_basket</span>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Avg. Items</p>
+<p class="text-body-lg font-black text-on-surface">42 Units</p>
+</div>
+<div class="candy-card p-6 border-b-[7px] border-tertiary/20 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-tertiary mb-2" style="font-size: 32px;">trending_down</span>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Est. Savings</p>
+<p class="text-body-lg font-black text-on-surface">12% Boost</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+    // Micro-interaction for form inputs
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.parentElement.querySelector('label').classList.add('text-primary');
+      });
+      input.addEventListener('blur', () => {
+        input.parentElement.querySelector('label').classList.remove('text-primary');
+      });
+    });
+
+    // Handle Period Toggle
+    const periodButtons = document.querySelectorAll('button[type="button"]');
+    periodButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(btn.parentElement.classList.contains('bg-surface-container-high')){
+                periodButtons.forEach(b => {
+                    b.classList.remove('bg-white', 'text-primary', 'shadow-sm', 'font-black');
+                    b.classList.add('text-on-surface-variant', 'font-bold');
+                });
+                btn.classList.add('bg-white', 'text-primary', 'shadow-sm', 'font-black');
+                btn.classList.remove('text-on-surface-variant', 'font-bold');
+            }
+        });
+    });
+  </script>
+</body></html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Adashi Wallet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#006590",
+                        "outline-variant": "#bdc8d2",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#88ceff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdf92",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#00405d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fec700",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#241a00",
+                        "on-background": "#191c1e",
+                        "primary-fixed": "#c8e6ff",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-container": "#ff8079",
+                        "tertiary": "#bb1522",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#001e2e",
+                        "secondary": "#755b00",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .candy-button {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .candy-button:hover { transform: translateY(-2px); }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .bento-card {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bento-card:hover {
+            transform: scale(1.02);
+            border-color: #1cb0f6;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- Persistent SideNavBar (JSON-derived Anchor) -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low dark:bg-surface-container-lowest border-r-4 border-surface-variant dark:border-outline shadow-[4px_0px_0px_0px_rgba(0,101,144,0.1)] z-50 overflow-y-auto">
+<div class="flex flex-col gap-4 p-gutter h-full">
+<!-- Brand Section -->
+<div class="px-2 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-white shadow-[0_4px_0_0_#004c6e]">
+<span class="material-symbols-outlined">wallet</span>
+</div>
+<div>
+<h1 class="font-display text-headline-md text-primary leading-tight">Adashi Wallet</h1>
+<p class="text-[12px] font-bold text-outline opacity-70">Managing your savings</p>
+</div>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav class="flex-grow flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                    My Groups
+                </a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+                    Explore
+                </a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                    Contributions
+                </a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</nav>
+<!-- Mascot Integration -->
+<div class="mt-auto mb-4 bg-primary/5 rounded-2xl p-4 relative overflow-hidden border-2 border-primary/10">
+<div class="relative z-10">
+<p class="font-label-bold text-label-bold text-primary mb-1">Hello, I'm Mr. K!</p>
+<p class="text-[12px] text-on-surface-variant">Check your payout dates below.</p>
+</div>
+<img alt="Mascot Mascot Mr. K" class="absolute -right-2 -bottom-2 opacity-20 w-16 h-16" data-alt="A charming and minimalist 3D mascot character of a blue penguin named Mr. K, wearing a small orange bow tie. The character is designed in a friendly, high-energy Duolingo-inspired style with smooth, rounded surfaces and expressive eyes. The setting is a clean, modern digital interface background with soft blue tones and playful geometric accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQMNhFUyXljS3GmhHEW-Q3XXZkPOYsld_NkIxr_ZkF7_9Go8d5G39KJVgQrnKe8YXJiEdgBbgQDAVoP23vtJgY_7d18TsPtBySg6AhCP5CfCNmJHOAae5DEbc69xErC1L-GkZQ8pwvEdAgUNiMUQhV5Vg0KX3Wh18_aTBr56_FjjrYPH9w2SHLtyV13c2ifS_mtO6tQFygufEqmk49l9HUlObtTrNDHoQ7E3bL2jB8zpn9JLWAQ1p9EpyVhndb9uJwZI1n7IlH1cI">
+</div>
+<!-- Footer Action -->
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl hover:scale-[1.02] transition-transform active:translate-y-[4px] font-label-bold text-label-bold w-full text-left">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Log out
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 p-margin-desktop min-h-screen">
+<!-- Top Bar Header -->
+<header class="flex justify-between items-center mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">My Adashi Groups</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">You are active in 4 savings circles.</p>
+</div>
+<button class="candy-button bg-primary-container text-on-primary-container px-6 py-3 rounded-xl font-label-bold text-label-bold shadow-[0_4px_0_0_#004c6e] flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                New Group
+            </button>
+</header>
+<!-- Search and Filter (Hybrid Component) -->
+<div class="flex gap-4 mb-10 overflow-x-auto pb-2">
+<div class="relative flex-grow max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-white border-2 border-surface-variant rounded-2xl focus:ring-2 focus:ring-primary-container focus:border-primary outline-none font-body-md transition-all" placeholder="Find a group..." type="text">
+</div>
+<button class="px-4 py-3 bg-white border-2 border-surface-variant rounded-2xl font-label-bold text-label-bold text-on-surface-variant hover:border-primary-container flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+                Active
+            </button>
+<button class="px-4 py-3 bg-white border-2 border-surface-variant rounded-2xl font-label-bold text-label-bold text-on-surface-variant hover:border-primary-container flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined">history</span>
+                Completed
+            </button>
+</div>
+<!-- Groups Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bento-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant shadow-sm flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-primary/10 p-3 rounded-2xl">
+<span class="material-symbols-outlined text-primary text-3xl">home</span>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full font-label-bold text-[12px] text-on-secondary-container">
+                        Weekly
+                    </div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Family Dream Home</h3>
+<p class="font-body-lg text-body-lg text-primary mb-6">₦50,000 per cycle</p>
+<div class="mb-6">
+<div class="flex justify-between text-[13px] font-bold text-outline mb-2">
+<span>Cycle Progress</span>
+<span>4 of 12</span>
+</div>
+<div class="h-4 bg-surface-container rounded-full overflow-hidden border border-surface-variant">
+<div class="h-full bg-primary-container w-[33%] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]"></div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-variant/50">
+<div class="flex -space-x-3">
+<img alt="Member 1" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close-up portrait of a friendly woman with a warm smile, wearing modern glasses, set against a vibrant yellow studio background. The style is clean, high-fidelity digital photography with soft, professional lighting, reflecting a modern, optimistic brand aesthetic with warm color tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl32T0-GzTilezqu-dkpxzsNy6a6UzbQAQhC9vqOBIY9Ba8ru31Yc7QAkBHwXqOT6u8EiTs8BPbCRLeCuMdJmZg_3M3Jw32zvw2sEVK4c5lt_FzC_Zu9gucEvaFJCUiYXGp5ezUdcU3CS0UtTUBe2rz9tNpqs_uS7pv5ofL9QReI10i-naRYltWYWr30Ld4ljGmr1GiRPQ2yXYpN5o98BWxS2s95Tj-C4HsV2YvKh6LV7x_WxOLIQXAPY60QoVzFjxnjy7zntd978">
+<img alt="Member 2" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Portrait of a young man with a cheerful expression, wearing a stylish denim jacket, positioned against a soft teal background. High-key lighting highlights the friendly facial features, creating a sense of reliability and community in a bright, modern light-mode visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkZhnpBkz_VgUsJ2RnXOdgcFtdhqc019pGkgtFeTfodvUNzKR8gSKFGnAr8gUnUz0J8ZRFGJINogoypY31gRfwFNNy-ZaDBKZrW5rmeO-dV-LEt7TtC8wsuuVy19gqVDOicGnfgCcDe_fq4wdEY4PDAwhGIVpsHMsbCX3QD81srY0Kbu45bg5SqKlh6ZTEoE5Up0HeDlEcZ7BXKgrnnQP0_04D6ogAck2mJNP3ULIVQRzHR99TzkDExgr727j1p-4KYKPhMeok_2c">
+<img alt="Member 3" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A diverse portrait of a person with a bright, welcoming smile, wearing a professional yet casual white shirt. The background is a soft pastel pink, and the lighting is even and bright, emphasizing a playful yet trustworthy digital brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ5RVD6ZX-DG1OpV9bgsxEeNySu1eBYGg7uuusAWn18S-RvH_hiSHIzQwQdoaoMBxpsf0Ljq-gbiFYXPOdyB8hcSa5dP6v00lBs-uFBByi6Bq42V70ieT9caHRPYVGIrJK0sJRLzsM5e1_SqaOMwGpqVmQTJuFXMfSzZEmS9p0l9DpSh8dE4TCXCi6mMfNWfcqF6R9M-PpV5hGNlUaTvmaGKSh4CE7dfi-PZdEKbBXrJN0x7iwdzRb6oFO48pJnVmoDyK9Q48LQ-k">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold border-2 border-white text-on-surface-variant">+9</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider">Next Payout</p>
+<p class="font-label-bold text-primary">In 3 Days</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bento-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant shadow-sm flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-tertiary-container/10 p-3 rounded-2xl">
+<span class="material-symbols-outlined text-tertiary text-3xl">directions_car</span>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full font-label-bold text-[12px] text-on-secondary-container">
+                        Monthly
+                    </div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Car Maintenance</h3>
+<p class="font-body-lg text-body-lg text-primary mb-6">₦20,000 per cycle</p>
+<div class="mb-6">
+<div class="flex justify-between text-[13px] font-bold text-outline mb-2">
+<span>Cycle Progress</span>
+<span>8 of 10</span>
+</div>
+<div class="h-4 bg-surface-container rounded-full overflow-hidden border border-surface-variant">
+<div class="h-full bg-tertiary-container w-[80%] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]"></div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-variant/50">
+<div class="flex -space-x-3">
+<img alt="Member 4" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close-up of a smiling grandmother with silver hair, looking kind and wise, in a bright sunlit kitchen environment. The photography is soft-focused with warm, natural lighting that promotes an atmosphere of trust, safety, and community for a modern digital wallet application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsHyv8G83UV0wPb5zRbt-pF2L_0vUoAq746DtLcYGeQYUTfeRaeGsXbP1mUfj6ZwdPgA9uLz8p0uJajQLH_1FGi6YrzbedTOTTqI_p001Dq6zUkwTNrLA68nZdXsDPFVrzKY_8eeRhNktxbrXWfEf0U88pX1pgeVH_SzFeDvaPqCgTDZ50iB84xm7aybSfiwGcH3ldJMediQzSHO1LVcLWgQanD9fgTuDSQxiF7VfAkGDS0W_S78QIWB0yYDdx4FmohFpl4kOIV7g">
+<img alt="Member 5" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close-up of a middle-aged man with a neat beard, smiling confidently into the camera. He is wearing a casual polo shirt against a blurred office backdrop with soft daylight. The image quality is crisp, featuring vibrant colors and an approachable, high-trust vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJIYdYkhSNRgacBPzLSDDKk7ErGLT7vdsuEqFz_OJiHfvRvLBsnDaIsmLdVP6i74yTWVAdyVfE1lhppp3mTFEXsjDKKFTlRkzG4VNVX6VscAuFc91sqJtsCN_8rJLwomUYowJp0CJ6r53XJpIIciEt3dNZsqkzmMwJtjCLJtWBoZ01_I3ntLxY2gFp08GdmpZ_DiT5-TEnVxLOFswTN5m8AQmLKbWNmx_w7KJHwLQaUeAxVT8Nf1BDK4y1hijMgsFEpQ3TKwPIbQM">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold border-2 border-white text-on-surface-variant">+3</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider">Next Payout</p>
+<p class="font-label-bold text-tertiary">In 12 Days</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bento-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant shadow-sm flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-secondary-container/20 p-3 rounded-2xl">
+<span class="material-symbols-outlined text-secondary text-3xl">school</span>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full font-label-bold text-[12px] text-on-secondary-container">
+                        Weekly
+                    </div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">MBA Savings</h3>
+<p class="font-body-lg text-body-lg text-primary mb-6">₦15,000 per cycle</p>
+<div class="mb-6">
+<div class="flex justify-between text-[13px] font-bold text-outline mb-2">
+<span>Cycle Progress</span>
+<span>2 of 24</span>
+</div>
+<div class="h-4 bg-surface-container rounded-full overflow-hidden border border-surface-variant">
+<div class="h-full bg-secondary-container w-[8%] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]"></div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-variant/50">
+<div class="flex -space-x-3">
+<img alt="Member 6" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Portrait of a young student in a university library setting, smiling warmly with books in the background. The lighting is soft and golden, creating an inspiring and educational mood. The aesthetic is clean, professional, and reflects growth and investment in the future." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASZ3p-EN4kuhFSbWejbVFhirVYGrfkbwU-2xfxCGVDnciQoT6CGj-wQ3g359UN2vL-b3HQWlylqmt9G4W4V6LGIjcEM2k_xe0Br9W3zMn0CoFXE6YV76b9HZHmRUb1cV37_p6K7dxs4yn_i2O-jL1LYNVmKgPwGlGCfOQR70a2Fv29typ7wihY99P_bcE_wPDkI9OcaRUgq9Xyo12BXTq5o2wVKURQiLHNzGW-kvKU8zF8wfLoSMb_11HyS0tsmvQsJHBouBP3Xb8">
+<img alt="Member 7" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A portrait of a professional woman in a modern office, exuding confidence and success. The lighting is bright and crisp, with a palette of blues and whites that matches the brand's primary colors, creating a cohesive and high-end professional feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkYf8-3nNGYMJXccFXs9XCmkgMH2WrJOoxo32YzHIcvGlWWLK2noka0k5QTfGyQ461ttJDVnSOiX1Lb9GjdQh1SFbLY0uRmzs2Kg7uHJ-Er3y_M3H53URJXiTiLko2iMf_dOhEzbPMJO2OWhivuYPxXvG8cL4quAKWk7UFPEfnkKc-8lrHjKXxVI50_r-FpGC8i-SDLp2KlFrDyuiCwF4YWmglD4OWnxrrFxmj9GA9MxcrRncW8jAMWRYgykDEoBU5bBAgwAtGDoU">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold border-2 border-white text-on-surface-variant">+15</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider">Next Payout</p>
+<p class="font-label-bold text-secondary">In 5 Days</p>
+</div>
+</div>
+</div>
+<!-- Card 4 (Actionable Placeholder) -->
+<div class="bento-card bg-surface-container border-2 border-dashed border-outline-variant p-6 rounded-[1.5rem] shadow-sm flex flex-col items-center justify-center text-center group cursor-pointer hover:bg-white hover:border-primary-container transition-all">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-outline text-4xl group-hover:text-primary">group_add</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface-variant">Join a Circle</h3>
+<p class="font-body-md text-body-md text-outline px-4 mt-2">Looking for something new? Explore community-run Adashi groups.</p>
+<div class="mt-6 font-label-bold text-primary flex items-center gap-2 group-hover:gap-4 transition-all">
+                    Browse Explore <span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Atmospheric Effect (Bottom of Page) -->
+<div class="mt-16 flex items-center justify-center p-8 bg-white/50 rounded-[2rem] border border-surface-variant/30">
+<div class="flex items-center gap-6 max-w-2xl">
+<div class="w-24 h-24 shrink-0 bg-primary-container rounded-3xl flex items-center justify-center shadow-[0_8px_0_0_#004c6e]">
+<span class="material-symbols-outlined text-white text-5xl">savings</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Did you know?</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Adashi groups help you reach your goals 3x faster than saving alone. Mr. K keeps everyone on track!</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Mobile Context Suppression) -->
+<!-- Not rendered as we are on a Tablet/SideNav Layout -->
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'translateY(4px) scale(0.98)';
+                card.style.boxShadow = 'none';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1.02)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple animation for progress bars on load
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.h-full.rounded-full');
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

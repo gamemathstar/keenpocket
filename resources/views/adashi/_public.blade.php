@@ -1,6 +1,6 @@
 {{-- Limited public view shown to people who are NOT members of this adashi. --}}
 <div class="max-w-xl mx-auto">
-    <div class="bg-white rounded-2xl border border-slate-200 p-6 text-center">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6 text-center">
         <h2 class="text-2xl font-extrabold">{{ $adashi->name }}</h2>
         <p class="text-sm text-slate-500 mt-1">Rotating savings · {{ ucfirst(strtolower($adashi->rotation_mode)) }} rotation</p>
 

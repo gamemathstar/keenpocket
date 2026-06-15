@@ -1,0 +1,221 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Get Started</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#241a00",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#006590",
+                    "primary": "#006590",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-secondary-fixed-variant": "#594400",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-container": "#fec700",
+                    "background": "#f7f9fb",
+                    "on-tertiary-container": "#7e000f",
+                    "inverse-surface": "#2d3133",
+                    "tertiary": "#bb1522",
+                    "secondary-fixed": "#ffdf92",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "secondary": "#755b00",
+                    "outline": "#6e7881",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2e",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#c8e6ff",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#00405d",
+                    "inverse-primary": "#88ceff",
+                    "tertiary-container": "#ff8079",
+                    "surface": "#f7f9fb",
+                    "primary-fixed-dim": "#88ceff",
+                    "on-surface": "#191c1e",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "outline-variant": "#bdc8d2",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-container": "#6e5400",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#1cb0f6",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-surface-variant": "#3e4850",
+                    "on-tertiary-fixed": "#410004",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#930014"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "container-max": "1200px",
+                    "margin-desktop": "40px",
+                    "margin-mobile": "20px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "display": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "800" }],
+                    "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "800" }],
+                    "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "800" }],
+                    "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "800" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Candy Button Styling */
+        .candy-button {
+            position: relative;
+            transition: transform 0.1s ease, background-color 0.2s ease;
+            box-shadow: 0 5px 0 0 #004c6e; /* Darker primary shade for the 3D base */
+        }
+        .candy-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 0 #004c6e;
+        }
+        .candy-button:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 0 #004c6e;
+        }
+
+        /* Secondary Candy Button Styling */
+        .candy-button-outline {
+            position: relative;
+            transition: transform 0.1s ease;
+            box-shadow: 0 5px 0 0 #bdc8d2; 
+            border: 2px solid #bdc8d2;
+        }
+        .candy-button-outline:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 0 #bdc8d2;
+        }
+        .candy-button-outline:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 0 #bdc8d2;
+        }
+
+        /* Global Shadows from System Guidance */
+        .brand-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 101, 144, 0.15);
+        }
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- Top Navigation (Standard Logic) -->
+<header class="bg-background dark:bg-background w-full top-0 z-50">
+<nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-display text-headline-lg text-primary dark:text-primary-fixed-dim tracking-tight">
+                KeenPocket
+            </div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:translate-y-1 transition-transform duration-100 p-2 rounded-full hover:bg-surface-container" title="Help">
+                    help
+                </button>
+</div>
+</nav>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-12">
+<div class="max-w-4xl w-full flex flex-col items-center text-center">
+<!-- Mascot Section -->
+<div class="w-full mb-12 flex justify-center animate-bounce-slow">
+<img alt="KeenPocket mascot Mr. K and friends" class="max-w-[80%] md:max-w-[700px] h-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp7lXKC8U7rTsRc5ygI4YTGbU7bz3iQR6qbQTMDjivU5FXlgp69RMXsvaflfUNKpHoK1ev831UTS6hVAiJ31nYGCP7hWeQb3EqqgYLRDE1mqFjmn8qTsX_4kxhZ8QXswCPt6XWlrorvA7mmqNk0mpPvhM8xX_chT5_xLn9D64ANgO3DK64Mi6a_z55PNSawW6Qagngg926WUO3nQJfddojFFdNdZe-Jjda_0BMq0_Zyyc1jv5Z6UFI9PWVqMSG7TKWbQdZeCa-ei0" style="transform: translateY(0.199987px);">
+</div>
+<!-- Identity Section -->
+<div class="space-y-4 mb-16">
+<h1 class="font-display text-display text-primary tracking-tight">
+                    KeenPocket
+                </h1>
+<p class="font-body-lg text-on-surface-variant max-w-md mx-auto">
+                    Saving made simple, playful, and rewarding.
+                </p>
+</div>
+<!-- Action Area -->
+<div class="flex flex-col items-center gap-6 w-full max-w-xs sm:max-w-sm mx-auto">
+<button class="candy-button bg-primary-container text-on-primary-container font-label-bold text-headline-md w-full py-5 rounded-2xl tracking-wide">
+                    Get Started
+                </button>
+<a class="text-primary font-label-bold text-body-md hover:underline transition-all active:scale-95 py-2" href="#">
+                    I already have an account
+                </a>
+</div>
+</div>
+</main>
+<!-- Footer Area -->
+<footer class="bg-transparent w-full bottom-0">
+<div class="flex flex-col md:flex-row justify-center items-center gap-8 w-full py-12 text-center border-t border-surface-container-highest/50">
+<div class="font-body-md text-on-surface-variant">
+                © 2024 KeenPocket. Join the flock.
+            </div>
+<div class="flex gap-6">
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Privacy</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Terms</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Support</a>
+</div>
+</div>
+</footer>
+<!-- Small script for simple mascot float animation -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mascot = document.querySelector('img[src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp7lXKC8U7rTsRc5ygI4YTGbU7bz3iQR6qbQTMDjivU5FXlgp69RMXsvaflfUNKpHoK1ev831UTS6hVAiJ31nYGCP7hWeQb3EqqgYLRDE1mqFjmn8qTsX_4kxhZ8QXswCPt6XWlrorvA7mmqNk0mpPvhM8xX_chT5_xLn9D64ANgO3DK64Mi6a_z55PNSawW6Qagngg926WUO3nQJfddojFFdNdZe-Jjda_0BMq0_Zyyc1jv5Z6UFI9PWVqMSG7TKWbQdZeCa-ei0"]');
+            let angle = 0;
+            
+            function animate() {
+                angle += 0.02;
+                const yOffset = Math.sin(angle) * 10;
+                mascot.style.transform = `translateY(${yOffset}px)`;
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        });
+    </script>
+</body></html>

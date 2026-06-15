@@ -3,31 +3,51 @@
 @section('heading', 'My Pockets')
 
 @section('content')
-    <div class="flex items-center justify-between mb-5">
-        <p class="text-slate-500 text-sm">Pockets you've joined or created.</p>
-        <a href="{{ route('pockets.create') }}" class="text-sm bg-brand hover:bg-brand-dark text-white rounded-lg px-4 py-2">+ New pocket</a>
+    <div class="flex flex-wrap items-end justify-between gap-3 mb-6">
+        <p class="text-slate-500">Manage your community contributions and goals.</p>
+        <a href="{{ route('pockets.create') }}" class="bg-brand hover:bg-brand-dark text-white font-bold rounded-xl px-4 py-2.5">+ Create new pocket</a>
     </div>
 
-    @php $all = $memberOf->merge($owned)->unique('id'); @endphp
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        @forelse ($all as $p)
-            <a href="{{ route('pockets.show', $p->id) }}" class="kp-photo-card block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-brand transition">
-                <div class="relative h-28 bg-gradient-to-br from-sky-100 to-emerald-100 overflow-hidden">
-                    <img src="{{ asset('ant-k/kforpocket.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover object-center">
-                    <span class="absolute top-2 right-2 text-[11px] font-bold uppercase tracking-wide text-white bg-black/30 rounded-full px-2 py-0.5">{{ $p->user_id == auth()->id() ? 'Owner' : ($p->status ? 'Open' : 'Closed') }}</span>
-                </div>
-                <div class="p-4">
-                    <div class="font-semibold truncate">{{ $p->title }}</div>
-                    <div class="text-sm text-slate-500 mt-1">₦{{ number_format($p->amount_per_hand) }}/hand</div>
-                    <div class="text-xs text-slate-400 mt-2">{{ $p->month_count }} months · {{ $p->year }}</div>
-                </div>
+    @php $ownedIds = $owned->pluck('id'); $joined = $memberOf->reject(fn ($p) => $ownedIds->contains($p->id)); @endphp
+
+    {{-- Pockets I organise --}}
+    <section class="mb-10">
+        <h3 class="flex items-center gap-2 text-lg font-extrabold mb-4"><span>🛠️</span> Pockets I organise</h3>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            @foreach ($owned as $p)
+                <a href="{{ route('pockets.show', $p->id) }}" class="card-depth block bg-white rounded-[1.5rem] border-2 border-slate-100 hover:border-brand p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="bg-sky-100 rounded-2xl h-11 w-11 flex items-center justify-center text-xl">👛</div>
+                        <span class="text-[11px] font-bold uppercase tracking-wide rounded-full px-2.5 py-1 {{ $p->status ? 'bg-brand-light text-brand-dark' : 'bg-slate-100 text-slate-500' }}">{{ $p->status ? 'Active' : 'Closed' }}</span>
+                    </div>
+                    <div class="font-extrabold truncate">{{ $p->title }}</div>
+                    <div class="text-sm text-slate-500 font-semibold mt-1">₦{{ number_format($p->amount_per_hand) }}/hand · {{ $p->month_count }} months · {{ $p->year }}</div>
+                </a>
+            @endforeach
+            {{-- Start a new pocket --}}
+            <a href="{{ route('pockets.create') }}" class="block rounded-[1.5rem] border-2 border-dashed border-slate-300 hover:border-brand text-slate-500 hover:text-brand-dark p-5 min-h-[140px] flex flex-col items-center justify-center gap-2 transition-colors">
+                <span class="text-3xl">＋</span>
+                <span class="font-bold">Start new pocket</span>
             </a>
-        @empty
-            <div class="col-span-full">
-                <x-empty-state title="No pockets yet"
-                    message="Discover an open pocket to join, or create your own."
-                    :action="route('pockets.create')" actionLabel="Create a pocket" />
+        </div>
+    </section>
+
+    {{-- Pockets I'm in --}}
+    @if ($joined->count())
+        <section>
+            <h3 class="flex items-center gap-2 text-lg font-extrabold mb-4"><span>🤝</span> Pockets I'm in</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                @foreach ($joined as $p)
+                    <a href="{{ route('pockets.show', $p->id) }}" class="card-depth block bg-white rounded-[1.5rem] border-2 border-slate-100 hover:border-brand p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="bg-amber-100 rounded-2xl h-11 w-11 flex items-center justify-center text-xl">🤝</div>
+                            <span class="text-[11px] font-bold uppercase tracking-wide rounded-full px-2.5 py-1 {{ $p->status ? 'bg-brand-light text-brand-dark' : 'bg-slate-100 text-slate-500' }}">{{ $p->status ? 'Active' : 'Closed' }}</span>
+                        </div>
+                        <div class="font-extrabold truncate">{{ $p->title }}</div>
+                        <div class="text-sm text-slate-500 font-semibold mt-1">₦{{ number_format($p->amount_per_hand) }}/hand · {{ $p->month_count }} months · {{ $p->year }}</div>
+                    </a>
+                @endforeach
             </div>
-        @endforelse
-    </div>
+        </section>
+    @endif
 @endsection

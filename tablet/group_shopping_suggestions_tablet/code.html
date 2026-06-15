@@ -1,0 +1,383 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Savings Cockpit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "surface-tint": "#006590",
+                    "secondary": "#755b00",
+                    "secondary-container": "#fec700",
+                    "inverse-primary": "#88ceff",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "tertiary": "#bb1522",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary-container": "#7e000f",
+                    "on-secondary-fixed": "#241a00",
+                    "on-secondary-fixed-variant": "#594400",
+                    "primary-container": "#1cb0f6",
+                    "outline-variant": "#bdc8d2",
+                    "secondary-fixed": "#ffdf92",
+                    "inverse-surface": "#2d3133",
+                    "on-surface-variant": "#3e4850",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#001e2e",
+                    "primary": "#006590",
+                    "tertiary-container": "#ff8079",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#c8e6ff",
+                    "on-secondary-container": "#6e5400",
+                    "surface-dim": "#d8dadc",
+                    "primary-fixed-dim": "#88ceff",
+                    "tertiary-fixed": "#ffdad7",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-background": "#191c1e",
+                    "on-primary-container": "#00405d",
+                    "error": "#ba1a1a",
+                    "outline": "#6e7881",
+                    "on-tertiary-fixed": "#410004",
+                    "background": "#f7f9fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1200px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "display": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .candy-button {
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        .candy-button:hover {
+            transform: translateY(2px);
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .candy-card {
+            box-shadow: 0 7px 0 0 #bdc8d2;
+        }
+        .candy-card-primary {
+            box-shadow: 0 7px 0 0 #004c6e;
+        }
+        .candy-card-secondary {
+            box-shadow: 0 7px 0 0 #6e5400;
+        }
+        .inner-recessed {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bdc8d2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background selection:bg-primary-container">
+<!-- SideNavBar (Mandatory Shell Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low border-r-4 border-outline-variant z-40 p-gutter gap-unit">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center candy-button shadow-[0_4px_0_0_#004c6e]">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-black text-primary leading-none">KeenPocket</h1>
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">Community Finance</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full py-4 bg-secondary-container text-on-secondary-container rounded-2xl font-black text-headline-md candy-button shadow-[0_4px_0_0_#6e5400] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+                New Pocket
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen p-margin-desktop bg-surface-bright">
+<!-- Header -->
+<header class="flex justify-between items-center mb-10">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Savings Cockpit</h2>
+<p class="text-body-lg text-on-surface-variant">Manage your group shopping and maximize collective savings!</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Ly9q3Zbe_VA3o2WcZ0TnV5goYZ9NXd0VydybA-UOIqEKbCI6hmgt_3QSobg8-oEZ4D3hS-x4xjdPtGIjl0CoTUvp0F_FC2NJ5HCogRWUO6NkwOCJHoXewy_53UvIx2X1WT5GDwBdhW4GgZVcVFL4sec7l-X9zvzLqFNjaiOwgsju0Xcol22VCplorAtpT5CnRBsmqdpVrYkia8_wxgdG3Q_7czsYZFrH675iK9bci_t-0DYaIKSjNTMnN8rqaMFSYxY0lfS4mbE">
+</div>
+</div>
+</header>
+<!-- Bento Layout Dashboard -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Mr. K Wisdom Card -->
+<div class="col-span-12 lg:col-span-8 bg-primary-fixed p-8 rounded-[1.5rem] candy-card-primary flex items-center gap-8 mb-4 relative overflow-hidden">
+<div class="z-10 flex-1">
+<h3 class="font-headline-md text-headline-md text-on-primary-fixed mb-2">Teamwork makes the dream work!</h3>
+<p class="text-body-lg text-on-primary-fixed-variant max-w-md">"Mr. K says: When we buy in bulk, everyone's pocket stays a little heavier! You've already saved <span class="font-black text-primary">$12.50</span> this week by grouping!"</p>
+</div>
+<div class="w-40 h-40 flex-shrink-0 relative z-10 group">
+<img alt="Mr. K Mascot" class="w-full h-full drop-shadow-xl animate-bounce" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtqBhubKOzdEVRIrTMUlq72qLefF1rhPZm6ceBr48Jk3q4-wwxgacelwiQ1FcL6mrpeZ1SMaBgJX9iRgCbzb9Kamchjm_m_I_VAtsneSKzgy63M7lt7_El0J2y8t_5ohGIeURiBbr-adSvxkIpaApXBGzEcb1LssXAruXWedbRDM42Hm9ByOZdyWi6dqg0n-7fBbg9jLJyMLAZ5KihUMqGaB790rUyuOYsovFRciycl10O0IWrZZQ4EEdm4A33bysN6BkeotPyQLE">
+</div>
+<!-- Abstract BG patterns -->
+<div class="absolute -right-10 -bottom-10 w-48 h-48 bg-primary-container opacity-20 rounded-full"></div>
+<div class="absolute right-20 top-5 w-12 h-12 bg-secondary opacity-10 rounded-full"></div>
+</div>
+<!-- Estimated Group Total Card -->
+<div class="col-span-12 lg:col-span-4 bg-secondary-fixed p-8 rounded-[1.5rem] candy-card-secondary flex flex-col justify-between mb-4">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-bold text-label-bold text-on-secondary-fixed-variant uppercase tracking-widest">Estimated Group Total</span>
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<div class="text-display font-display text-on-secondary-fixed">$142.60</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">-12% vs Individual</span>
+</div>
+</div>
+<div class="mt-6">
+<div class="w-full h-4 bg-white/50 rounded-full overflow-hidden inner-recessed">
+<div class="h-full bg-secondary-container w-3/4 rounded-full"></div>
+</div>
+<p class="text-xs font-bold text-on-secondary-fixed-variant mt-2">Target reached: 75% for bulk discount</p>
+</div>
+</div>
+<!-- Shopping List Section -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-[1.5rem] candy-card">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Group Shopping List</h3>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-surface-container-high rounded-full font-label-bold text-on-surface-variant hover:bg-surface-variant transition-colors">Filter</button>
+<button class="px-4 py-2 bg-surface-container-high rounded-full font-label-bold text-on-surface-variant hover:bg-surface-variant transition-colors">Sort</button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- List Item: Brioche Buns -->
+<div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-outline-variant hover:border-primary transition-all group">
+<div class="w-16 h-16 bg-surface-container rounded-xl flex items-center justify-center overflow-hidden">
+<img alt="Brioche Buns" class="w-full h-full object-cover" data-alt="A macro close-up of golden-brown, shiny brioche burger buns stacked neatly on a rustic wooden surface. The lighting is warm and inviting, emphasizing the soft texture and buttery glaze of the bread. The scene is bright and airy with a modern, high-quality food photography aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-letFPS834yOQfCtj0yu1rma3K1DCYyucHlK479nyftXQrx-7fGctKiqqG7lLtTKxOb0Tdb1eBb98BrmtUnbH_dL6xw_qOAneHkyzvQx7LKSbmXfuDCAU4jLRN-3DAcNkAkbDZCFowt-TWY5LBc1T3v9UJQV_xFpEdti-oVULXy0jl0vHyPTFYpJy7jg1d8vfSTkm88WBd82FakUpHdaKLpuh2JAwtbWu1GM5H0No8PjltRKCGdx2gWsteILAg7ZUUEmgwLQy-cg">
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-[18px] text-on-surface">Brioche Buns</h4>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-sm font-bold text-on-surface-variant">$4.50 <span class="font-normal">/ unit</span></span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<div class="flex -space-x-2">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjMWeLXTKd2yGd1txraa6QSAcx1XFg2Br2xGUXanYry5Zzk1V2QU9nCCSgTZCUrn0irXx9LBibmKY3340hIwrfROeuNnTX-s_j_6VYX-pslre8XGgsHe1CAJCG3BXqQxN7M2jQMUI3CfLZ87IyVO7GXnUo_dBI0NhAEzZ2TsNX0hSb6gLRFn1IyW9BHK6FszMmHwmefS2E5lzQe-G2oVxU7wwTBAs88wT3DOivMi5cdUEhVUXpwIs3y-I2T0qV6_9fpl2meRyUTKY">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQfURxN0j7DkCqI8uua6vj5WxW04StGHGyNGUs285mNnohvQFFt-0aGEj1eoODzv9RG5YUdE7NCIQAT88PtfBBCYseGqgTdtBq0-0DgUavBCeBIcW95ULEYq3H1rF35SyHy_7gCWApcZPXBTQPlmj8J8inuzij28RDl8pXKYr2W8pAhkx_AwWTtx8Zp-593coHgRtRFv0Pis4u6aBxiTTeE_gBeS9l5Ha6gw5qx113FG3idJd0hOKAuef35mVgXO__I4AiZCbapys">
+<div class="w-6 h-6 rounded-full bg-primary-container text-[8px] font-black text-white flex items-center justify-center border-2 border-white">+2</div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Sharing</span>
+</div>
+</div>
+<div class="text-right">
+<div class="text-headline-md text-primary">$18.00</div>
+<div class="text-[10px] font-black text-on-surface-variant uppercase">Total Cost</div>
+</div>
+<button class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-error opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- List Item: Beef Patties -->
+<div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-outline-variant hover:border-primary transition-all group">
+<div class="w-16 h-16 bg-surface-container rounded-xl flex items-center justify-center overflow-hidden">
+<img alt="Beef Patties" class="w-full h-full object-cover" data-alt="Raw, high-quality gourmet beef burger patties arranged on dark butcher paper. The meat is marbled and fresh, with vibrant red tones. Sprinkles of sea salt and cracked black pepper are visible on top. The lighting is crisp and professional, highlighting the fresh texture against a clean, bright background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz0lmCiEa5h89WLs0XR83lmJcm82lTOWTDfkliTs52Nq56-3fmeg2t4Q5yhiMKBu_825WYMjhUN3GDNgUL8NhDmwmcO9KI65H5a5MHV0Nmc8C5KD2uhmvJKfbD35GyqxBraMqp0hkTu2SCvqjdRVl00DYmJ7d5SQTH8n-1zeF-OqaAwq7984LpfSIqdsgscbHkDXjLlmvbj5KmXuVh1UCd_mAApE55wHGxX-4vvsDJIqMUSVW3PTYpDogGD2OuK8nhAXyBJvtkzew">
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-[18px] text-on-surface">Beef Patties</h4>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-sm font-bold text-on-surface-variant">$12.00 <span class="font-normal">/ 4pk</span></span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<div class="flex -space-x-2">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu-wGLxpY9ALJAqKuLvHNwx7ZhYBWDQLt9hEamrN3-lDq2ZQNhz8KXz88ATgDEDWs6B-7aJ7Yq44YIzagJFbn1w6T4jQq2aQA2SCJlBxktvtb7FcCbJEF9n8FnbCyfq_1qUiZF_nGP9amChOqgznUmEAqx92_WvRZIpAuuYjMOmyZSMeQpPIyV7SzS_TI7MolkuR80itLfBRodw1gFuRZPlt6cBL0jvSLA9awP_aD0m016SHl8CzMwFADi59wC0XFKsd8-FzsguSw">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjwbrxDxK-MSkJA2R38HSsZBi4oXtqQ5G5bMaIutkuMpQvo_tWIKschfP0cKptSbC-8FX29WeDvsQSgwzuBLZGHM6yir4plZ8s7kYyZHXT2ihKOFWeNKIyCllhbpCQNXcdIjEz_lKlY3yjexKmVv2bvj3b9oDcgdRK-1ojrqMVqh8C8oKSHNrgMlNrUO4sTH6lUSvC4hNkGwnPdndEhDRLMsRnOImBywupu-DCg-mI7psNfcNe6o0I89Odh6_KhLrjLoJZJGmJE88">
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Sharing</span>
+</div>
+</div>
+<div class="text-right">
+<div class="text-headline-md text-primary">$24.00</div>
+<div class="text-[10px] font-black text-on-surface-variant uppercase">Total Cost</div>
+</div>
+<button class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-error opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Placeholder/Empty State Micro-interaction -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-8 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-2">shopping_basket</span>
+<p class="font-bold">Add more items for bigger discounts!</p>
+</div>
+</div>
+</div>
+<!-- Add Item Form -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-[1.5rem] candy-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Add New Item</h3>
+<form class="space-y-6">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Item Name</label>
+<input class="w-full p-4 rounded-2xl border-2 border-outline-variant bg-surface-container-low focus:border-primary focus:ring-0 transition-all outline-none" placeholder="e.g. Avocado Bag" type="text">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Unit Price ($)</label>
+<input class="w-full p-4 rounded-2xl border-2 border-outline-variant bg-surface-container-low focus:border-primary focus:ring-0 transition-all outline-none" placeholder="0.00" type="number">
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">Quantity</label>
+<div class="flex items-center gap-2 p-1 bg-surface-container-low rounded-2xl border-2 border-outline-variant">
+<button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center candy-button shadow-[0_3px_0_0_#bdc8d2]" type="button">
+<span class="material-symbols-outlined text-on-surface-variant">remove</span>
+</button>
+<input class="w-full text-center bg-transparent border-none focus:ring-0 font-black" type="text" value="1">
+<button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center candy-button shadow-[0_3px_0_0_#bdc8d2]" type="button">
+<span class="material-symbols-outlined text-on-surface-variant">add</span>
+</button>
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2">People Sharing</label>
+<div class="flex flex-wrap gap-3">
+<label class="flex items-center gap-2 p-3 bg-primary-container/10 border-2 border-primary rounded-xl cursor-pointer">
+<input checked="" class="hidden" type="checkbox">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUEtme-ZDFC3f2DjDWbPy40XkowWByMdBa2h_xEoZIQPDrTGtHbdES8NFowHEkYCBHnPKfZ2ZQGbaKkyI9raFYryU_QuQN16OXLi9BbHUASSSSt5JZ2XOfv2coG-JJfk1EGLUfZiYYIH87WnsinbuRygpPeOnDTuax08NDdXbyZDgFh7BhHrxTr0N9V5sBkh_oU7qX3sAC9II62rN5w5aAVN-JtPxi-4x3xPIHbas0EVNa4PzKsyqISaS1mdoRuOBrjp86iR7HTF0">
+<span class="font-bold text-xs">You</span>
+</label>
+<label class="flex items-center gap-2 p-3 bg-surface-container-low border-2 border-outline-variant rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
+<input class="hidden" type="checkbox">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-transparent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_wHP1LiyXRbTKpCXcdd0Rn1kd1kANJmgFznkrHbmeFzK5oyKgPWP8tA5nIU04r_cSIGxZR7KrQ30flU_tBgXkMPGDD_uHhp2rO6vIVbfe7Clqc7FhIarq7m4rAhfl9C2dUIMIk2qqtSdof3fBWh4FOL0yp7rOUaK9Ja7lHFgwwS5wyQSJzzuIYfU-aoLPsv1OHmU8lkOWFgMkgcAkl7snR8hgJ0iZsSlB-no7h3px8f41z6mvm4W_NE3OW1WfUu6Hph-jeEOLBaI">
+<span class="font-bold text-xs">Sarah</span>
+</label>
+<label class="flex items-center gap-2 p-3 bg-surface-container-low border-2 border-outline-variant rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
+<input class="hidden" type="checkbox">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-transparent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAABbubS-AyCFeD2iP7y0M6U0H8Blwkj1ER_FPdxUXlLidNqE2-9MneIDXMfPi5uduj6Mwafbd_w7SNtP7Ym1ol7Llhi2lXTRV2yB_V-0gl-EPbHlVtcKoGceqTRpvJCmENu2MiN22vXReQL0WCWn_Ahv6JgUU4698lbs4g_Yo9ZQug2FxNezGYaXOQd_rWeMHsRAA34r81zrb-LLjoAiMIgEK-ZukYsHSF1hIkjftwEyklEMOKNclrVffHg2Qqt1aOFIWcNROtAK0">
+<span class="font-bold text-xs">Mike</span>
+</label>
+<button class="w-14 h-14 rounded-xl border-2 border-dashed border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container" type="button">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<button class="w-full py-5 bg-primary text-white rounded-2xl font-black text-headline-md candy-button shadow-[0_6px_0_0_#004c6e] mt-4" type="submit">
+                        Add to List
+                    </button>
+</form>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interactions for buttons and inputs
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                // Button sinks 4px on press
+                button.style.transform = 'translateY(4px)';
+                button.style.boxShadow = 'none';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(2px)';
+                // Restoration of shadow would happen via CSS transition, 
+                // but let's re-apply the structural logic if it's dynamic
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simple qty toggle logic
+        const qtyInputs = document.querySelectorAll('input[value="1"]');
+        qtyInputs.forEach(input => {
+            const plus = input.nextElementSibling;
+            const minus = input.previousElementSibling;
+            plus.addEventListener('click', () => {
+                input.value = parseInt(input.value) + 1;
+            });
+            minus.addEventListener('click', () => {
+                if(parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                }
+            });
+        });
+    </script>
+</body></html>

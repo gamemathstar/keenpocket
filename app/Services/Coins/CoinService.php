@@ -18,24 +18,60 @@ class CoinService
         return (bool) Setting::get('coins_enabled', '0');
     }
 
-    public function costPocket(): int { return (int) Setting::get('cost_pocket', 50); }
-    public function costAdashi(): int { return (int) Setting::get('cost_adashi', 50); }
-    public function costSchool(): int { return (int) Setting::get('cost_school', 100); }
+    public function costPocket(): int { return $this->base('pocket'); }
+    public function costAdashi(): int { return $this->base('adashi'); }
+    public function costSchool(): int { return $this->base('school'); }
 
-    /** Cost to create/clone, given the participant capacity. */
+    /** Built-in defaults per type: [base, tier size (participants), step per extra tier]. */
+    private const DEFAULTS = [
+        'pocket' => ['base' => 50,  'tier' => 50,  'step' => 50],
+        'adashi' => ['base' => 50,  'tier' => 12,  'step' => 40],
+        'school' => ['base' => 100, 'tier' => 100, 'step' => 100],
+    ];
+
+    /** Base cost (covers the first tier of participants). */
+    public function base(string $type): int
+    {
+        return (int) Setting::get("cost_{$type}", self::DEFAULTS[$type]['base'] ?? 0);
+    }
+
+    /** Tier size — how many participants each pricing tier covers. */
+    public function tierSize(string $type): int
+    {
+        return max(1, (int) Setting::get("{$type}_tier", self::DEFAULTS[$type]['tier'] ?? 50));
+    }
+
+    /** Extra Keens added for each tier beyond the first. */
+    public function tierStep(string $type): int
+    {
+        return (int) Setting::get("{$type}_step", self::DEFAULTS[$type]['step'] ?? $this->base($type));
+    }
+
+    /**
+     * Cost to create/clone for a given participant capacity, using tiered pricing:
+     * base covers up to one tier; each further tier adds `step`.
+     * e.g. adashi base 50, tier 12, step 40 → ≤12:50, ≤24:90, ≤36:130 …
+     */
     public function cost(string $type, int $capacity = 0): int
     {
-        if (!$this->enabled()) {
+        if (!$this->enabled() || !isset(self::DEFAULTS[$type])) {
             return 0;
         }
-        // Tier sizes: 50 hands per unit (pocket/adashi), 100 students per unit (school).
-        switch ($type) {
-            case 'pocket': return (int) ceil(max(1, $capacity) / 50) * $this->costPocket();
-            case 'adashi': return (int) ceil(max(1, $capacity) / 50) * $this->costAdashi();
-            case 'school': return (int) ceil(max(1, $capacity ?: 1) / 100) * $this->costSchool();
+        $units = $capacity <= 0 ? 1 : (int) ceil($capacity / $this->tierSize($type));
+
+        return max(0, $this->base($type) + $this->tierStep($type) * ($units - 1));
+    }
+
+    /** A few tier rows for previewing the pricing in the UI: [['upTo' => 12, 'cost' => 50], …]. */
+    public function tierPreview(string $type, int $rows = 4): array
+    {
+        $tier = $this->tierSize($type);
+        $out = [];
+        for ($i = 1; $i <= $rows; $i++) {
+            $out[] = ['upTo' => $tier * $i, 'cost' => $this->base($type) + $this->tierStep($type) * ($i - 1)];
         }
 
-        return 0;
+        return $out;
     }
 
     public function balance(User $user): int

@@ -30,6 +30,18 @@ class AdashiAdminTest extends TestCase
         return [$admin, Adashi::first()];
     }
 
+    public function test_show_page_renders_hub_layout_for_admin()
+    {
+        [$admin, $adashi] = $this->adminWithAdashi();
+
+        $this->get("/adashi/{$adashi->id}")
+            ->assertOk()
+            ->assertSee('Master organiser', false)   // organiser card (left)
+            ->assertSee('Rotation timeline', false)  // timeline (right)
+            ->assertSee('Cycles completed', false)   // stat chips
+            ->assertSee('Next payout', false);       // cycle hero (center)
+    }
+
     public function test_pause_and_resume()
     {
         [$admin, $adashi] = $this->adminWithAdashi();

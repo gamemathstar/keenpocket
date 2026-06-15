@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket Wallet Cockpit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .candy-shadow {
+            box-shadow: 0 7px 0 0 #e6e8ea;
+        }
+        .candy-shadow-primary {
+            box-shadow: 0 4px 0 0 #004c6e;
+        }
+        .candy-shadow-secondary {
+            box-shadow: 0 4px 0 0 #c29800;
+        }
+        .candy-button-active:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .inner-recess {
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#bb1522",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed": "#ffdf92",
+                    "surface-container": "#eceef0",
+                    "on-surface-variant": "#3e4850",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "outline-variant": "#bdc8d2",
+                    "on-secondary-container": "#6e5400",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "surface-tint": "#006590",
+                    "surface": "#f7f9fb",
+                    "on-tertiary-container": "#7e000f",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-secondary-fixed-variant": "#594400",
+                    "inverse-primary": "#88ceff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#ff8079",
+                    "secondary": "#755b00",
+                    "tertiary-fixed": "#ffdad7",
+                    "primary": "#006590",
+                    "on-secondary-fixed": "#241a00",
+                    "secondary-container": "#fec700",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-fixed": "#410004",
+                    "surface-container-highest": "#e0e3e5",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d8dadc",
+                    "outline": "#6e7881",
+                    "on-background": "#191c1e",
+                    "on-primary": "#ffffff",
+                    "background": "#f7f9fb",
+                    "on-primary-container": "#00405d",
+                    "primary-fixed": "#c8e6ff",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "on-primary-fixed": "#001e2e",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#88ceff",
+                    "surface-bright": "#f7f9fb",
+                    "primary-container": "#1cb0f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "container-max": "1200px",
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "display": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 flex flex-col p-6 z-50 bg-surface-container-lowest border-r-2 border-surface-variant shadow-sm">
+<div class="mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-3xl filled-icon">account_balance_wallet</span>
+</div>
+<div>
+<h1 class="font-display text-headline-lg text-primary leading-none">KeenPocket</h1>
+<p class="text-on-surface-variant text-label-bold">Manage your wealth</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<!-- Navigation Items -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="group_work">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<!-- Active State: Wallet -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined filled-icon" data-icon="payments">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</div>
+<button class="mt-auto bg-secondary-container text-on-secondary-container font-label-bold text-label-bold py-4 rounded-2xl candy-shadow-secondary candy-button-active transition-all mb-4">
+            New Pocket
+        </button>
+</nav>
+<!-- TopNavBar -->
+<header class="fixed left-64 top-0 right-0 h-20 bg-surface flex justify-between items-center px-margin-desktop z-40 border-b-2 border-surface-variant">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary">Wallet Cockpit</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:translate-y-1">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:translate-y-1">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-outline-variant">
+<div class="text-right">
+<p class="font-label-bold text-label-bold leading-tight">Alex Rivera</p>
+<p class="text-xs text-on-surface-variant">Premium Member</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqrwOPDwobnwxZMCDasIahadq5_7dfR9vOi7xjxYU0Wyx_bUxeIwEV3dYarvEgzZnAckS_DJVnNfnD3YK5tOsVWIq4EEtMwoU97h9po2yN8-M6HSxOEG28XVXWnb6fRTrCgLhxoIfZpYMgI2sl6sPVNB0f36yrQX8HgpWEa-9Ze8mm8kKD-YTvyJ-Pmlr6qQ6AbEXGIwt5Khwp4_zTWJ0QlPHTrvpFgzLZBQIAZP6Uf2HC4KUt53YJW3ywnVKoYOS9NhJ_59y057E"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-20 min-h-screen">
+<div class="p-margin-desktop grid grid-cols-12 gap-gutter">
+<!-- Left/Center Main Area -->
+<div class="col-span-8 flex flex-col gap-gutter">
+<!-- Available Balance Card -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-8 candy-shadow border border-surface-variant relative overflow-hidden">
+<div class="absolute top-0 right-0 w-48 h-48 bg-primary opacity-5 rounded-full -mr-20 -mt-20"></div>
+<div class="flex justify-between items-start relative z-10">
+<div>
+<h2 class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-wider mb-2">Available Balance</h2>
+<p class="text-primary font-display text-[56px] leading-none mb-6">N12,500<span class="text-headline-md font-bold">.00</span></p>
+</div>
+<div class="bg-primary-container/20 px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm filled-icon">trending_up</span>
+<span class="text-primary font-label-bold text-xs">+4.5% this month</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10">
+<button class="flex-1 bg-primary text-on-primary py-4 rounded-2xl font-headline-md text-headline-md candy-shadow-primary candy-button-active transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">send</span>
+                            Send
+                        </button>
+<button class="flex-1 bg-surface-container-high text-on-surface py-4 rounded-2xl font-headline-md text-headline-md candy-shadow border border-surface-variant candy-button-active transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">account_balance</span>
+                            Withdraw
+                        </button>
+</div>
+</section>
+<!-- Recent Activity List -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-8 candy-shadow border border-surface-variant">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md">Recent Activity</h3>
+<button class="text-primary font-label-bold text-label-bold hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- Transaction Item 1 -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary-container/20 rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">add_circle</span>
+</div>
+<div>
+<p class="font-label-bold text-body-lg">Top up</p>
+<p class="text-sm text-on-surface-variant">Via Bank Transfer • Today, 10:45 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-primary text-body-lg text-emerald-600">+N5,000.00</p>
+<p class="text-xs font-label-bold text-emerald-600 uppercase tracking-tighter bg-emerald-50 px-2 py-0.5 rounded-full inline-block">Success</p>
+</div>
+</div>
+<!-- Transaction Item 2 -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div>
+<p class="font-label-bold text-body-lg">Pocket payment</p>
+<p class="text-sm text-on-surface-variant">Grocery Savings • Yesterday, 4:20 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-on-surface text-body-lg">-N1,200.00</p>
+<p class="text-xs font-label-bold text-on-surface-variant uppercase tracking-tighter bg-surface-variant px-2 py-0.5 rounded-full inline-block">Settled</p>
+</div>
+</div>
+<!-- Transaction Item 3 -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-surface-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div>
+<p class="font-label-bold text-body-lg">Refund</p>
+<p class="text-sm text-on-surface-variant">Amazon Marketplace • 2 days ago</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-tertiary text-body-lg">+N850.00</p>
+<p class="text-xs font-label-bold text-tertiary-fixed-dim uppercase tracking-tighter bg-tertiary-fixed px-2 py-0.5 rounded-full inline-block">Refunded</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Rail -->
+<aside class="col-span-4 flex flex-col gap-gutter">
+<!-- Top Up Pane -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 candy-shadow border border-surface-variant">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_card</span>
+                        Quick Top up
+                    </h3>
+<div class="space-y-4">
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-headline-md text-on-surface-variant">N</span>
+<input class="w-full bg-surface-container-low border-2 border-surface-variant rounded-2xl py-4 pl-10 pr-4 font-headline-md text-headline-md focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none" placeholder="0.00" type="number"/>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 rounded-xl bg-surface-container border-2 border-surface-variant font-label-bold text-label-bold hover:bg-primary-container/20 hover:border-primary transition-all text-on-surface-variant">1,000</button>
+<button class="py-2 rounded-xl bg-surface-container border-2 border-surface-variant font-label-bold text-label-bold hover:bg-primary-container/20 hover:border-primary transition-all text-on-surface-variant">5,000</button>
+<button class="py-2 rounded-xl bg-surface-container border-2 border-surface-variant font-label-bold text-label-bold hover:bg-primary-container/20 hover:border-primary transition-all text-on-surface-variant">10k</button>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-2xl font-label-bold text-body-lg candy-shadow-secondary candy-button-active transition-all">
+                            Add Funds
+                        </button>
+</div>
+</section>
+<!-- Monthly Spending Limit Progress Card -->
+<section class="bg-surface-container-lowest rounded-[1.5rem] p-6 candy-shadow border border-surface-variant">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase">Spending Limit</h3>
+<span class="text-xs font-bold text-primary">64% Used</span>
+</div>
+<div class="mb-4">
+<div class="h-4 w-full bg-surface-container rounded-full overflow-hidden inner-recess">
+<div class="h-full bg-primary rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant">Used</p>
+<p class="font-headline-md text-on-surface">N16,000</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-on-surface-variant">Limit</p>
+<p class="font-label-bold text-on-surface-variant">N25,000</p>
+</div>
+</div>
+</section>
+<!-- Safety & Security Trust Marker -->
+<section class="bg-primary/5 rounded-[1.5rem] p-6 border-2 border-dashed border-primary-container/40 flex items-center gap-4">
+<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-on-primary candy-shadow-primary">
+<span class="material-symbols-outlined filled-icon">security</span>
+</div>
+<div>
+<h4 class="font-label-bold text-body-md text-on-primary-container">Safety &amp; Security</h4>
+<p class="text-xs text-on-primary-container opacity-70">Protected by AES-256 Encryption &amp; Biometric Vault.</p>
+</div>
+</section>
+<!-- Promotion / Mascot Area -->
+<div class="relative mt-4 flex items-center justify-center">
+<div class="bg-surface-container rounded-[1.5rem] p-6 w-full relative overflow-hidden">
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center border-4 border-primary-container">
+<span class="material-symbols-outlined text-4xl text-primary filled-icon">mood</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-primary uppercase">Mister K Says</p>
+<p class="text-sm font-label-bold text-on-surface leading-tight">"You're doing great! You saved N2,400 more than last month."</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Floating Action Feedback for Demo -->
+<div class="fixed bottom-10 right-10 transform translate-y-20 opacity-0 transition-all duration-300 z-[100]" id="toast">
+<div class="bg-inverse-surface text-inverse-on-surface px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-b-4 border-black/20">
+<span class="material-symbols-outlined text-emerald-400 filled-icon">check_circle</span>
+<span class="font-label-bold">Action successful!</span>
+</div>
+</div>
+<script>
+        // Simple Interaction Feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 3000);
+            });
+        });
+    </script>
+</body></html>
