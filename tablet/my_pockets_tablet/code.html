@@ -1,0 +1,443 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>NairaSave - My Pockets</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#ffdf92",
+            "outline-variant": "#bdc8d2",
+            "outline": "#6e7881",
+            "on-secondary-fixed-variant": "#594400",
+            "error-container": "#ffdad6",
+            "primary-container": "#1cb0f6",
+            "on-secondary-container": "#6e5400",
+            "tertiary-container": "#ff8079",
+            "on-primary-fixed-variant": "#004c6e",
+            "tertiary-fixed": "#ffdad7",
+            "surface-container-high": "#e6e8ea",
+            "tertiary": "#bb1522",
+            "surface-bright": "#f7f9fb",
+            "primary-fixed": "#c8e6ff",
+            "primary": "#006590",
+            "surface-container-highest": "#e0e3e5",
+            "surface-container": "#eceef0",
+            "on-primary-container": "#00405d",
+            "surface-variant": "#e0e3e5",
+            "on-surface": "#191c1e",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb3ae",
+            "surface-tint": "#006590",
+            "surface-container-low": "#f2f4f6",
+            "secondary-container": "#fec700",
+            "on-surface-variant": "#3e4850",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#7e000f",
+            "surface-dim": "#d8dadc",
+            "on-error-container": "#93000a",
+            "on-background": "#191c1e",
+            "inverse-on-surface": "#eff1f3",
+            "secondary": "#755b00",
+            "on-tertiary-fixed-variant": "#930014",
+            "inverse-surface": "#2d3133",
+            "secondary-fixed-dim": "#f4bf00",
+            "on-secondary-fixed": "#241a00",
+            "surface": "#f7f9fb",
+            "on-primary-fixed": "#001e2e",
+            "background": "#f7f9fb",
+            "inverse-primary": "#88ceff",
+            "error": "#ba1a1a",
+            "primary-fixed-dim": "#88ceff",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed": "#410004"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "unit": "4px",
+            "margin-mobile": "20px",
+            "margin-desktop": "40px",
+            "container-max": "1200px",
+            "gutter": "16px"
+          },
+          "fontFamily": {
+            "label-bold": ["Nunito Sans"],
+            "display": ["Nunito Sans"],
+            "body-md": ["Nunito Sans"],
+            "headline-md": ["Nunito Sans"],
+            "headline-lg-mobile": ["Nunito Sans"],
+            "headline-lg": ["Nunito Sans"],
+            "body-lg": ["Nunito Sans"]
+          },
+          "fontSize": {
+            "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+            "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background-color: #f7f9fb;
+    }
+
+    .candy-card {
+      background-color: white;
+      border-radius: 1.5rem;
+      position: relative;
+      transition: transform 0.2s ease;
+      box-shadow: 0 7px 0 0 #e0e3e5;
+    }
+
+    .candy-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .candy-button {
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 0 0 #004c6e;
+    }
+
+    .candy-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 0 transparent;
+    }
+
+    .candy-button-secondary {
+      box-shadow: 0 4px 0 0 #594400;
+    }
+
+    .candy-button-secondary:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 0 transparent;
+    }
+
+    .progress-bar-recessed {
+      height: 16px;
+      background-color: #e6e8ea;
+      border-radius: 9999px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-surface">
+<!-- Side Navigation -->
+<aside class="h-screen w-72 fixed left-0 top-0 border-r-2 border-outline-variant bg-surface-container-low flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-4">
+<h1 class="text-headline-md font-headline-md font-black text-primary">NairaSave</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Community Finance</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-label-bold text-label-bold transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group_work">group_work</span>
+<span class="font-label-bold text-label-bold">Groups</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Savings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-bold text-label-bold">Marketplace</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2">
+<button class="candy-button w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-label-bold text-label-bold flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+        Start a Group
+      </button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-bold text-label-bold">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-bold text-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-72 min-h-screen flex flex-col relative">
+<!-- Top Bar -->
+<header class="w-full sticky top-0 flex justify-between items-center px-margin-desktop py-4 bg-surface z-40">
+<div class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full w-96 border-2 border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-md text-body-md text-on-surface" placeholder="Search your pockets..." type="text">
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="history">history</span>
+</button>
+<div class="flex items-center gap-3 ml-4 bg-surface-container-high px-4 py-2 rounded-full border-2 border-outline-variant">
+<span class="font-label-bold text-label-bold">Abiodun O.</span>
+<span class="material-symbols-outlined text-primary" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="px-margin-desktop py-8 flex flex-col gap-12 pb-32">
+<!-- Welcome Section -->
+<section class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">My Pockets</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage your community contributions and goals.</p>
+</div>
+<button class="candy-button bg-primary-container text-on-primary-container px-6 py-4 rounded-2xl font-headline-md text-headline-md flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+          Create New Pocket
+        </button>
+</section>
+<!-- Pockets I Organise -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Pockets I Organise</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="candy-card p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 bg-secondary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-3xl" data-icon="airplane">airplay</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-bold text-label-bold text-on-surface-variant">Active</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Japan 2025 Fund</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Monthly Contribution: <span class="font-bold text-primary">₦45,000</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">8 Hands Joined</span>
+</div>
+<div class="mt-2">
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Goal Progress</span>
+<span class="font-label-bold text-label-bold text-primary">65%</span>
+</div>
+<div class="progress-bar-recessed">
+<div class="h-full bg-primary-container rounded-full transition-all duration-1000" style="width: 65%;"></div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="candy-card p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 bg-tertiary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl" data-icon="apartment">apartment</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-bold text-label-bold text-on-surface-variant">Active</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Lekki Rent Savers</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Monthly Contribution: <span class="font-bold text-primary">₦120,000</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">12 Hands Joined</span>
+</div>
+<div class="mt-2">
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Goal Progress</span>
+<span class="font-label-bold text-label-bold text-primary">30%</span>
+</div>
+<div class="progress-bar-recessed">
+<div class="h-full bg-primary-container rounded-full transition-all duration-1000" style="width: 30%;"></div>
+</div>
+</div>
+</div>
+<!-- Empty Slot Interaction -->
+<button class="border-4 border-dashed border-outline-variant rounded-[1.5rem] flex flex-col items-center justify-center p-6 text-on-surface-variant hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-5xl mb-2 group-hover:scale-110 transition-transform" data-icon="add_circle">add_circle</span>
+<span class="font-headline-md text-headline-md">Start New Group</span>
+</button>
+</div>
+</section>
+<!-- Pockets I'm In -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-12 h-12 bg-secondary-fixed rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="groups" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Pockets I'm In</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 3 -->
+<div class="candy-card p-6 flex flex-col gap-4 border-l-8 border-secondary-container">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="savings">savings</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container/20 text-on-secondary-container rounded-full font-label-bold text-label-bold">Your Turn Next!</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Family Emergency fund</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Your Share: <span class="font-bold text-primary">₦25,000</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="person_pin">person_pin</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">Organised by Sarah J.</span>
+</div>
+<div class="mt-2">
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Cycle Progress</span>
+<span class="font-label-bold text-label-bold text-primary">90%</span>
+</div>
+<div class="progress-bar-recessed">
+<div class="h-full bg-secondary-container rounded-full transition-all duration-1000" style="width: 90%;"></div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="candy-card p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="directions_car">directions_car</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-bold text-label-bold text-on-surface-variant">Paying</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">New Wheels Goal</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Your Share: <span class="font-bold text-primary">₦200,000</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="person_pin">person_pin</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">Organised by Mike D.</span>
+</div>
+<div class="mt-2">
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Cycle Progress</span>
+<span class="font-label-bold text-label-bold text-primary">15%</span>
+</div>
+<div class="progress-bar-recessed">
+<div class="h-full bg-primary-container rounded-full transition-all duration-1000" style="width: 15%;"></div>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="candy-card p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="school">school</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-bold text-label-bold text-on-surface-variant">Active</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Education Ajo</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Your Share: <span class="font-bold text-primary">₦50,000</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="person_pin">person_pin</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">Organised by Chidi E.</span>
+</div>
+<div class="mt-2">
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Cycle Progress</span>
+<span class="font-label-bold text-label-bold text-primary">45%</span>
+</div>
+<div class="progress-bar-recessed">
+<div class="h-full bg-primary-container rounded-full transition-all duration-1000" style="width: 45%;"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Mascot Tip Card -->
+<section class="mt-8">
+<div class="candy-card bg-primary-fixed p-8 flex items-center gap-8 border-none overflow-hidden">
+<div class="relative w-40 h-40 flex-shrink-0">
+<img alt="Mascot Mr. K" class="w-full h-full object-contain" data-alt="A friendly, stylized cartoon owl mascot named Mr. K, designed with vibrant blue and green feathers, large expressive eyes, and a cheerful smile. He is wearing a tiny digital coin pendant. The mascot is rendered in a clean, modern 3D vector style with soft gradients and friendly rounded shapes, set against a bright, airy background of soft blue and white hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOuLyyeaDWjm8QPoSuvpUvgHM4EqEX5IpVvA4q4IlKUnrV6BC6g_It9440qMFSMeHhP6klyoUomvNa2FMcWDud7IRHSunrH4JgIkeutCiTGPajbxoWvVjgdaI-mC4W8NnNCqwnkDBRDOpiVL4jcmArDObJyLlvukZewvYAU3ILaxo1omzjwlvGl0MSYpvD32oZu2WnZTTCnctIh3ydiS3pZto5emyCJOG_8NV4F3TpSjusGncVywcQFubR6OAqsaaowjHzCF_-n4s">
+</div>
+<div class="flex-1">
+<h4 class="font-headline-lg text-headline-lg text-on-primary-fixed mb-2">Great job, Abiodun!</h4>
+<p class="font-body-lg text-body-lg text-on-primary-fixed-variant mb-6">You've successfully made all your contributions for March. You're on track to receive your payout for 'Lekki Rent Savers' in 2 weeks!</p>
+<div class="flex gap-4">
+<button class="candy-button bg-primary-container text-on-primary-container px-6 py-2 rounded-xl font-label-bold text-label-bold">View History</button>
+<button class="candy-button-secondary bg-secondary-container text-on-secondary-container px-6 py-2 rounded-xl font-label-bold text-label-bold">Pocket Stats</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Floating Action Button (Tablet/Mobile Context) -->
+<button class="fixed bottom-10 right-10 candy-button w-16 h-16 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-xl z-50 lg:hidden">
+<span class="material-symbols-outlined text-4xl" data-icon="add">add</span>
+</button>
+</main>
+<script>
+    // Micro-interaction for buttons
+    document.querySelectorAll('.candy-button, .candy-button-secondary').forEach(button => {
+      button.addEventListener('mousedown', () => {
+        button.style.transform = 'translateY(4px)';
+        button.style.boxShadow = '0 0 0 0 transparent';
+      });
+      button.addEventListener('mouseup', () => {
+        button.style.transform = 'translateY(0)';
+        // Restoring shadows requires specific handling of the original values
+        if (button.classList.contains('candy-button-secondary')) {
+          button.style.boxShadow = '0 4px 0 0 #594400';
+        } else {
+          button.style.boxShadow = '0 4px 0 0 #004c6e';
+        }
+      });
+      button.addEventListener('mouseleave', () => {
+        button.style.transform = 'translateY(0)';
+        if (button.classList.contains('candy-button-secondary')) {
+          button.style.boxShadow = '0 4px 0 0 #594400';
+        } else {
+          button.style.boxShadow = '0 4px 0 0 #004c6e';
+        }
+      });
+    });
+
+    // Simulating progress bar load animation
+    window.addEventListener('DOMContentLoaded', () => {
+      const bars = document.querySelectorAll('.progress-bar-recessed > div');
+      bars.forEach(bar => {
+        const targetWidth = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = targetWidth;
+        }, 300);
+      });
+    });
+  </script>
+</body></html>

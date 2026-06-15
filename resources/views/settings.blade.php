@@ -3,8 +3,17 @@
 @section('heading', 'Settings')
 
 @section('content')
+    {{-- Hero --}}
+    <section class="bg-brand-light rounded-[2rem] border-b-8 border-brand p-6 sm:p-7 mb-6 max-w-4xl flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-dark leading-tight">Settings ⚙️</h2>
+            <p class="text-slate-600 mt-1">Manage your profile, security, notifications and payout accounts.</p>
+        </div>
+        <x-mascot :size="80" class="hidden sm:block drop-shadow-xl" />
+    </section>
+
     {{-- Profile photo --}}
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 max-w-4xl">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6 mb-6 max-w-4xl">
         <h3 class="font-semibold mb-3">Profile photo</h3>
         <form method="POST" action="{{ route('settings.avatar') }}" enctype="multipart/form-data" class="flex items-center gap-4">
             @csrf
@@ -19,7 +28,7 @@
     </div>
 
     {{-- Notification preferences --}}
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6 max-w-4xl">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6 mb-6 max-w-4xl">
         <h3 class="font-semibold mb-1">Notification preferences</h3>
         <p class="text-sm text-slate-500 mb-4">Choose how you'd like to receive payment reminders & updates.</p>
         <form method="POST" action="{{ route('settings.preferences') }}" class="space-y-3">
@@ -37,7 +46,7 @@
 
     <div class="grid lg:grid-cols-2 gap-6 max-w-4xl">
         {{-- Account info --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Account information</h3>
             <p class="text-sm text-slate-500 mb-4">Update your name and contact details.</p>
             <form method="POST" action="{{ route('settings.profile') }}" class="space-y-3">
@@ -60,7 +69,7 @@
         </div>
 
         {{-- Change password --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Change password</h3>
             <p class="text-sm text-slate-500 mb-4">Use at least 6 characters.</p>
             <form method="POST" action="{{ route('settings.password') }}" class="space-y-3">
@@ -82,7 +91,7 @@
         </div>
 
         {{-- Bank accounts --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Bank accounts</h3>
             <p class="text-sm text-slate-500 mb-4">Save the accounts you receive payouts into. You pick which one to use for each pocket or adashi.</p>
 

@@ -28,7 +28,17 @@ class AdashiWebController extends Controller
 
     public function create()
     {
-        return view('adashi.create');
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $keens = [
+            'enabled' => $coins->enabled(),
+            'balance' => $coins->balance(auth()->user()),
+            'exempt' => auth()->user()->isSuperAdmin(),
+            'base' => $coins->base('adashi'),
+            'tier' => $coins->tierSize('adashi'),
+            'step' => $coins->tierStep('adashi'),
+        ];
+
+        return view('adashi.create', compact('keens'));
     }
 
     public function store(Request $request)
@@ -40,6 +50,7 @@ class AdashiWebController extends Controller
             'start_date' => 'required|date',
             'rotation_mode' => 'required|in:AUTO,MANUAL,auto,manual',
             'is_public' => 'nullable|boolean',
+            'member_capacity' => 'nullable|integer|min:1|max:1000',
             'bank' => 'nullable|string|max:255',
             'nuban' => 'nullable|string|max:32',
             'account_name' => 'nullable|string|max:255',
@@ -50,7 +61,8 @@ class AdashiWebController extends Controller
         $isPublic = $request->boolean('is_public');
 
         $coins = app(\App\Services\Coins\CoinService::class);
-        $cost = $coins->cost('adashi', 1);
+        // Cost is tiered by how many members the organiser expects.
+        $cost = $coins->cost('adashi', (int) ($data['member_capacity'] ?? 1));
         if (!$coins->canAfford($user, $cost)) {
             return back()->withErrors(['name' => "This adashi costs {$cost} Keens — you have {$coins->balance($user)}."])->withInput();
         }

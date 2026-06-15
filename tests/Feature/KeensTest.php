@@ -76,6 +76,39 @@ class KeensTest extends TestCase
         $this->assertSame(0, (int) $admin->fresh()->keens); // not charged
     }
 
+    public function test_adashi_cost_is_tiered_by_members()
+    {
+        Setting::set('coins_enabled', '1');
+        Setting::set('cost_adashi', 50);
+        Setting::set('adashi_tier', 12);
+        Setting::set('adashi_step', 40);
+
+        $svc = app(\App\Services\Coins\CoinService::class);
+        $this->assertSame(50, $svc->cost('adashi', 12));   // ≤12
+        $this->assertSame(90, $svc->cost('adashi', 13));   // 13 → 2nd tier
+        $this->assertSame(90, $svc->cost('adashi', 24));   // ≤24
+        $this->assertSame(130, $svc->cost('adashi', 25));  // 25 → 3rd tier
+        $this->assertSame(130, $svc->cost('adashi', 36));  // ≤36
+    }
+
+    public function test_creating_adashi_charges_the_tier_for_expected_members()
+    {
+        Setting::set('coins_enabled', '1');
+        Setting::set('cost_adashi', 50);
+        Setting::set('adashi_tier', 12);
+        Setting::set('adashi_step', 40);
+
+        $user = $this->makeUser(['keens' => 200]);
+        $this->actingAs($user)->post('/adashi', [
+            'name' => 'Big circle', 'amount_per_cycle' => 50000, 'cycle_duration_days' => 30,
+            'start_date' => '2026-07-01', 'rotation_mode' => 'MANUAL',
+            'member_capacity' => 24, 'accept_terms' => 1,
+        ])->assertRedirect();
+
+        $this->assertSame(110, (int) $user->fresh()->keens);  // 200 - 90 (tier for 24)
+        $this->assertDatabaseHas('keen_transactions', ['user_id' => $user->id, 'amount' => -90]);
+    }
+
     public function test_super_admin_sets_costs()
     {
         $admin = $this->makeUser(['is_super_admin' => true]);

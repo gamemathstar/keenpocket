@@ -5,7 +5,7 @@
 @section('content')
     <div class="grid lg:grid-cols-3 gap-6">
         {{-- Identity + reputation --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <div class="flex items-center gap-3 mb-4">
                 <x-avatar :user="$profileUser" :size="56" />
                 <div>
@@ -37,7 +37,7 @@
 
         {{-- Their open groups + ratings --}}
         <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
                 <h3 class="font-semibold mb-3">Open groups by {{ explode(' ', $profileUser->name)[0] }}</h3>
                 @if ($openPockets->isEmpty() && $openAdashis->isEmpty())
                     <p class="text-sm text-slate-500">No open groups right now.</p>
@@ -61,7 +61,7 @@
                 @endif
             </div>
 
-            <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
                 <h3 class="font-semibold mb-3">What members say</h3>
                 <div class="divide-y divide-slate-100">
                     @forelse ($ratings as $r)

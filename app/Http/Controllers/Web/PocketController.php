@@ -32,7 +32,17 @@ class PocketController extends Controller
 
     public function create()
     {
-        return view('pockets.create');
+        $coins = app(\App\Services\Coins\CoinService::class);
+        $keens = [
+            'enabled' => $coins->enabled(),
+            'balance' => $coins->balance(auth()->user()),
+            'exempt' => auth()->user()->isSuperAdmin(),
+            'base' => $coins->base('pocket'),
+            'tier' => $coins->tierSize('pocket'),
+            'step' => $coins->tierStep('pocket'),
+        ];
+
+        return view('pockets.create', compact('keens'));
     }
 
     public function store(Request $request)

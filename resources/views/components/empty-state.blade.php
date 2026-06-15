@@ -1,6 +1,6 @@
 @props(['title', 'message' => '', 'action' => '', 'actionLabel' => 'Get started'])
 
-<div class="bg-white border border-slate-200 rounded-2xl p-8 text-center">
+<div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-8 text-center">
     <x-mascot :size="84" class="mx-auto mb-4" />
     <h3 class="font-extrabold text-lg">{{ $title }}</h3>
     @if ($message)

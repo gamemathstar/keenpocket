@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket Insights &amp; Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#bb1522",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#ffdf92",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#3e4850",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "outline-variant": "#bdc8d2",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-tint": "#006590",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "on-secondary-fixed-variant": "#594400",
+                        "inverse-primary": "#88ceff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#ff8079",
+                        "secondary": "#755b00",
+                        "tertiary-fixed": "#ffdad7",
+                        "primary": "#006590",
+                        "on-secondary-fixed": "#241a00",
+                        "secondary-container": "#fec700",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#410004",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#00405d",
+                        "primary-fixed": "#c8e6ff",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "on-primary-fixed": "#001e2e",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-bright": "#f7f9fb",
+                        "primary-container": "#1cb0f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .candy-button {
+            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+        }
+        .candy-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+        }
+        .chunky-card {
+            box-shadow: 0 7px 0 0 #e2e8f0;
+        }
+        .active-card {
+            border-color: #006590;
+            box-shadow: 0 7px 0 0 #006590;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col p-6 z-50 bg-surface-container-lowest border-r-2 border-surface-variant shadow-sm">
+<div class="mb-10 flex flex-col gap-1">
+<h1 class="font-display text-headline-lg text-primary">KeenPocket</h1>
+<p class="text-on-surface-variant text-label-bold">Manage your wealth</p>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="candy-button mt-auto bg-secondary-container text-on-secondary-container font-label-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+            New Pocket
+        </button>
+</aside>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin-desktop h-20 w-full ml-64 bg-surface fixed top-0 z-40 border-b-2 border-surface-variant">
+<div class="flex items-center gap-4">
+<h2 class="font-display text-headline-md text-primary">Insights &amp; Reports</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+</div>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional and friendly headshot of a young adult with a warm smile, set against a soft, out-of-focus office background. The lighting is bright and natural, reflecting a clean and modern aesthetic that matches the app's high-energy and approachable brand identity. The individual appears confident and tech-savvy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeuU7oUNq-K3I5pNnQP9CJK5HomzuxOAdMv_hqa2ATqIfNEyanYSE17jnUZjErqYc05JtakOxwneGt7i-1BWORwQ9h6Am8sWq5MVRwLk3ftHiihD9xx-EuaHc4MOhNBIiHDlEHXypzyZw-GZyRPPazjFWGez9L79_jRZJjNwknAYnIDVL1Z9IwPcrZVmu-05KmvXceFP8rAWfwDC5ehjqNhRKcDB0pGup1BHI5PscC0F6KRfmIz86QxY4_Kfty6fLQRkW-UWrJbqc"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 pb-12 px-margin-desktop min-h-screen">
+<div class="max-w-container-max mx-auto space-y-gutter">
+<!-- Hero Card -->
+<section class="chunky-card bg-primary-container rounded-[1.5rem] p-8 relative overflow-hidden flex flex-col md:flex-row items-center gap-8 border-b-[7px] border-[#159bd8]">
+<div class="flex-1 z-10">
+<h3 class="font-display text-display text-on-primary-container mb-4">Year in Review</h3>
+<p class="font-headline-md text-headline-md text-on-primary-container opacity-90 leading-tight">
+                        Wow! You've had an incredible year, saving more than 85% of your peers. Keep up the momentum!
+                    </p>
+</div>
+<div class="relative w-64 h-64 shrink-0 flex items-center justify-center">
+<!-- Mascot Placeholder -->
+<div class="w-full h-full bg-white/20 rounded-full flex items-center justify-center relative">
+<img alt="Mr. K Mascot" class="w-48 h-48 object-contain drop-shadow-xl" data-alt="A cheerful, rounded 3D mascot character named Mr. K, designed with a vibrant blue and yellow color scheme, celebrating amidst a flurry of colorful confetti. The mascot has large, friendly eyes and a wide, joyful smile, conveying a sense of achievement and optimism. The overall style is playful, tactile, and candy-like, consistent with a gamified financial application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZAnklHnVNW-PZtjwwViWomUqPPviWz6c4NqPnAaGSXGOCEOB7lsnhPYprVTdXo_55Ficg5lLuH7RQ9osYma60LQWfqO2C8Hxz1aPJrsUyV3jRCfFufn_t-3jCsWPtMUGWOLaH5uiAKvPywzVStkjN85PJx6kqs_eHlMaoS8alzZ0uuSNAYZEcdi2byQ33UENcVDCi5tCzV9i7pZ91KpmTTuC3jWNYstDRNk8nfrsMuCPn8e4Yf_VkNqQnxZJ8PPG9CloqTb9jVU0"/>
+<!-- confetti effect (simplified) -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="absolute top-0 left-1/4 w-3 h-3 bg-yellow-400 rotate-45 animate-bounce"></div>
+<div class="absolute top-1/2 right-1/4 w-2 h-4 bg-tertiary-container -rotate-12 animate-pulse"></div>
+<div class="absolute bottom-1/4 left-1/3 w-4 h-2 bg-secondary-fixed rotate-90 animate-bounce"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Data Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Total Saved -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2 hover:border-primary transition-colors group">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Total Saved</span>
+<div class="p-2 bg-surface-container-low rounded-xl text-primary">
+<span class="material-symbols-outlined">savings</span>
+</div>
+</div>
+<div class="mt-2">
+<p class="font-headline-lg text-headline-lg text-on-surface">₦4,250,000</p>
+<p class="text-body-md text-on-surface-variant">Lifetime savings growth</p>
+</div>
+</div>
+<!-- Saved This Year -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Saved This Year</span>
+<div class="p-2 bg-primary-fixed rounded-xl text-on-primary-fixed">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex items-baseline gap-2">
+<p class="font-headline-lg text-headline-lg text-on-surface">₦1,820,500</p>
+<span class="text-primary font-label-bold flex items-center">
+<span class="material-symbols-outlined text-sm">arrow_upward</span> 12%
+                            </span>
+</div>
+<div class="w-full bg-surface-container-low h-3 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 72%;"></div>
+</div>
+</div>
+</div>
+<!-- Donated (Sadaqah) -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Donated (Sadaqah)</span>
+<div class="p-2 bg-tertiary-fixed rounded-xl text-on-tertiary-fixed">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+</div>
+<div class="mt-2">
+<p class="font-headline-lg text-headline-lg text-tertiary">₦125,000</p>
+<p class="text-body-md text-on-surface-variant">Impact on the community</p>
+</div>
+</div>
+<!-- Total Contributions -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Total Contributions</span>
+<div class="p-2 bg-secondary-fixed rounded-xl text-on-secondary-fixed">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+</div>
+<div class="mt-2">
+<p class="font-headline-lg text-headline-lg text-on-surface">342</p>
+<p class="text-body-md text-on-surface-variant">Individual transactions</p>
+</div>
+</div>
+<!-- Active Pockets -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Active Pockets</span>
+<div class="p-2 bg-surface-container rounded-xl text-on-surface">
+<span class="material-symbols-outlined">folder_special</span>
+</div>
+</div>
+<div class="mt-2">
+<p class="font-headline-lg text-headline-lg text-on-surface">12</p>
+<p class="text-body-md text-on-surface-variant">Ongoing goals</p>
+</div>
+</div>
+<!-- Adashi Circles Joined -->
+<div class="chunky-card bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-label-bold text-on-surface-variant">Adashi Circles</span>
+<div class="p-2 bg-primary-fixed-dim rounded-xl text-on-primary-fixed-variant">
+<span class="material-symbols-outlined">groups</span>
+</div>
+</div>
+<div class="mt-2">
+<p class="font-headline-lg text-headline-lg text-on-surface">3</p>
+<p class="text-body-md text-on-surface-variant">Community saving groups</p>
+</div>
+</div>
+</div>
+<!-- Share Action -->
+<div class="flex justify-center pt-8">
+<button class="candy-button bg-primary text-on-primary font-headline-md px-12 py-5 rounded-2xl flex items-center gap-3 shadow-xl transition-all">
+<span class="material-symbols-outlined">share</span>
+                    Share My Year
+                </button>
+</div>
+<!-- Footer Mascot Wisdom -->
+<div class="mt-12 p-8 bg-surface-container-low rounded-[1.5rem] flex items-start gap-6 border-2 border-surface-variant border-dashed">
+<div class="w-16 h-16 shrink-0 bg-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">lightbulb</span>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-primary mb-1 uppercase tracking-wider">Mr. K's Advice</h4>
+<p class="text-body-lg text-on-surface-variant italic">"Building wealth is a marathon, not a sprint. Your consistency this year in your Hajj Pocket is truly inspiring. Why not aim for a 5% increase in your Sadaqah next month?"</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Interactive Micro-interactions
+        document.querySelectorAll('.chunky-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!card.classList.contains('bg-primary-container')) {
+                    card.classList.add('active-card');
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('active-card');
+            });
+        });
+
+        // Simple confetti animation trigger for visual reward
+        const shareBtn = document.querySelector('.candy-button.bg-primary');
+        shareBtn.addEventListener('click', () => {
+            alert("Ready to share your financial success with your circle!");
+        });
+    </script>
+</body></html>

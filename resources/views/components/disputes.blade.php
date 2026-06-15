@@ -1,6 +1,6 @@
 @props(['type', 'id', 'disputes', 'isAdmin' => false, 'canRaise' => false])
 
-<div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+<div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 mt-6">
     <div class="flex items-center justify-between mb-3">
         <h3 class="font-semibold">⚖️ Disputes</h3>
         @if ($canRaise)

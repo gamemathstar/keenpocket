@@ -8,7 +8,7 @@
             <img src="{{ asset('ant-k/kforgoing.png') }}" alt="K taking his child to school" class="w-full h-40 sm:h-48 object-cover object-center">
         </div>
     @endif
-    <div class="max-w-2xl bg-white rounded-xl border border-slate-200 p-6">
+    <div class="max-w-2xl bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
         <p class="text-sm text-slate-500 mb-4">Set up your school to manage class fees, students and parent payments. KeenPocket keeps the records — it never holds your money.</p>
         <form method="POST" action="{{ route('school.store') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf

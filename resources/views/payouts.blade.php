@@ -11,7 +11,7 @@
 
     <div class="grid lg:grid-cols-2 gap-6 max-w-5xl">
         {{-- Personal payout destination --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">My payout account</h3>
             <p class="text-sm text-slate-500 mb-4">Where your Adashi payouts are sent.</p>
             <form method="POST" action="{{ route('payouts.saveBank') }}" class="space-y-3">
@@ -35,7 +35,7 @@
         </div>
 
         {{-- Payout history --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-3">Payouts received</h3>
             <ul class="divide-y divide-slate-100">
                 @forelse ($received as $p)
@@ -60,7 +60,7 @@
     @else
         <div class="grid md:grid-cols-2 gap-4 max-w-5xl">
             @foreach ($ownedPockets as $p)
-                <div class="bg-white rounded-xl border border-slate-200 p-5">
+                <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
                     <div class="font-medium mb-3">{{ $p->title }}</div>
                     <form method="POST" action="{{ route('payouts.savePocketBank', $p->id) }}" class="space-y-3">
                         @csrf

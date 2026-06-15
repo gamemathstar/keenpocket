@@ -29,9 +29,9 @@
                     $pocketItems = [['pockets.index', 'My Pockets', '👛'], ['adashi.index', 'Adashi', '🔄']];
                     $profileItems = [
                         ['profile', 'Profile', '⭐'],
+                        ['friends.index', 'Friends & Invites', '👥'],
                         ['wallet.index', 'Wallet', '💳'],
                         ['payouts.index', 'Payouts & Bank', '🏦'],
-                        ['referrals.index', 'Referrals', '🎁'],
                         ['guarantor.requests', 'Vouches', '🤝'],
                         ['insights', 'Insights', '📊'],
                         ['admin.health', 'Admin', '🩺'],
@@ -42,18 +42,10 @@
 
                 @include('partials.nav-link', ['route' => 'dashboard', 'label' => 'Dashboard', 'icon' => '🏠'])
 
-                {{-- Pocket group --}}
-                <details class="group" {{ $pocketOpen ? 'open' : '' }}>
-                    <summary class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide text-slate-500 hover:bg-slate-100 cursor-pointer list-none">
-                        <span class="text-base">👛</span><span>Pocket</span>
-                        <span class="ml-auto text-slate-400 transition-transform group-open:rotate-90">›</span>
-                    </summary>
-                    <div class="mt-1 space-y-1">
-                        @foreach ($pocketItems as [$route, $label, $icon])
-                            @include('partials.nav-link', ['route' => $route, 'label' => $label, 'icon' => $icon, 'sub' => true])
-                        @endforeach
-                    </div>
-                </details>
+                {{-- Pocket (opens to tabbed pages) --}}
+                <a href="{{ route('pockets.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide border-2 {{ $pocketOpen ? 'bg-brand-light text-brand-dark border-brand/40' : 'text-slate-500 border-transparent hover:bg-slate-100' }}">
+                    <span class="text-base">👛</span><span>Pocket</span>
+                </a>
 
                 {{-- School (right after Pocket) --}}
                 @if (config('school.enabled', true) && $me->canCreateSchool())
@@ -71,18 +63,10 @@
                     @include('partials.nav-link', ['route' => 'super-admin.index', 'label' => 'Super Admin', 'icon' => '🛡️'])
                 @endif
 
-                {{-- Profile group --}}
-                <details class="group" {{ $profileOpen ? 'open' : '' }}>
-                    <summary class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide text-slate-500 hover:bg-slate-100 cursor-pointer list-none">
-                        <span class="text-base">⭐</span><span>Profile</span>
-                        <span class="ml-auto text-slate-400 transition-transform group-open:rotate-90">›</span>
-                    </summary>
-                    <div class="mt-1 space-y-1">
-                        @foreach ($profileItems as [$route, $label, $icon])
-                            @include('partials.nav-link', ['route' => $route, 'label' => $label, 'icon' => $icon, 'sub' => true])
-                        @endforeach
-                    </div>
-                </details>
+                {{-- Profile (opens to tabbed pages) --}}
+                <a href="{{ route('profile') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide border-2 {{ $profileOpen ? 'bg-brand-light text-brand-dark border-brand/40' : 'text-slate-500 border-transparent hover:bg-slate-100' }}">
+                    <span class="text-base">⭐</span><span>Profile</span>
+                </a>
             </nav>
             <div class="p-3 border-t border-slate-100">
                 <form method="POST" action="{{ route('logout') }}">
@@ -116,6 +100,24 @@
                 <a href="{{ route('settings') }}"><x-avatar :user="auth()->user()" :size="32" /></a>
             </div>
         </header>
+
+        {{-- Group tabs: shown when the current page belongs to the Pocket or Profile group --}}
+        @php
+            $groupTabs = collect($pocketItems)->contains(fn ($i) => $isActive($i[0])) ? $pocketItems
+                : (collect($profileItems)->contains(fn ($i) => $isActive($i[0])) ? $profileItems : null);
+        @endphp
+        @if ($groupTabs)
+            <nav class="bg-white border-b border-slate-200 px-4 sm:px-6 overflow-x-auto">
+                <div class="flex gap-1">
+                    @foreach ($groupTabs as [$route, $label, $icon])
+                        @php $on = $isActive($route); @endphp
+                        <a href="{{ route($route) }}" class="flex items-center gap-1.5 px-3 py-3 text-sm font-bold border-b-2 whitespace-nowrap transition-colors {{ $on ? 'border-brand text-brand-dark' : 'border-transparent text-slate-500 hover:text-slate-700' }}">
+                            <span>{{ $icon }}</span> {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </nav>
+        @endif
 
         <main class="p-6 pb-24 md:pb-6 flex-1">
             @if (session('status'))
@@ -154,7 +156,7 @@
     </div>
 </div>
 
-{{-- Mobile bottom tab bar (Duolingo-style) --}}
+{{-- Mobile bottom tab bar (Duolingo-style). Pocket/Profile open to their tabbed pages. --}}
 <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-slate-200 grid grid-cols-5">
     @php
         $tabs = [
@@ -166,7 +168,7 @@
         ];
     @endphp
     @foreach ($tabs as [$route, $label, $icon, $extra])
-        @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index','',$route).'.*') || ($extra && request()->routeIs($extra)); @endphp
+        @php $active = request()->routeIs($route) || request()->routeIs(str_replace('.index', '', $route).'.*') || ($extra && request()->routeIs($extra)); @endphp
         <a href="{{ route($route) }}" class="flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold uppercase {{ $active ? 'text-brand-dark' : 'text-slate-400' }}">
             <span class="text-xl">{{ $icon }}</span>{{ $label }}
         </a>

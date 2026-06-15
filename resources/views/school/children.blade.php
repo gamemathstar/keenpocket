@@ -3,14 +3,24 @@
 @section('heading', 'School fees')
 
 @section('content')
-    <p class="text-sm text-slate-500 mb-6">What you've paid and what's left, per child and term. Payments are recorded by the school.</p>
+    {{-- Hero --}}
+    <section class="relative overflow-hidden bg-brand-light rounded-[2rem] border-b-8 border-brand p-6 sm:p-7 mb-8 flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-dark leading-tight">My children 🎒</h2>
+            <p class="text-slate-600 mt-1">What you've paid and what's left, per child and term. Payments are recorded by the school.</p>
+        </div>
+        <img src="{{ asset('ant-k/kforgoing.png') }}" alt="" class="hidden sm:block h-28 w-auto shrink-0 drop-shadow-xl object-contain">
+    </section>
 
     @forelse ($rows as $r)
-        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-5">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 mb-5">
             <div class="flex items-center justify-between mb-3">
-                <div>
-                    <h3 class="font-semibold">{{ $r->student->name }}</h3>
-                    <p class="text-xs text-slate-400">{{ $r->school }}@if($r->class) · {{ $r->class }}@endif</p>
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="bg-amber-100 rounded-2xl h-11 w-11 shrink-0 flex items-center justify-center text-xl">🎒</div>
+                    <div class="min-w-0">
+                        <h3 class="font-extrabold truncate">{{ $r->student->name }}</h3>
+                        <p class="text-xs text-slate-400 truncate">{{ $r->school }}@if($r->class) · {{ $r->class }}@endif</p>
+                    </div>
                 </div>
                 @if ($r->plan)
                     <span class="text-xs px-2 py-0.5 rounded-full bg-brand-light text-brand-dark">

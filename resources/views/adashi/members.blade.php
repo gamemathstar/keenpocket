@@ -10,7 +10,7 @@
 
     {{-- Admin controls for the current cycle --}}
     @if ($currentRecord)
-        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-4">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 mt-4">
             <h3 class="font-semibold mb-3">Cycle {{ $currentRecord->cycle_number }} controls
                 <span class="text-xs font-normal text-slate-400">· {{ ucfirst(strtolower($currentRecord->status)) }}</span>
             </h3>
@@ -49,7 +49,7 @@
     @endif
 
     {{-- Adashi status control --}}
-    <div class="bg-white border border-slate-200 rounded-xl p-5 mt-4 flex items-center justify-between">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 mt-4 flex items-center justify-between">
         <div>
             <span class="font-semibold">Status:</span>
             <span class="text-xs px-2 py-0.5 rounded-full ml-1 font-bold uppercase
@@ -72,7 +72,7 @@
 
     <div class="grid lg:grid-cols-3 gap-6 mt-6">
         {{-- Add member --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Add a member</h3>
             <p class="text-sm text-slate-500 mb-4">Add by phone number. If they're not on KeenPocket yet, an account is created for them to claim later.</p>
             <form method="POST" action="{{ route('adashi.members.store', $adashi->id) }}" class="space-y-3">
@@ -91,7 +91,7 @@
         </div>
 
         {{-- Current members --}}
-        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div class="lg:col-span-2 bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-3">Members ({{ $members->count() }})</h3>
             <ul class="divide-y divide-slate-100">
                 @foreach ($members as $m)

@@ -1,0 +1,296 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Identity Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,800;0,900;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#88ceff",
+                    "primary-fixed": "#c8e6ff",
+                    "on-surface-variant": "#3e4850",
+                    "outline": "#6e7881",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#ff8079",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#00405d",
+                    "on-primary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-secondary-fixed-variant": "#594400",
+                    "outline-variant": "#bdc8d2",
+                    "secondary-fixed": "#ffdf92",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "primary-container": "#1cb0f6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary": "#bb1522",
+                    "background": "#f7f9fb",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-fixed": "#410004",
+                    "on-secondary-container": "#6e5400",
+                    "secondary-container": "#fec700",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006590",
+                    "surface-container": "#eceef0",
+                    "primary-fixed-dim": "#88ceff",
+                    "on-primary-fixed": "#001e2e",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary": "#755b00",
+                    "on-tertiary-container": "#7e000f",
+                    "primary": "#006590",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#241a00",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "on-primary-fixed-variant": "#004c6e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "display": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .candy-button {
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .candy-card {
+            box-shadow: 0 7px 0 0 rgba(224, 227, 229, 1);
+        }
+        .candy-card-primary {
+            box-shadow: 0 7px 0 0 rgba(0, 76, 110, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            box-shadow: 0 4px 0 0 rgba(0, 76, 110, 1);
+        }
+        input:focus {
+            outline: none;
+            border-color: #1cb0f6 !important;
+            box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-72 flex flex-col border-r-4 border-surface-container-highest bg-surface px-4 py-6 z-40 hidden md:flex">
+<div class="mb-10 px-4">
+<h1 class="text-headline-md font-display font-black text-primary">KeenPocket</h1>
+</div>
+<div class="flex items-center gap-4 px-4 mb-8">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border-2 border-primary">
+<img alt="User profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBrypE47jdYeljXeEAYAHqEuqYsy8tyLAlo0R2Sde2YhC3SDc7i0sPCoHFTsU8Zz7F1JtuTL1oo69h8JaRtcqM7DA1-3V4wzGBnGuzlms_nvdcoI-G0JWOXIfg_iuZSFGApu-DlAzN4RkLvxeTSGLynH76qqFXXDM-mFAq1cWpgAIdFkkIG30mIHHue6z-jcEB1xrsxCGZTnGv99NxAYr1n91gqISK-8rvq4f2an7XoX3ywNE9XaqObtmwKggayLNAWDL2qxqpTWM">
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-on-surface">Alex Rivers</p>
+<p class="text-[12px] font-bold text-primary">Reputation: Gold Tier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-label-bold hover:bg-surface-container-low transition-all duration-100 rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-label-bold hover:bg-surface-container-low transition-all duration-100 rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_balance_wallet</span>
+                Pockets
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-label-bold hover:bg-surface-container-low transition-all duration-100 rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">group</span>
+                Adashi Groups
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-label-bold hover:bg-surface-container-low transition-all duration-100 rounded-xl group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+                Wallet
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl border-b-4 border-on-primary-fixed-variant flex items-center gap-3 px-4 py-3 translate-y-[1px]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                Settings
+            </a>
+</nav>
+<button class="mt-4 mb-8 mx-2 candy-button bg-secondary-container text-on-secondary-container font-label-bold py-3 px-6 rounded-xl border-b-4 border-on-secondary-container hover:translate-y-[1px] active:translate-y-[4px] active:border-b-0 transition-all">
+            Create New Pocket
+        </button>
+<div class="border-t-2 border-surface-container-highest pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant font-label-bold hover:bg-surface-container-low rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+                Help
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-error font-label-bold hover:bg-error-container rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-full md:w-[calc(100%-18rem)] md:ml-72 px-8 py-4 sticky top-0 z-50 bg-surface border-b-4 border-surface-container-highest">
+<div class="flex items-center gap-8">
+<h2 class="text-headline-md font-display font-black text-primary md:hidden">KeenPocket</h2>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">History</a>
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border-2 border-outline-variant rounded-full py-2 pl-10 pr-4 w-64 focus:ring-0" placeholder="Search transactions..." type="text">
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full md:w-[calc(100%-18rem)] md:ml-72 min-h-[calc(100vh-84px)] p-6 md:p-12">
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left Column: Identity Check Character -->
+<div class="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+<div class="relative w-full max-w-[320px] aspect-square rounded-3xl bg-primary-fixed flex items-center justify-center p-8 candy-card-primary">
+<img alt="Mr. K mascot for identity verification" class="w-full h-full object-contain" data-alt="A friendly, high-energy 3D cartoon mascot named Mr. K, a playful round robot with big expressive digital eyes and a warm smile. He is presented in a bright, light-mode interface with a soft blue background. The character has a polished, candy-like tactile texture with clean shadows, evoking a sense of helpfulness and security in a modern fintech setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCZDWw6-Rl0TfB8TNGPb4xFm770ijLlhtpmZ1zwBeamjQdDmVN0z9A8j_YsUff6OfQvYZiK3iXmJxle6hOMkmmaH3YSfZzyHsXOBNkbPo7YrMASqm63wYtkQE8on-2EwWbqBCWYB1ecRWTBBA1-vJRWPWCcINIy8W5SaAoOcHZ5-AfUQ97KmtdrAeQWX-4b5AraKfXcbK148sfjLwPE73z53oBzTvHKENuSlZ_Cp7Z1mMEM3XNmxFfy7OHyeo_wF7WvWZQXyS4z-U">
+<div class="absolute -bottom-4 -right-4 bg-secondary-container p-4 rounded-2xl border-b-4 border-on-secondary-container shadow-lg">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+</div>
+<div class="space-y-3">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Identity Check</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-sm">
+                        Help us secure your pockets! Verify your identity to unlock higher transaction limits and group features.
+                    </p>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-4 relative overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary transition-all duration-700" style="width: 65%;"></div>
+</div>
+<p class="text-label-bold font-label-bold text-primary">Step 2 of 3: Document Details</p>
+</div>
+<!-- Right Column: Verification Form -->
+<div class="lg:col-span-7">
+<div class="bg-surface rounded-[2rem] p-8 md:p-12 candy-card border-2 border-surface-container-highest">
+<form class="space-y-8" onsubmit="event.preventDefault();">
+<div>
+<label class="text-label-bold font-label-bold text-on-surface-variant mb-4 block uppercase tracking-wider">Select Identification Type</label>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 border-outline-variant bg-surface-container-lowest transition-all hover:border-primary group active-pill" id="btn-bvn" onclick="selectId('bvn')" type="button">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary">badge</span>
+<span class="font-label-bold">BVN</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 border-outline-variant bg-surface-container-lowest transition-all hover:border-primary group" id="btn-nin" onclick="selectId('nin')" type="button">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary">fingerprint</span>
+<span class="font-label-bold">NIN</span>
+</button>
+</div>
+</div>
+<div class="space-y-3">
+<label class="text-label-bold font-label-bold text-on-surface-variant block uppercase tracking-wider" for="id_number">Enter 11-Digit Number</label>
+<div class="relative">
+<input class="w-full text-headline-md font-headline-md bg-surface-container-low border-2 border-outline-variant rounded-2xl px-6 py-5 focus:border-primary tracking-[0.2em] placeholder:text-outline-variant transition-all" id="id_number" maxlength="11" placeholder="000 000 000 00" type="text">
+<span class="absolute right-6 top-1/2 -translate-y-1/2 text-outline-variant font-label-bold" id="char-count">0/11</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">info</span>
+                                We'll only use this to confirm your legal identity.
+                            </p>
+</div>
+<div class="pt-6">
+<button class="w-full candy-button bg-primary-container text-on-primary-container font-headline-md py-6 rounded-2xl border-b-8 border-on-primary-fixed-variant text-xl hover:translate-y-[2px] hover:border-b-[6px] active:translate-y-[8px] active:border-b-0">
+                                Verify Identity
+                            </button>
+</div>
+</form>
+</div>
+<div class="mt-8 flex justify-center gap-6">
+<div class="flex items-center gap-2 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-lg">lock</span>
+<span class="text-label-bold font-label-bold">AES-256 Encrypted</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-lg">shield</span>
+<span class="text-label-bold font-label-bold">CBN Regulated</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function selectId(type) {
+            const bvnBtn = document.getElementById('btn-bvn');
+            const ninBtn = document.getElementById('btn-nin');
+            
+            if (type === 'bvn') {
+                bvnBtn.classList.add('active-pill', 'border-primary');
+                bvnBtn.querySelector('span').classList.add('text-primary');
+                ninBtn.classList.remove('active-pill', 'border-primary');
+                ninBtn.querySelector('span').classList.remove('text-primary');
+            } else {
+                ninBtn.classList.add('active-pill', 'border-primary');
+                ninBtn.querySelector('span').classList.add('text-primary');
+                bvnBtn.classList.remove('active-pill', 'border-primary');
+                bvnBtn.querySelector('span').classList.remove('text-primary');
+            }
+        }
+
+        const input = document.getElementById('id_number');
+        const count = document.getElementById('char-count');
+        
+        input.addEventListener('input', (e) => {
+            const val = e.target.value.replace(/\D/g, '');
+            e.target.value = val;
+            count.textContent = `${val.length}/11`;
+            
+            if (val.length === 11) {
+                count.classList.add('text-primary');
+            } else {
+                count.classList.remove('text-primary');
+            }
+        });
+    </script>
+</body></html>

@@ -166,7 +166,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/wallet', [WalletWebController::class, 'index'])->name('wallet.index');
     Route::post('/wallet/topup', [WalletWebController::class, 'topup'])->name('wallet.topup');
-    Route::get('/referrals', [ReferralWebController::class, 'index'])->name('referrals.index');
+    // Friends (mutual, request → accept).
+    Route::get('/friends', [\App\Http\Controllers\Web\FriendController::class, 'index'])->name('friends.index');
+    Route::post('/friends', [\App\Http\Controllers\Web\FriendController::class, 'store'])->name('friends.store');
+    Route::post('/friends/{id}/accept', [\App\Http\Controllers\Web\FriendController::class, 'accept'])->name('friends.accept');
+    Route::post('/friends/{id}/decline', [\App\Http\Controllers\Web\FriendController::class, 'decline'])->name('friends.decline');
+    Route::post('/friends/{id}/cancel', [\App\Http\Controllers\Web\FriendController::class, 'cancel'])->name('friends.cancel');
+    Route::post('/friends/{userId}/remove', [\App\Http\Controllers\Web\FriendController::class, 'remove'])->name('friends.remove');
+
+    // Referrals merged into the Friends page; keep the old route as a redirect.
+    Route::get('/referrals', fn () => redirect()->route('friends.index'))->name('referrals.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/users/{id}', [\App\Http\Controllers\Web\PublicProfileController::class, 'show'])->name('users.show');
     Route::post('/kyc', [KycWebController::class, 'submit'])->name('kyc.submit');

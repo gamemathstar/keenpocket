@@ -1,0 +1,342 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Create Pocket - NairaSave</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .candy-button {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .candy-card {
+            box-shadow: 0 7px 0 0 #e6e8ea;
+        }
+        .candy-input {
+            border: 2px solid #bdc8d2;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .candy-input:focus {
+            border-color: #1cb0f6;
+            box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.1);
+            outline: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdf92",
+                        "outline-variant": "#bdc8d2",
+                        "outline": "#6e7881",
+                        "on-secondary-fixed-variant": "#594400",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1cb0f6",
+                        "on-secondary-container": "#6e5400",
+                        "tertiary-container": "#ff8079",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary": "#bb1522",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed": "#c8e6ff",
+                        "primary": "#006590",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "on-primary-container": "#00405d",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "surface-tint": "#006590",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#fec700",
+                        "on-surface-variant": "#3e4850",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#7e000f",
+                        "surface-dim": "#d8dadc",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#755b00",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-secondary-fixed": "#241a00",
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed": "#001e2e",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#88ceff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#410004"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex overflow-hidden">
+<!-- Sidebar (Shared Component) -->
+<aside class="bg-surface-container-low h-screen w-72 fixed left-0 top-0 border-r-2 border-outline-variant flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-4">
+<span class="text-headline-md font-headline-md font-black text-primary">NairaSave</span>
+<p class="font-body-md text-on-surface-variant text-sm opacity-70">Community Finance</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-label-bold text-label-bold transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group_work</span>
+<span class="font-label-bold text-label-bold">Groups</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Savings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-bold text-label-bold">Marketplace</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold text-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 flex-1 flex flex-col h-screen">
+<!-- Top App Bar (Shared Component) -->
+<header class="w-full sticky top-0 bg-surface flex justify-between items-center px-10 py-4 z-40">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-low rounded-full transition-colors">arrow_back</button>
+<h1 class="font-headline-md text-headline-md font-black text-primary">Create Pocket</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined hover:bg-surface-container-low rounded-full p-2 transition-colors text-on-surface-variant">notifications</button>
+<button class="material-symbols-outlined hover:bg-surface-container-low rounded-full p-2 transition-colors text-on-surface-variant">history</button>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center ml-2 border-2 border-white shadow-sm overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4lwPM0V9nQLfufldaY0BT6oZRYRnqAojj3AMCD8X-ke15-I4G3P8R5GKlNZmfOIP6trcE2WT61p7_9L5xz5rtdJ9NhEdp2PUek5xoe5hKhApxP_9b8BghoObziSZqp4JqT3CX6T6vGKiR_r_B-ocRa6mAV9lWNizJE8F4XeO1hfWjP1qx8UgVEy-yIwMUfIsj5kRiASypopwliwe9ICz-g0GPvC2pn35D0EmJD0dygChS-3iJZh8FWwsHJsAMJ5TubQuCaM0CauQ">
+</div>
+</div>
+</header>
+<!-- Multi-Pane Layout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Pane: Identity/Mascot -->
+<section class="w-2/5 p-12 flex flex-col justify-center items-center text-center bg-white border-r-2 border-outline-variant">
+<div class="relative mb-8">
+<div class="absolute -top-12 -left-12 w-24 h-24 bg-primary-container rounded-full opacity-10 animate-pulse"></div>
+<div class="w-64 h-64 flex items-center justify-center relative z-10">
+<!-- Mascot Placeholder -->
+<img class="w-full h-full drop-shadow-xl transition-transform hover:scale-105 cursor-pointer" data-alt="A friendly and vibrant blue owl mascot named Mr. K, standing in a welcoming pose with large expressive eyes and a warm smile. The owl is rendered in a clean, 3D candy-style digital art aesthetic with soft highlights and chunky proportions. The background is a clean white studio setting with subtle blue glows, reflecting a playful, modern, and reliable fintech brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCby0TxZ6xM0yeFLsqret9ReYTG9WFkNGbD2OuDg8VoboY-ODHroQmR2vTAAWQebK0oAe_9TUTQ-FkINNwOCkvVNfRjcHevnXgRBOFnm_19dsdTBCgyIuRzh1N51wXyv8zpUD3MnHzhNvWxj15Y92kR85tdf0zueMLrCn5wLbn-hFU5aQuE1LwbKYetF_uRznTrLjS-pwx4jFdthCYdtQKG3KUXbyIj8VX6pT7ACJEk4205euGPZcedhrQ_ifbuLTXVXP4TFCSUZtY">
+</div>
+<div class="absolute -bottom-6 -right-6 w-16 h-16 bg-secondary-container rounded-full opacity-20"></div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Ready for a new Pocket?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm">
+                    Pockets are community-driven savings groups where everyone gets a turn to win big. Let's set up your new financial circle!
+                </p>
+<div class="mt-12 flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary">security</span>
+</div>
+<span class="text-label-bold font-label-bold text-xs uppercase text-outline">Verified</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary">group</span>
+</div>
+<span class="text-label-bold font-label-bold text-xs uppercase text-outline">Collaborative</span>
+</div>
+</div>
+</section>
+<!-- Right Pane: Scrollable Form Area -->
+<section class="w-3/5 p-10 overflow-y-auto custom-scrollbar bg-surface-container-lowest">
+<div class="max-w-xl mx-auto space-y-8 pb-12">
+<!-- Section: General Info -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">edit_note</span>
+<h3 class="font-headline-md text-headline-md">General Details</h3>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Pocket Title</label>
+<input class="w-full px-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white" placeholder="e.g. Lagos Super Savers" type="text">
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Description</label>
+<textarea class="w-full px-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white" placeholder="What's the goal for this group?" rows="3"></textarea>
+</div>
+</div>
+<!-- Section: Scheduling -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+<h3 class="font-headline-md text-headline-md">Timeline</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Year</label>
+<select class="w-full px-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white appearance-none">
+<option>2024</option>
+<option>2025</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Start Month</label>
+<select class="w-full px-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white appearance-none">
+<option>January</option>
+<option>February</option>
+<option>March</option>
+<option>April</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Duration (Months)</label>
+<div class="flex items-center gap-4">
+<input class="flex-1 h-3 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary" max="24" min="3" type="range" value="6">
+<span class="bg-primary-container text-on-primary-container font-label-bold px-4 py-2 rounded-xl">6 Mo</span>
+</div>
+</div>
+</div>
+<!-- Section: Financials -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">payments</span>
+<h3 class="font-headline-md text-headline-md">Contribution</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">₦ Per Hand</label>
+<div class="relative">
+<span class="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">₦</span>
+<input class="w-full pl-12 pr-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white" placeholder="50,000" type="number">
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Member Capacity</label>
+<input class="w-full px-6 py-4 rounded-2xl candy-input font-body-md text-body-md bg-white" type="number" value="10">
+</div>
+</div>
+</div>
+<!-- Your Hands Counter -->
+<div class="candy-card bg-primary-container p-6 rounded-[1.5rem] flex items-center justify-between">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-primary-container">Your Hands</h4>
+<p class="font-body-md text-on-primary-container opacity-80">How many slots are you taking?</p>
+</div>
+<div class="flex items-center gap-4 bg-white/20 p-2 rounded-2xl">
+<button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary-container shadow-sm hover:scale-105 active:scale-95 transition-transform" onclick="updateHands(-1)">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="text-headline-md font-black text-on-primary-container min-w-[2ch] text-center" id="hands-count">1</span>
+<button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary-container shadow-sm hover:scale-105 active:scale-95 transition-transform" onclick="updateHands(1)">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<!-- Terms Notice Box -->
+<div class="p-6 bg-surface-container rounded-2xl border-2 border-dashed border-outline-variant flex gap-4">
+<span class="material-symbols-outlined text-outline">info</span>
+<div class="font-body-md text-on-surface-variant text-sm">
+                            By creating this Pocket, you agree to NairaSave's community governance terms. Ensure all members are verified to maintain group trust. Total estimated cycle value: <span class="font-bold text-on-surface">₦500,000</span>.
+                        </div>
+</div>
+<!-- Create Button -->
+<button class="candy-button w-full py-6 bg-secondary-container hover:bg-secondary transition-colors rounded-[1.5rem] shadow-[0_7px_0_0_#755b00] flex items-center justify-center gap-4 group">
+<span class="font-headline-md text-headline-md text-on-secondary-fixed tracking-widest">CREATE POCKET</span>
+<span class="material-symbols-outlined font-black text-on-secondary-fixed group-hover:translate-x-1 transition-transform">rocket_launch</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Micro-interactions Script -->
+<script>
+        let hands = 1;
+        function updateHands(change) {
+            hands = Math.max(1, hands + change);
+            document.getElementById('hands-count').innerText = hands;
+        }
+
+        // Add a simple hover effect for the mascot
+        const mascot = document.querySelector('[data-alt*="mascot"]');
+        if (mascot) {
+            mascot.addEventListener('mouseenter', () => {
+                mascot.style.transform = 'scale(1.1) rotate(2deg)';
+            });
+            mascot.addEventListener('mouseleave', () => {
+                mascot.style.transform = 'scale(1) rotate(0deg)';
+            });
+        }
+    </script>
+</body></html>

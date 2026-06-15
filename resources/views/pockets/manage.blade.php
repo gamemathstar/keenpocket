@@ -5,7 +5,7 @@
 @section('content')
     <a href="{{ route('pockets.show', $pocket->id) }}" class="text-sm text-brand-dark hover:underline">← Back to {{ $pocket->title }}</a>
 
-    <div class="flex items-center justify-between bg-white rounded-xl border border-slate-200 p-5 mt-4 max-w-5xl">
+    <div class="flex items-center justify-between bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 mt-4 max-w-5xl">
         <div>
             <div class="font-semibold">{{ $pocket->title }}</div>
             <div class="text-sm text-slate-500">{{ $pocket->status ? 'Open — anyone can join' : 'Closed — invitation only' }}</div>
@@ -35,7 +35,7 @@
 
     {{-- Pending join requests --}}
     @if ($requests->isNotEmpty())
-        <div class="bg-white rounded-xl border border-slate-200 p-6 mt-6 max-w-5xl">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6 mt-6 max-w-5xl">
             <h3 class="font-semibold mb-3">Join requests ({{ $requests->count() }})</h3>
             <ul class="divide-y divide-slate-100">
                 @foreach ($requests as $r)
@@ -76,7 +76,7 @@
 
     <div class="grid lg:grid-cols-3 gap-6 mt-6 max-w-5xl">
         {{-- Add member --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Add a member</h3>
             <p class="text-sm text-slate-500 mb-4">Add by phone. New numbers get a placeholder account to claim later.</p>
             <form method="POST" action="{{ route('pockets.addMember', $pocket->id) }}" class="space-y-3">
@@ -99,7 +99,7 @@
         </div>
 
         {{-- Collection account --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-1">Collection account</h3>
             <p class="text-sm text-slate-500 mb-4">Where members send contributions.</p>
             <form method="POST" action="{{ route('pockets.account', $pocket->id) }}" class="space-y-3">
@@ -112,7 +112,7 @@
         </div>
 
         {{-- Members --}}
-        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div class="lg:col-span-2 bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6">
             <h3 class="font-semibold mb-3">Members ({{ $members->where('status', 1)->count() }})</h3>
             <ul class="divide-y divide-slate-100">
                 @foreach ($members as $m)

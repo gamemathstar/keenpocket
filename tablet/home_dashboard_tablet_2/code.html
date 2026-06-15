@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeenPocket Dashboard | Save Together, Grow Together</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#3e4850",
+                    "on-secondary-fixed-variant": "#594400",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eceef0",
+                    "outline-variant": "#bdc8d2",
+                    "primary-fixed": "#c8e6ff",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "secondary-container": "#fec700",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#006590",
+                    "on-secondary-container": "#6e5400",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#410004",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#755b00",
+                    "on-tertiary-container": "#7e000f",
+                    "on-background": "#191c1e",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "surface-variant": "#e0e3e5",
+                    "surface": "#f7f9fb",
+                    "primary-fixed-dim": "#88ceff",
+                    "inverse-surface": "#2d3133",
+                    "secondary-fixed": "#ffdf92",
+                    "tertiary-container": "#ff8079",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "primary-container": "#1cb0f6",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-highest": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary-container": "#00405d",
+                    "on-primary-fixed": "#001e2e",
+                    "on-surface": "#191c1e",
+                    "background": "#f7f9fb",
+                    "tertiary": "#bb1522",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#241a00",
+                    "outline": "#6e7881",
+                    "inverse-primary": "#88ceff",
+                    "primary": "#006590"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "unit": "4px",
+                    "gutter": "16px",
+                    "container-max": "1200px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "display": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .candy-shadow {
+            box-shadow: 0 7px 0 0 rgba(0, 0, 0, 0.05);
+        }
+        .candy-shadow-primary {
+            box-shadow: 0 4px 0 0 #004c6e;
+        }
+        .candy-shadow-secondary {
+            box-shadow: 0 4px 0 0 #6e5400;
+        }
+        .candy-button-active:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .bento-card {
+            @apply bg-surface-container-lowest rounded-[1.5rem] border-b-[7px] border-surface-variant p-6 transition-all;
+        }
+        .bento-card:hover {
+            @apply border-primary-container;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full w-64 bg-surface-container-lowest dark:bg-surface-container-low border-r-4 border-surface-variant dark:border-outline-variant p-4 gap-2 shadow-[0px_4px_0px_0px_rgba(224,227,229,1)] z-20">
+<div class="flex flex-col gap-1 mb-8 px-2">
+<h1 class="text-headline-md font-headline-md text-primary dark:text-primary-fixed-dim">KeenPocket</h1>
+<p class="text-on-surface-variant text-label-bold">Save together, grow together</p>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-on-primary-container/20 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="mt-auto bg-secondary-container text-on-secondary-container rounded-xl px-4 py-4 font-label-bold text-label-bold candy-shadow-secondary hover:translate-y-0.5 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+                Create Pocket
+            </button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col h-full relative overflow-hidden">
+<!-- TopAppBar -->
+<header class="w-full py-2 bg-background dark:bg-background flex justify-between items-center px-margin-desktop max-w-container-max mx-auto z-10">
+<div class="flex items-center gap-4 md:hidden">
+<span class="material-symbols-outlined text-primary">menu</span>
+<span class="text-headline-md font-headline-md text-primary">KeenPocket</span>
+</div>
+<div class="hidden md:block"></div> <!-- Spacer for desktop -->
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:translate-y-0.5">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:translate-y-0.5">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden bg-surface-container-high">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADCmWhQ4fHPSUrMcAHczuqdH5UgUi7hxN3C-C0t3Rj5qBCYN4Z8hlHiRwkNkZ38neYfjY76e_3qZ_wlHOJVdH5taEG5RKJWIoyrCg2K_Db2haboO0hArcPitgTBaqtA_pzkW_Ov1KYv-fEjQUTmMhZrM-MqB8etpfoGpnPv2EYLPTOdlpD71IFItwxnD6xz9p2cbSewDD-GRk_79jwMGWL7Qzl_Rqiq-5PSzuik2IUfw7fys3ylTO-L4O4dKcyoJkshXZCk4ry72w"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content Scrollable -->
+<div class="flex-grow overflow-y-auto px-margin-desktop py-6 custom-scrollbar">
+<div class="max-w-container-max mx-auto space-y-gutter">
+<!-- (1) Hero Row -->
+<div class="flex flex-col md:flex-row items-center gap-8 bg-primary-container/10 rounded-[2rem] p-8 border-b-[7px] border-primary-container/20">
+<div class="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 animate-bounce">
+<img alt="Mr K Mascot" class="w-full h-full" data-alt="A cute, friendly blue circular mascot named Mr. K with big expressive black eyes and a wide smiling mouth, wearing a small gold coin with a K engraved on his chest, waving his hand joyfully. The character has a glossy 3D candy-like texture with soft highlights, set against a clean minimalist light blue gradient background that fits a high-energy financial gamification app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9Qajbp6ujU4Q7qJ3xtp6zr7B5sMUdLc4l8wiGI7Q4XGxk96_bTqAg3xV4RXuMn8IXGXFGo0NIuvzzJeMm_Dr6SgL94htB5UQTSyBSVGMWMaUcividNZ9afaJxq1qoSwgEt5RGx_zk-0ITPf_bzJLZIumqRN-DN3WQesx6g3khoSz4xQxDdkApZOqz2KILlYw7vaj4ZdmMNteLoej_fOFUx6bWu_k5asQyqqfY3vPx7frxRX8n9s8ZFFuw8VGLfjWeJbjEpYTUASE"/>
+</div>
+<div class="text-center md:text-left flex-grow">
+<h2 class="text-headline-lg font-headline-lg text-on-background mb-1">Hello, Amaka 👋</h2>
+<p class="text-body-lg font-body-lg text-primary flex items-center gap-2 justify-center md:justify-start">
+<span class="text-display font-display leading-none">₦248,000</span>
+<span class="text-label-bold pt-4">total saved</span>
+</p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-2xl font-label-bold text-label-bold candy-shadow-primary active:translate-y-1 active:shadow-none transition-all">
+                            Boost Savings
+                        </button>
+</div>
+<!-- (2) Stat Tiles -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<div class="bento-card flex flex-col items-center text-center gap-2">
+<span class="text-primary-container material-symbols-outlined text-[32px]">folder_special</span>
+<span class="text-on-surface-variant text-label-bold">Active Pockets</span>
+<span class="text-headline-md font-headline-md">3</span>
+</div>
+<div class="bento-card flex flex-col items-center text-center gap-2">
+<span class="text-secondary material-symbols-outlined text-[32px]">groups_3</span>
+<span class="text-on-surface-variant text-label-bold">Adashi Groups</span>
+<span class="text-headline-md font-headline-md">2</span>
+</div>
+<div class="bento-card flex flex-col items-center text-center gap-2">
+<span class="text-tertiary material-symbols-outlined text-[32px]">military_tech</span>
+<span class="text-on-surface-variant text-label-bold">Reputation Tier</span>
+<span class="text-headline-md font-headline-md">Tier 1</span>
+</div>
+<div class="bento-card flex flex-col items-center text-center gap-2">
+<span class="text-primary material-symbols-outlined text-[32px]">account_balance_wallet</span>
+<span class="text-on-surface-variant text-label-bold">Wallet Balance</span>
+<span class="text-headline-md font-headline-md text-primary">₦5,000</span>
+</div>
+</div>
+<!-- (3) Middle Section: Goal & Gamification -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Weekly Goal -->
+<div class="bento-card flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="text-headline-md font-headline-md">Weekly goal</h3>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-label-bold flex items-center gap-1">
+                                    🎯 On Track
+                                </div>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl">
+<div class="flex-grow">
+<div class="flex justify-between text-label-bold mb-2">
+<span>Progress</span>
+<span>80%</span>
+</div>
+<div class="w-full h-4 bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-1000" style="width: 80%"></div>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[40px]" data-weight="fill">check_circle</span>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 bg-secondary-container/20 p-3 rounded-xl flex items-center justify-center gap-2 text-secondary font-label-bold">
+<span>🔥</span> 5-week streak
+                                </div>
+<div class="flex-1 bg-primary-fixed p-3 rounded-xl flex items-center justify-center gap-2 text-on-primary-fixed-variant font-label-bold">
+<span>🧊</span> 2 freezes
+                                </div>
+</div>
+<p class="text-on-surface-variant text-center text-label-bold italic">Resets Monday · 48h left</p>
+</div>
+<!-- Gamification Strip -->
+<div class="bento-card flex flex-col gap-6">
+<h3 class="text-headline-md font-headline-md">Reputation Score</h3>
+<div class="flex items-center gap-8">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-container transition-all duration-1000" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="91.1" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-headline-lg font-headline-lg">75</span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">XP</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-bold text-label-bold shadow-sm">
+<span class="material-symbols-outlined text-[18px]">military_tech</span>
+                                        Early Saver
+                                    </div>
+<div class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-label-bold text-label-bold shadow-sm">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                                        Reliable Payer
+                                    </div>
+<a class="text-primary text-label-bold underline mt-2" href="#">View all badges</a>
+</div>
+</div>
+</div>
+</div>
+<!-- (4) Contribution Trend -->
+<div class="bento-card">
+<h3 class="text-headline-md font-headline-md mb-6">Contribution trend</h3>
+<div class="h-48 w-full flex items-end gap-4 px-4">
+<!-- Simple Bar Chart -->
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[40%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant">Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[60%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant">Feb</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[55%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant">Mar</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[85%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant">Apr</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[70%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant">May</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary-container/20 rounded-t-xl relative group h-[95%]">
+<div class="absolute inset-0 bg-primary-container rounded-t-xl transition-all h-full group-hover:brightness-110"></div>
+</div>
+<span class="text-label-bold text-on-surface-variant font-black">Jun</span>
+</div>
+</div>
+</div>
+<!-- (5) Parallel Card Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter pb-margin-desktop">
+<!-- My Pockets -->
+<div class="flex flex-col gap-gutter">
+<div class="flex justify-between items-center px-2">
+<h3 class="text-headline-md font-headline-md">My Pockets</h3>
+<button class="text-primary font-label-bold">View All</button>
+</div>
+<div class="bento-card !p-0 overflow-hidden flex flex-col group cursor-pointer hover:translate-y-[-4px]">
+<div class="h-40 relative bg-gradient-to-br from-primary-container to-primary flex items-center justify-center">
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-white text-label-bold">Active</div>
+<span class="material-symbols-outlined text-white text-[64px]">laptop_mac</span>
+</div>
+<div class="p-6 space-y-3">
+<h4 class="text-headline-md font-headline-md">MacBook Pro Save</h4>
+<div class="flex justify-between items-center text-body-md text-on-surface-variant">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">payments</span> ₦5,000 / hand</div>
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">calendar_today</span> 6 months · 2026</div>
+</div>
+</div>
+</div>
+</div>
+<!-- My Adashi -->
+<div class="flex flex-col gap-gutter">
+<div class="flex justify-between items-center px-2">
+<h3 class="text-headline-md font-headline-md">My Adashi</h3>
+<button class="text-primary font-label-bold">Join Group</button>
+</div>
+<div class="bento-card !p-0 overflow-hidden flex flex-col group cursor-pointer hover:translate-y-[-4px]">
+<div class="h-40 relative bg-gradient-to-br from-secondary-container to-secondary flex items-center justify-center">
+<div class="absolute top-4 right-4 bg-on-secondary-container text-white px-3 py-1 rounded-full text-label-bold">Cycle 2 of 8</div>
+<span class="material-symbols-outlined text-white text-[64px]">group</span>
+</div>
+<div class="p-6 space-y-3">
+<h4 class="text-headline-md font-headline-md">Lagos Entreprenuers</h4>
+<div class="flex justify-between items-center text-body-md text-on-surface-variant">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">sync</span> ₦10,000 / cycle</div>
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">person</span> 8 members</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-around items-center h-16 bg-surface-container-lowest border-t-2 border-surface-variant">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">savings</span>
+<span class="text-[10px] font-label-bold">Pockets</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-label-bold">Groups</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-label-bold">Wallet</span>
+</button>
+</nav>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'translateY(2px)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Toggle Dark Mode (Optional Helper)
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</body></html>

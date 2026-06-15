@@ -1,0 +1,346 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KeenPocket - Grocery Plans</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "surface-tint": "#006590",
+                    "secondary": "#755b00",
+                    "secondary-container": "#fec700",
+                    "inverse-primary": "#88ceff",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "tertiary": "#bb1522",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary-container": "#7e000f",
+                    "on-secondary-fixed": "#241a00",
+                    "on-secondary-fixed-variant": "#594400",
+                    "primary-container": "#1cb0f6",
+                    "outline-variant": "#bdc8d2",
+                    "secondary-fixed": "#ffdf92",
+                    "inverse-surface": "#2d3133",
+                    "on-surface-variant": "#3e4850",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#001e2e",
+                    "primary": "#006590",
+                    "tertiary-container": "#ff8079",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#c8e6ff",
+                    "on-secondary-container": "#6e5400",
+                    "surface-dim": "#d8dadc",
+                    "primary-fixed-dim": "#88ceff",
+                    "tertiary-fixed": "#ffdad7",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-background": "#191c1e",
+                    "on-primary-container": "#00405d",
+                    "error": "#ba1a1a",
+                    "outline": "#6e7881",
+                    "on-tertiary-fixed": "#410004",
+                    "background": "#f7f9fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1200px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "display": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; background-color: #f7f9fb; }
+        .candy-button-shadow { box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.1); }
+        .card-shadow { box-shadow: 0 7px 0 0 #e0e3e5; }
+        .card-shadow-active { box-shadow: 0 7px 0 0 #006590; }
+        .side-nav-active { box-shadow: 0 4px 0 0 #004c6e; }
+        .inner-recessed { box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low border-r-4 border-outline-variant z-40">
+<div class="flex flex-col gap-gutter p-gutter h-full">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">wallet</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-black text-primary leading-tight">KeenPocket</h1>
+<p class="text-label-bold font-label-bold text-on-surface-variant opacity-70">Community Finance</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl side-nav-active transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="text-label-bold font-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="text-label-bold font-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-label-bold font-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all active:translate-y-[2px]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full bg-secondary-container text-on-secondary-container py-4 rounded-xl font-headline-md text-[18px] border-b-4 border-[#c59a00] active:border-b-0 active:translate-y-1 transition-all">
+                New Pocket
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 p-margin-desktop min-h-screen relative">
+<!-- Savings Cockpit Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Savings Cockpit</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Your grocery strategy for the month</p>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-high p-4 rounded-2xl border-b-4 border-outline-variant">
+<div class="w-12 h-12 bg-primary rounded-full overflow-hidden flex-shrink-0">
+<img alt="User" class="w-full h-full object-cover" data-alt="A friendly, expressive character portrait in a colorful, vector art style similar to high-quality educational apps. The character has a bright, helpful expression, styled with clean lines and bold flat colors against a soft pastel background, embodying a welcoming and supportive financial assistant persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-OJclxutSrL4dQeHenZ71UZn50GRW9DE4wF4gj8Cn2U4MVnWah_J-jZwWm4zh_C0gXG2XKOtHNoCo-jz9IEQ1Kq49oaNRx4NUXV0T-3GzK4X4Kuvdapg_PIdXJB9QPio-db5jg2mUiA6zs6LIlAGKFP9_abXIL0qcC0puMclgW9nLblqPCc8wSdaMIi4605Uo7aN4NMMR9i11mkssfv6HRxOMgkyXQkdMt18Z4KNQ6fZ3H9kqt3FKJt2sekDskJndci62UhGYl7s">
+</div>
+<div>
+<span class="text-label-bold font-label-bold block">Monthly Goal</span>
+<span class="text-primary font-black">74% Reached</span>
+</div>
+</div>
+</header>
+<!-- Bento Layout / Plan Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Plan Card 1: Family Groceries -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] card-shadow border-2 border-transparent hover:border-primary-container transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 items-center">
+<div class="w-14 h-14 bg-secondary-fixed rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed text-3xl">shopping_cart</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface">Family Groceries</h3>
+<span class="bg-surface-container text-on-surface-variant text-[12px] font-black px-3 py-1 rounded-full uppercase">Monthly</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-label-bold font-label-bold text-on-surface-variant">Budget Progress</span>
+<span class="text-headline-md font-headline-md text-primary">$450 <span class="text-body-md font-body-md text-on-surface-variant">/ $600</span></span>
+</div>
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden inner-recessed">
+<div class="h-full bg-primary-container w-[75%] rounded-full transition-all duration-1000 ease-out"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-primary">24</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Bought</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-secondary">8</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Pending</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-outline">3</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Deferred</span>
+</div>
+</div>
+</div>
+<!-- Plan Card 2: Bachelor Week -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] card-shadow border-2 border-transparent hover:border-primary-container transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 items-center">
+<div class="w-14 h-14 bg-tertiary-fixed rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-3xl">restaurant</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface">Bachelor Week</h3>
+<span class="bg-surface-container text-on-surface-variant text-[12px] font-black px-3 py-1 rounded-full uppercase">Weekly</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-label-bold font-label-bold text-on-surface-variant">Budget Progress</span>
+<span class="text-headline-md font-headline-md text-primary">$120 <span class="text-body-md font-body-md text-on-surface-variant">/ $150</span></span>
+</div>
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden inner-recessed">
+<div class="h-full bg-secondary-container w-[80%] rounded-full transition-all duration-1000 ease-out"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-primary">12</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Bought</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-secondary">2</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Pending</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<span class="block text-headline-md font-headline-md text-outline">0</span>
+<span class="text-[12px] font-black uppercase text-on-surface-variant">Deferred</span>
+</div>
+</div>
+</div>
+<!-- Quick Mascot Engagement Section -->
+<div class="lg:col-span-2 bg-primary text-on-primary rounded-[2rem] p-8 mt-4 relative overflow-hidden flex items-center gap-12 shadow-xl">
+<div class="absolute top-0 right-0 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-[300px]">savings</span>
+</div>
+<div class="w-48 h-48 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md relative z-10">
+<img alt="Mr. K" class="w-32 h-32 object-contain" data-alt="A friendly, mascot-style owl character known as Mr. K, designed with a modern, flat-illustration style. The character is cheering with wings spread, featuring vibrant blue and white plumage, large expressive eyes, and a joyful smile. The artwork is clean, playful, and high-energy, reminiscent of a gamified learning application, set against a cheerful primary blue background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPSUj3Q-UJMc-M_sGkTsWl16E4ntx5JWvn2P1wO9tyP_gVBfEP-enlBP8iB-bTYXsnXDfqx-cJbsGJ62YrjLR54yzwrBkvV-VkWdUsd5GtPSrv8nLKyaXNnsY7RUeIQc5pVx2Fu6FDJFY9uwi8OIq6lnEXab67Ejr7FTD3oko2aVkEyJIZf42Ls9nRgbQGyFSiOGm4S_VQ__Z34Hvapkyp9ylT3NBNiZLPNFUU93z_MTMizJcZdSJcpWOBjQsh0RtV_idwn_C35_o">
+</div>
+<div class="relative z-10 max-w-xl">
+<h3 class="text-display font-display leading-tight mb-2">Doing Great!</h3>
+<p class="text-body-lg font-body-lg mb-6 opacity-90">You've saved over $45 this week by choosing deferred items wisely. Mr. K is proud of your grocery discipline!</p>
+<button class="bg-white text-primary px-8 py-3 rounded-2xl font-headline-md text-[18px] border-b-4 border-surface-variant active:border-b-0 active:translate-y-1 transition-all">
+                        View Analytics
+                    </button>
+</div>
+</div>
+<!-- Activity / Pending Item Bento -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] card-shadow">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-secondary">pending_actions</span>
+<h3 class="text-headline-md font-headline-md">High Priority Items</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface rounded-2xl border-2 border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary-fixed-dim rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed">egg</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold">Organic Eggs (12pk)</p>
+<p class="text-[12px] text-on-surface-variant font-bold">Family Groceries</p>
+</div>
+</div>
+<span class="text-primary font-black">$5.99</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-2xl border-2 border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary-fixed-dim rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed">coffee</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold">Cold Brew Coffee</p>
+<p class="text-[12px] text-on-surface-variant font-bold">Bachelor Week</p>
+</div>
+</div>
+<span class="text-primary font-black">$12.50</span>
+</div>
+</div>
+</div>
+<!-- Savings Tip Bento -->
+<div class="bg-secondary-container p-6 rounded-[1.5rem] card-shadow border-b-4 border-[#c59a00]">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-on-secondary-container">lightbulb</span>
+<h3 class="text-headline-md font-headline-md text-on-secondary-container">Savings Hack</h3>
+</div>
+<p class="text-body-md font-body-md text-on-secondary-container font-semibold mb-4">
+                    "Shopping on Tuesdays at FreshMarket can save you up to 15% on dairy and grains. Sync your 'Family Groceries' plan for Tuesday!"
+                </p>
+<div class="flex items-center gap-3">
+<div class="h-1 w-12 bg-on-secondary-container/20 rounded-full"></div>
+<span class="text-[12px] font-black text-on-secondary-container/60 uppercase">Mascot Suggestion</span>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-margin-desktop right-margin-desktop w-20 h-20 bg-primary-container text-white rounded-3xl flex flex-col items-center justify-center border-b-[6px] border-[#004c6e] active:border-b-0 active:translate-y-1 transition-all z-50 group hover:bg-primary shadow-2xl">
+<span class="material-symbols-outlined text-4xl mb-[-4px]" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="text-[10px] font-black uppercase">Plan</span>
+<div class="absolute -top-12 right-0 bg-on-surface text-white text-[12px] font-bold px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Create new plan
+            </div>
+</button>
+</main>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.card-shadow').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.classList.replace('card-shadow', 'card-shadow-active');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.classList.replace('card-shadow-active', 'card-shadow');
+            });
+        });
+
+        // Simple progress bar animation on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.h-full.bg-primary-container, .h-full.bg-secondary-container');
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

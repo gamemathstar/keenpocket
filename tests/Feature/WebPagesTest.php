@@ -31,7 +31,7 @@ class WebPagesTest extends TestCase
     {
         $this->actingAs($this->user());
 
-        foreach (['/dashboard', '/pockets', '/adashi', '/discover', '/leaderboard', '/profile', '/notifications', '/wallet', '/payouts', '/referrals', '/settings'] as $path) {
+        foreach (['/dashboard', '/pockets', '/adashi', '/discover', '/leaderboard', '/profile', '/notifications', '/wallet', '/payouts', '/friends', '/settings'] as $path) {
             $this->get($path)->assertStatus(200);
         }
     }

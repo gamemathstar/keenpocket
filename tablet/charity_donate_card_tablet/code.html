@@ -1,0 +1,349 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Charity Donate Card (Tablet)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .candy-button-primary {
+            @apply relative transition-all duration-100;
+            box-shadow: 0 4px 0 #004c6e;
+        }
+        .candy-button-primary:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #004c6e;
+        }
+        .candy-button-primary:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #004c6e;
+        }
+        .candy-card {
+            box-shadow: 0 7px 0 #e0e3e5;
+        }
+        .dark .candy-card {
+            box-shadow: 0 7px 0 #3e4850;
+        }
+        .progress-container {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#f7f9fb",
+                      "error-container": "#ffdad6",
+                      "primary": "#006590",
+                      "surface-dim": "#d8dadc",
+                      "background": "#f7f9fb",
+                      "on-background": "#191c1e",
+                      "primary-fixed": "#c8e6ff",
+                      "secondary": "#755b00",
+                      "surface-container-low": "#f2f4f6",
+                      "primary-container": "#1cb0f6",
+                      "on-surface-variant": "#3e4850",
+                      "surface-container": "#eceef0",
+                      "on-primary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#e0e3e5",
+                      "outline-variant": "#bdc8d2",
+                      "surface-tint": "#006590",
+                      "inverse-surface": "#2d3133",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-container": "#6e5400",
+                      "on-primary-fixed-variant": "#004c6e",
+                      "on-secondary-fixed": "#241a00",
+                      "on-primary-fixed": "#001e2e",
+                      "surface-container-highest": "#e0e3e5",
+                      "on-error": "#ffffff",
+                      "tertiary-container": "#ff8079",
+                      "tertiary": "#bb1522",
+                      "on-surface": "#191c1e",
+                      "secondary-container": "#fec700",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#410004",
+                      "inverse-primary": "#88ceff",
+                      "surface-bright": "#f7f9fb",
+                      "primary-fixed-dim": "#88ceff",
+                      "on-tertiary-fixed-variant": "#930014",
+                      "secondary-fixed": "#ffdf92",
+                      "outline": "#6e7881",
+                      "surface-container-high": "#e6e8ea",
+                      "on-tertiary-container": "#7e000f",
+                      "on-primary-container": "#00405d",
+                      "tertiary-fixed-dim": "#ffb3ae",
+                      "on-secondary-fixed-variant": "#594400",
+                      "secondary-fixed-dim": "#f4bf00",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffdad7",
+                      "inverse-on-surface": "#eff1f3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "container-max": "1200px",
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Nunito Sans"],
+                      "headline-lg": ["Nunito Sans"],
+                      "body-lg": ["Nunito Sans"],
+                      "headline-lg-mobile": ["Nunito Sans"],
+                      "display": ["Nunito Sans"],
+                      "headline-md": ["Nunito Sans"],
+                      "body-md": ["Nunito Sans"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background dark:bg-on-background text-on-surface min-h-screen flex overflow-hidden">
+<!-- SideNavBar (Persistent on Tablet/Web) -->
+<aside class="flex flex-col h-full w-72 bg-surface-container-lowest dark:bg-on-background border-r-4 border-surface-variant dark:border-outline-variant p-gutter gap-4 z-20">
+<div class="flex flex-col gap-2 mb-8 px-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-primary-container rounded-xl flex items-center justify-center overflow-hidden">
+<img alt="KeenPocket Mascot Mr. K" class="w-full h-full object-cover" data-alt="A friendly and professional digital illustration of Mr. K, the KeenPocket mascot, appearing as a cheerful round blue character with expressive eyes. The style is clean, vector-based, and modern, using the primary brand color #1cb0f6. He is set against a soft, bright background that feels approachable and trustworthy for a group savings application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9XWZHwJmro7I4zYXGvKSIYIktAgcB6MRkRLnXC81v1Bx6xe2lDhIZNxX8DiWvXC3MtI1NGu-LtWLqAd1IQBY2ryQ86otxEM-2sLyeg1jLwd5mwBlJ_Bokxw-78HlYNSS_uL5__kcVm8zD71mNXxH1mq0KwQLTKeTj5nGeWyJcqhcYONVwoZ3Iac0r6AWGefRhHLie59ccz5PdzZD8nxvr2j891DWYBe9_OB8pTnyCGZqd0sVB8VIDzEpTc0_S_uoquov1ngYATPo">
+</div>
+<div>
+<h1 class="font-display text-headline-md text-primary leading-tight">KeenPocket</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Group Savings</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Pockets is active because we are in a Charity/Pocket context -->
+<a class="flex items-center gap-3 text-on-surface-variant p-4 hover:bg-surface-container-high rounded-xl transition-all duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl p-4 border-b-4 border-primary transition-all duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant p-4 hover:bg-surface-container-high rounded-xl transition-all duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant p-4 hover:bg-surface-container-high rounded-xl transition-all duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant p-4 hover:bg-surface-container-high rounded-xl transition-all duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="candy-button-primary mt-auto w-full bg-primary-container text-on-primary-container py-4 rounded-xl font-label-bold text-label-bold">
+            Start New Pocket
+        </button>
+</aside>
+<!-- Main Savings Cockpit Canvas -->
+<main class="flex-grow flex flex-col h-screen overflow-hidden">
+<!-- Top Header Anchor -->
+<header class="flex justify-between items-center px-margin-desktop py-4 w-full bg-surface dark:bg-on-background border-b-4 border-surface-variant dark:border-outline-variant z-10">
+<h2 class="font-headline-md text-headline-md text-primary">Charity Donate Card (Tablet)</h2>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:translate-y-[2px]">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:translate-y-[2px]">
+<span class="material-symbols-outlined text-primary">help</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional profile headshot of a user against a bright studio background. The lighting is soft and flattering, creating a modern professional look that fits seamlessly into a high-end fintech UI. The style is crisp and high-resolution, emphasizing a friendly and approachable persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBvkHEU-_FLfVQk5uJGSb6qitEHUbVnR6jN1wzmFVdiy7CKG-bFvn1maFC18JDN-oxeqC56oQ0nWx9zNCKiN8gJNtm8tiTn6smC14S6_IhJgWsGf-aJ6GHSp1R09Rjcmz4stMMa6ZO2w_2Sjmk933Dn2i99Hz0YpnC0MRCOU9jtM1Gd-HHyIL77cz52eVFNhKyPhh2Kn5aJpgNU4hT3Wq4uYmhj03clzd1sUUvysLs3F1ZBXKmRrFwKEvDk83hnGdSgXbddpyJXHk">
+</div>
+</div>
+</header>
+<!-- Multi-Pane Dashboard -->
+<div class="flex-grow grid grid-cols-12 gap-gutter p-gutter overflow-y-auto">
+<!-- Pane 1: Hero & Progress (6 cols) -->
+<section class="col-span-12 lg:col-span-7 flex flex-col gap-gutter">
+<div class="candy-card bg-surface-container-lowest dark:bg-surface-container rounded-[1.5rem] p-8 border-2 border-surface-variant dark:border-outline-variant">
+<div class="flex items-start justify-between mb-6">
+<div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-bold text-label-bold mb-3 inline-block">Active Relief</span>
+<h3 class="font-headline-lg text-headline-lg text-on-background mb-2">Support the Relief Fund</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">Join our community pocket to provide urgent medical aid and logistical support for families displaced by recent climate events. Every contribution counts toward our collective goal.</p>
+</div>
+<div class="w-24 h-24 flex-shrink-0 animate-bounce">
+<img alt="Charity Icon" data-alt="A 3D rendered, candy-style heart icon with glossy reflections and soft shadows. The color is a vibrant ruby red with highlights that give it a tactile, physical presence. The style is playful and optimistic, matching the Duolingo-inspired aesthetic of the KeenPocket design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCQfQ2kuErk2HfwrApwmIAonaoMeuHpb4WbpIkAqZ3BbmVlKeFfFtSErPYGpC_zSmJ_EsVXMwj8hVIIaJ9Vzonqi64W3eUtkZnjU7QQKl4l1q2YznpQb-nWmYKXKRsYtJkT0XxQ_Q_3fYBGzp5aSXnNM3iRsCOtuvjKW2hotFhCSrCrxk8bxGi938a-WArquKq7WDOw__sU2GHyHuOkHqHGkPHzFtTIAmH9YY31ax0Xr26EZ4bR_9dBXUuluPFph4aFpqKDnLLP0g">
+</div>
+</div>
+<div class="space-y-6">
+<!-- Financial Goal -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-bold text-label-bold text-on-surface">Financial Goal</span>
+<span class="font-headline-md text-headline-md text-primary">$12,450 / $25,000</span>
+</div>
+<div class="progress-container w-full h-4 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-1000" style="width: 50%;"></div>
+</div>
+</div>
+<!-- Resource Goals Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-low dark:bg-on-surface-variant/10 rounded-xl border-2 border-surface-variant dark:border-outline-variant">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">lunch_dining</span>
+<span class="font-label-bold text-label-bold">Food Packs</span>
+</div>
+<div class="progress-container w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 75%;"></div>
+</div>
+<div class="mt-2 text-right font-label-bold text-label-bold text-on-surface-variant">750/1000</div>
+</div>
+<div class="p-4 bg-surface-container-low dark:bg-on-surface-variant/10 rounded-xl border-2 border-surface-variant dark:border-outline-variant">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">android</span>
+<span class="font-label-bold text-label-bold">Blankets</span>
+</div>
+<div class="progress-container w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 40%;"></div>
+</div>
+<div class="mt-2 text-right font-label-bold text-label-bold text-on-surface-variant">200/500</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mascot Feedback Card -->
+<div class="candy-card bg-primary-fixed dark:bg-primary-container/20 rounded-[1.5rem] p-6 flex items-center gap-6 border-2 border-primary-container/30">
+<div class="w-20 h-20 flex-shrink-0">
+<img alt="Mr. K" data-alt="A cheerful character illustration of Mr. K smiling broadly and giving a thumbs up. He is a round, bright blue mascot with large, friendly eyes and a warm expression. The lighting is bright and cheerful, reinforcing a sense of progress and positivity in a gamified finance app context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJMBNd0Upo8-1GrkD-L0RxhDDH4Z76VIwBfdFXSqAsYFmVoyD5s3W43JfYaQEp6U0MDZsC-jEoCLcXGmwkaM8RfLo9A07kORG2n4a0eZ7qeE0KpQeOIxVGYWyR7XmqnqK6sFSLxG7PmV5aRdbHtULk5q6FZAyVMkbrqkCs-lk4iqE5Zxqfrp5v6plvN3BEPZqcPLA3c4Kmlkf9JUGphDmCjmjFeD2PbmcK0ZJ7c5vkF7nRk0zU-pgu8UAq_V3moX5XCHLxrkzyeB8">
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-primary-container leading-snug">"You're making a huge impact! This pocket has grown 15% since yesterday. Let's keep the momentum going!"</p>
+</div>
+</div>
+</section>
+<!-- Pane 2: Interaction Zone (5 cols) -->
+<section class="col-span-12 lg:col-span-5 flex flex-col gap-gutter">
+<div class="candy-card bg-surface-container-lowest dark:bg-surface-container rounded-[1.5rem] p-8 border-2 border-surface-variant dark:border-outline-variant">
+<h4 class="font-headline-md text-headline-md text-on-background mb-6">Make a Contribution</h4>
+<div class="space-y-6">
+<!-- Tabs -->
+<div class="flex bg-surface-container-low rounded-xl p-1 gap-1">
+<button class="flex-1 py-3 bg-surface-container-lowest dark:bg-on-surface-variant/20 rounded-lg font-label-bold text-label-bold text-primary border-b-2 border-primary">Money</button>
+<button class="flex-1 py-3 rounded-lg font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">Resources</button>
+</div>
+<!-- Amount Input -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Enter Amount</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-headline-md text-headline-md text-on-surface-variant group-focus-within:text-primary transition-colors">$</span>
+<input class="w-full pl-10 pr-4 py-4 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 font-headline-md text-headline-md transition-all outline-none" placeholder="50.00" type="number">
+</div>
+</div>
+<!-- Quick Select Chips -->
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-2 rounded-full border-2 border-outline-variant font-label-bold text-label-bold hover:border-primary hover:text-primary transition-all active:scale-95">$10</button>
+<button class="px-6 py-2 rounded-full border-2 border-primary bg-primary/10 text-primary font-label-bold text-label-bold active:scale-95">$50</button>
+<button class="px-6 py-2 rounded-full border-2 border-outline-variant font-label-bold text-label-bold hover:border-primary hover:text-primary transition-all active:scale-95">$100</button>
+<button class="px-6 py-2 rounded-full border-2 border-outline-variant font-label-bold text-label-bold hover:border-primary hover:text-primary transition-all active:scale-95">$500</button>
+</div>
+<!-- Pledge Message -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Add a Note (Optional)</label>
+<textarea class="w-full px-4 py-3 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 font-body-md text-body-md transition-all outline-none resize-none h-24" placeholder="Write something inspiring..."></textarea>
+</div>
+<!-- Primary CTA -->
+<button class="candy-button-primary w-full bg-primary-container text-on-primary-container py-5 rounded-2xl font-display text-headline-md flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+                            Donate Now
+                        </button>
+<p class="text-center font-label-bold text-label-bold text-on-surface-variant opacity-70">Secured with KeenPocket Pay. No transaction fees.</p>
+</div>
+</div>
+<!-- Pane 3: Recent Contributions List -->
+<div class="candy-card bg-surface-container-lowest dark:bg-surface-container rounded-[1.5rem] p-6 border-2 border-surface-variant dark:border-outline-variant flex-grow flex flex-col">
+<div class="flex justify-between items-center mb-6 px-2">
+<h4 class="font-headline-md text-headline-md text-on-background">Recent Heroes</h4>
+<button class="text-primary font-label-bold text-label-bold hover:underline transition-all">See All</button>
+</div>
+<div class="space-y-4 overflow-y-auto max-h-64 pr-2">
+<!-- Contribution Item -->
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container rounded-xl transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center font-display text-on-secondary-container text-headline-md">S</div>
+<div class="flex-grow">
+<h5 class="font-label-bold text-label-bold text-on-surface">Sarah Johnson</h5>
+<p class="font-body-md text-body-md text-on-surface-variant">"Sending love and strength!"</p>
+</div>
+<div class="text-right">
+<span class="font-label-bold text-label-bold text-primary block">$250.00</span>
+<span class="font-body-md text-[12px] text-on-surface-variant opacity-60">2m ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container rounded-xl transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center font-display text-on-primary-container text-headline-md text-white">M</div>
+<div class="flex-grow">
+<h5 class="font-label-bold text-label-bold text-on-surface">Marcus K.</h5>
+<p class="font-body-md text-body-md text-on-surface-variant">Pledged 10 Blankets</p>
+</div>
+<div class="text-right">
+<span class="font-label-bold text-label-bold text-primary block">Resource</span>
+<span class="font-body-md text-[12px] text-on-surface-variant opacity-60">15m ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container rounded-xl transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center font-display text-on-tertiary-container text-headline-md">L</div>
+<div class="flex-grow">
+<h5 class="font-label-bold text-label-bold text-on-surface">Linda Wu</h5>
+<p class="font-body-md text-body-md text-on-surface-variant">"Happy to help out."</p>
+</div>
+<div class="text-right">
+<span class="font-label-bold text-label-bold text-primary block">$50.00</span>
+<span class="font-body-md text-[12px] text-on-surface-variant opacity-60">1h ago</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        // Simple dark mode toggle for demonstration
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Handle button clicks with scale feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

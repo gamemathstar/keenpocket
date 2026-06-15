@@ -1,0 +1,356 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,800;0,900;1,400;1,600;1,800;1,900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#88ceff",
+                    "primary-fixed": "#c8e6ff",
+                    "on-surface-variant": "#3e4850",
+                    "outline": "#6e7881",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#ff8079",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#00405d",
+                    "on-primary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-secondary-fixed-variant": "#594400",
+                    "outline-variant": "#bdc8d2",
+                    "secondary-fixed": "#ffdf92",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "primary-container": "#1cb0f6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary": "#bb1522",
+                    "background": "#f7f9fb",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-fixed": "#410004",
+                    "on-secondary-container": "#6e5400",
+                    "secondary-container": "#fec700",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006590",
+                    "surface-container": "#eceef0",
+                    "primary-fixed-dim": "#88ceff",
+                    "on-primary-fixed": "#001e2e",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary": "#755b00",
+                    "on-tertiary-container": "#7e000f",
+                    "primary": "#006590",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#241a00",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-tertiary-fixed-variant": "#930014",
+                    "on-primary-fixed-variant": "#004c6e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "display": ["Nunito Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Candy Button Effect */
+        .candy-button {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Persistent SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-72 flex flex-col border-r-4 border-surface-container-highest bg-surface z-50 px-4 py-6">
+<div class="mb-10 px-4">
+<span class="text-headline-md font-display font-black text-primary">KeenPocket</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 mb-6 bg-surface-container-low rounded-xl">
+<img alt="User" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="A professional close-up headshot of a friendly young man named Alex Rivers with a warm smile, set against a blurred modern office background with soft daylight. The image has a clean, high-resolution aesthetic with vibrant but natural color saturation, reflecting a trustworthy and approachable financial dashboard persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcac7MJRNk8SWAqkHT2xaa3j2GWFiTr_BZee0K9ilcHIj2ptnpGv4PNULqXZasTnAWmx4ne9OoOfBjzJOptX0gN3ErsTo3zS5tx7T-Zf3eObjTojMfTWlktEGk_B_YPVAARWyE18aGwLSbm3EIIY_4Gh7nXIOJWtBqZEJN4Z-J8iqvyjRLbsNcqdXgFzJAr8HhOgpjdpb117QdvENhsd-D2oQZumfod_ryCnW_25U5jrzS2IaZLf8ek9NF8IsPKVqvmPQLj5pgRyo">
+<div>
+<p class="text-label-bold font-label-bold text-on-surface">Alex Rivers</p>
+<p class="text-body-md font-body-md text-on-surface-variant text-xs">Reputation: Gold Tier</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Active State: Adashi Groups (Closest match to Vouching) -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl border-b-4 border-on-primary-fixed-variant translate-y-[4px] border-b-0" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold text-label-bold">Adashi Groups</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-bold text-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-all duration-100 hover:translate-y-[1px]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2">
+<button class="candy-button w-full py-3 bg-secondary-container text-on-secondary-container font-label-bold text-label-bold rounded-xl border-b-4 border-secondary mb-4 shadow-[0_4px_0_0_rgba(117,91,0,1)]">
+                Create New Pocket
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold">Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold text-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-[calc(100%-18rem)] ml-72 px-8 py-4 sticky top-0 z-40 bg-surface border-b-4 border-surface-container-highest">
+<div class="flex items-center gap-8">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Vouching Dashboard</h1>
+<nav class="hidden lg:flex gap-6">
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-primary font-extrabold border-b-4 border-primary pb-1" href="#">Requests</a>
+<a class="text-on-surface-variant font-bold hover:text-primary transition-colors" href="#">History</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-2 border-outline-variant rounded-full text-body-md focus:outline-none focus:border-primary w-64" placeholder="Search members..." type="text">
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content: Two-Pane Layout -->
+<main class="ml-72 p-8 h-[calc(100vh-84px)] overflow-hidden">
+<div class="grid grid-cols-12 gap-8 h-full">
+<!-- Left Pane: Pending Requests List -->
+<section class="col-span-5 flex flex-col gap-6 h-full overflow-y-auto no-scrollbar pr-2">
+<div class="flex items-center justify-between mb-2">
+<h2 class="text-headline-md font-headline-md">Pending Vouchers (4)</h2>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-bold font-label-bold">New Activity</span>
+</div>
+<!-- Request Card 1 (Active/Selected) -->
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border-b-[7px] border-primary cursor-pointer transition-transform hover:scale-[1.02] active:scale-100">
+<div class="flex items-start gap-4 mb-4">
+<img alt="Jordan" class="w-14 h-14 rounded-2xl border-4 border-primary-fixed" data-alt="A portrait of a cheerful person with short curly hair and glasses, wearing a bright yellow sweater, centered in a clean studio setting. The lighting is high-key and optimistic, with a soft teal gradient background. The style is modern, approachable, and playful, matching a premium gamified UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHIAqxNBq8jDlZHTfnkTwFSLLPpyQF1NV1pFMLpF0-gI02P6XzsobxvVfV_dJySeRDxHQB-S3PInWBqx3gve-8CyZTNviIkTvzdW_ffSIL3AqpjmdACRlL5b40e_l4enGV_hnKgXowXiH76tdudbZ1-l69eLnvU9MNXMUZCSORI1jiNO3M1FXMAcqha4Rkeq_PJYEAv1LJHuWs2tDRd0BfZG3ugCku-D0LCk5VFTdoOtOtcKzBfOjOmopxvR1GX4bKRI4T7sluoQk">
+<div class="flex-grow">
+<h3 class="text-body-lg font-headline-md text-on-surface">Jordan Diaz</h3>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Reputation: 840</span>
+</div>
+</div>
+<span class="text-body-md text-outline text-sm">2h ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-6 line-clamp-2">"Jordan has been a consistent saver in the 'Brooklyn Rent' pocket for 6 months. Seeking entry to Gold Adashi."</p>
+<div class="flex gap-3">
+<button class="candy-button flex-1 py-3 bg-primary-container text-on-primary-container font-label-bold text-label-bold rounded-xl border-b-4 border-on-primary-fixed-variant shadow-[0_4px_0_0_rgba(0,76,110,1)]">
+                            Vouch
+                        </button>
+<button class="candy-button flex-1 py-3 bg-surface-variant text-on-surface-variant font-label-bold text-label-bold rounded-xl border-b-4 border-outline-variant shadow-[0_4px_0_0_rgba(189,200,210,1)]">
+                            Decline
+                        </button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant cursor-pointer hover:border-primary-fixed transition-all group">
+<div class="flex items-start gap-4 mb-4">
+<img alt="Sarah" class="w-14 h-14 rounded-2xl border-4 border-surface-container" data-alt="Close up face of a smiling woman with long dark hair, wearing a navy blue blazer, set against a soft beige minimalist interior. Professional, clear, and bright photography style, highlighting reliability and warmth for a community finance application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb-tUWw2SESsQjD3wF4LR9Fi8gBI0pny9SoMtu69R_9B6OeUIRTGSP-qEt7Fra_7fJ0h_kIdS6Meq4t1RRnjcxt-ta0PaG4A_1Ju7UPRpbeRb8PtNlH6JWKodSr_rfHEG9Ls5tWYw1YKHEXneFU7QlIxQ10j-L2XvlWgFzam9zjnWv2fFqBcgOJq22bMoXy6TvUB5_Xa46xrARmvd_VT2QnyO75O7x9vsqd724wdW23gYrFwemnYarOi0xBZEbgOW2o-7fO_y8M_8">
+<div class="flex-grow">
+<h3 class="text-body-lg font-headline-md text-on-surface">Sarah Chen</h3>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">star</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Reputation: 710</span>
+</div>
+</div>
+<span class="text-body-md text-outline text-sm">5h ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">Requested access to: <span class="font-bold text-primary">Vanguard Savers Group</span></p>
+<div class="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="candy-button flex-1 py-2 bg-primary-container text-on-primary-container font-label-bold text-label-bold rounded-xl border-b-4 border-on-primary-fixed-variant shadow-[0_4px_0_0_rgba(0,76,110,1)]">Vouch</button>
+<button class="candy-button flex-1 py-2 bg-surface-variant text-on-surface-variant font-label-bold text-label-bold rounded-xl border-b-4 border-outline-variant shadow-[0_4px_0_0_rgba(189,200,210,1)]">Decline</button>
+</div>
+</div>
+<!-- Request Card 3 -->
+<div class="bg-white p-6 rounded-[1.5rem] border-b-[7px] border-surface-variant cursor-pointer hover:border-primary-fixed transition-all group">
+<div class="flex items-start gap-4 mb-4">
+<img alt="Marcus" class="w-14 h-14 rounded-2xl border-4 border-surface-container" data-alt="A friendly older man with gray hair and a kind face, wearing a casual denim shirt. He is standing in a brightly lit garden environment. The image is crisp, modern, and exudes a sense of communal trust and wisdom, tailored for a high-end social finance platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8-Kwb0b4chE7ZfKlcqm_TBDMp4wBJyMxyMR7yIy-sQIhZqNUWqlK-YiOCHbpkyi-i6BnsSk26AdLp67gfn0oLrKPncLLLNW3C7jYAdpUuGB3LDkae2CD00cnnIfCZN2rZ3IQplDLNRN4kdFUfP_TKhgl4fw68DjYDimlfB8Fzgwvo3K1ngXqcktiLRyUleiOtesK1ukC4Ol3dzv-L_f5210vw_56l1YZKuFkyMROuJqZb35d3oHK6Ylv-4A11bvFvmMslvVYdBpw">
+<div class="flex-grow">
+<h3 class="text-body-lg font-headline-md text-on-surface">Marcus Thorne</h3>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">star</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Reputation: 920</span>
+</div>
+</div>
+<span class="text-body-md text-outline text-sm">Yesterday</span>
+</div>
+</div>
+</section>
+<!-- Right Pane: Detailed Profile & Reputation View -->
+<section class="col-span-7 h-full">
+<div class="bg-white h-full rounded-[2rem] border-b-[8px] border-surface-variant p-8 flex flex-col overflow-y-auto no-scrollbar relative">
+<!-- Decorative Background Element -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
+<!-- Profile Header -->
+<div class="flex items-center gap-8 mb-10 relative">
+<div class="relative">
+<img alt="Jordan Diaz Detail" class="w-32 h-32 rounded-[2rem] border-8 border-primary-container shadow-xl" data-alt="A detailed, vibrant portrait of a stylish young professional with curly hair and glasses, set against a soft-focus urban park background with warm sunset lighting. The visual style is high-energy, friendly, and polished, emphasizing the person's character for a vouching decision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJa2JS_ljP50rs-SesdH5MNDE-TFwnpb0MCvmJGzcxbmI_TyiiQx5rLE2KaAF0pp1rbXe9LfHvQ1Akqv6vQHF49A5m6Zu4QdMG2q3Wo6_ndUpxJR04A8Ro0-iUn7O7z6kb-kFU9jvnaDp95Rx8b7QwGybgzDaavVIkVl2Q9kTa4C_mGZTXSile3FE8XojsPzwhon7nq4uFtW4qMM1ZbNp1TNKjhIQzKmQmaPoBaaSNuA-Ahc7STEoNucLuDvzT8XOYcuOVP2WkQvg">
+<div class="absolute -bottom-2 -right-2 bg-secondary-container p-2 rounded-full border-4 border-white">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<h2 class="text-display font-display text-on-surface">Jordan Diaz</h2>
+<p class="text-body-lg font-body-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">location_on</span>
+                                New York, NY • Member since 2022
+                            </p>
+<div class="flex gap-2 mt-4">
+<span class="px-4 py-1 bg-surface-container text-on-surface-variant rounded-full text-label-bold font-label-bold">Fintech Specialist</span>
+<span class="px-4 py-1 bg-surface-container text-on-surface-variant rounded-full text-label-bold font-label-bold">Early Adopter</span>
+</div>
+</div>
+</div>
+<!-- Reputation Stats Bento -->
+<div class="grid grid-cols-2 gap-6 mb-10">
+<div class="bg-surface-container-low p-6 rounded-[1.5rem] flex flex-col justify-between h-40 border-b-4 border-surface-variant">
+<div class="flex justify-between items-center">
+<span class="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-wider">Reputation Score</span>
+<span class="material-symbols-outlined text-secondary-container">trending_up</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display font-display text-on-surface">840</span>
+<span class="text-body-md text-tertiary-container font-bold">+12% this month</span>
+</div>
+</div>
+<div class="bg-primary-container/10 p-6 rounded-[1.5rem] flex flex-col justify-between h-40 border-b-4 border-primary-container">
+<div class="flex justify-between items-center">
+<span class="text-label-bold font-label-bold text-primary uppercase tracking-wider">Trust Network</span>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<div>
+<span class="text-headline-lg font-headline-lg text-on-primary-container">42 Vouched</span>
+<p class="text-body-md text-on-primary-container/70">8 Mutual Connections</p>
+</div>
+</div>
+<div class="bg-white border-2 border-surface-variant p-6 rounded-[1.5rem] flex flex-col gap-4 border-b-4">
+<span class="text-label-bold font-label-bold text-on-surface-variant">SAVING CONSISTENCY</span>
+<div class="w-full bg-surface-container rounded-full h-4 overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 92%"></div>
+</div>
+<p class="text-body-md text-on-surface-variant">92% On-time contribution rate over 12 months.</p>
+</div>
+<div class="bg-white border-2 border-surface-variant p-6 rounded-[1.5rem] flex flex-col gap-4 border-b-4">
+<span class="text-label-bold font-label-bold text-on-surface-variant">COMMUNITY ACTIVITY</span>
+<div class="w-full bg-surface-container rounded-full h-4 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 75%"></div>
+</div>
+<p class="text-body-md text-on-surface-variant">Active in 3 different high-tier Adashi groups.</p>
+</div>
+</div>
+<!-- Recommendation Text -->
+<div class="mb-10">
+<h3 class="text-headline-md font-headline-md mb-4">Request Note</h3>
+<div class="bg-surface-container-lowest border-2 border-outline-variant rounded-2xl p-6 italic text-body-lg text-on-surface-variant relative">
+<span class="material-symbols-outlined absolute -top-4 -left-2 text-primary text-4xl bg-white">format_quote</span>
+                            "Hey Alex! I've been working with Jordan on a few tech projects. He's incredibly disciplined with his finances and is looking to join our Gold Adashi group to start saving for a house deposit. I highly recommend him!"
+                            <p class="not-italic mt-4 text-primary font-bold">— Endorsed by Sarah Jenkins</p>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="mt-auto pt-8 border-t-2 border-surface-variant flex gap-4">
+<button class="candy-button flex-[2] py-5 bg-primary text-white font-headline-md rounded-2xl border-b-8 border-on-primary-fixed-variant shadow-[0_8px_0_0_rgba(0,76,110,1)] text-center">
+                            Vouch for Jordan
+                        </button>
+<button class="candy-button flex-1 py-5 bg-error-container text-on-error-container font-headline-md rounded-2xl border-b-8 border-error shadow-[0_8px_0_0_rgba(186,26,26,1)] text-center">
+                            Flag Profile
+                        </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mr. K Mascot (Contextual Feedback) -->
+<div class="fixed bottom-10 right-10 flex items-end gap-4 pointer-events-none">
+<div class="bg-white p-4 rounded-2xl shadow-xl border-2 border-primary-container max-w-xs animate-bounce pointer-events-auto">
+<p class="text-body-md font-label-bold text-on-surface">"Jordan looks like a solid choice, Alex! Their 92% consistency is impressive."</p>
+</div>
+<div class="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center shadow-2xl border-4 border-white pointer-events-auto cursor-pointer hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-5xl">face</span>
+</div>
+</div>
+<script>
+        // Simple micro-interaction for card selection
+        document.querySelectorAll('section.col-span-5 > div[class*="bg-"]').forEach(card => {
+            card.addEventListener('click', () => {
+                // Reset all cards
+                document.querySelectorAll('section.col-span-5 > div[class*="bg-"]').forEach(c => {
+                    c.classList.remove('border-primary');
+                    c.classList.add('border-surface-variant');
+                });
+                // Highlight active
+                card.classList.remove('border-surface-variant');
+                card.classList.add('border-primary');
+            });
+        });
+    </script>
+</body></html>

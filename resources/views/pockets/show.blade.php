@@ -6,100 +6,197 @@
 @if (!$isMember && !$isOwner)
     @include('pockets._public')
 @else
-    <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
-        <div class="flex items-start justify-between gap-4">
-            <div>
-                <h2 class="text-2xl font-semibold">{{ $pocket->title }}</h2>
-                <p class="text-slate-500 text-sm mt-1">{{ $pocket->description ?: 'No description.' }}</p>
-                <p class="text-xs text-slate-400 mt-2">Organised by
-                    @if ($owner)<a href="{{ route('users.show', $owner->id) }}" class="text-brand-dark hover:underline">{{ $owner->name }}</a>@else — @endif
-                    · {{ $pocket->month_count }} months · {{ $pocket->year }}</p>
-            </div>
-            <div class="text-right">
-                <div class="text-2xl font-semibold">₦{{ number_format($pocket->amount_per_hand) }}</div>
-                <div class="text-xs text-slate-400">per hand</div>
-                @if ($isOwner)
-                    <a href="{{ route('pockets.manage', $pocket->id) }}" class="inline-block mt-2 text-sm text-brand-dark hover:underline">Manage →</a>
-                    @if ($adminRating['count'])
-                        <div class="mt-2 text-xs text-slate-500">⭐ {{ number_format($adminRating['average'], 1) }} ({{ $adminRating['count'] }})</div>
-                    @endif
-                @elseif ($isMember)
-                    <div class="mt-2">
-                        <x-rate-admin :action="route('pockets.rateAdmin', $pocket->id)" :average="$adminRating" :my="$myRating" />
+    @php
+        $activeMembers = $members->where('status', 1)->count();
+        $statusLabel = $pocket->status ? 'Open' : 'Closed';
+    @endphp
+
+    {{-- Header --}}
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-dark">{{ $pocket->title }}</h2>
+            <p class="text-slate-500 text-sm mt-0.5">{{ $pocket->description ?: 'Community savings pocket.' }} · {{ $pocket->month_count }} months · {{ $pocket->year }} · ₦{{ number_format($pocket->amount_per_hand) }}/hand @if($isOwner)· you're the admin @endif</p>
+        </div>
+        <div class="flex items-center gap-2">
+            @if (!$isOwner && $isMember)
+                <x-rate-admin :action="route('pockets.rateAdmin', $pocket->id)" :average="$adminRating" :my="$myRating" />
+            @endif
+            @if ($isOwner)
+                <a href="{{ route('pockets.manage', $pocket->id) }}" class="inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 hover:border-brand text-slate-700 font-bold text-sm px-4 py-2">⚙️ Manage</a>
+            @endif
+            <x-share-card cardTitle="Join my pocket" :cardBig="$pocket->title"
+                :cardSub="'₦'.number_format($pocket->amount_per_hand).'/hand · '.$pocket->month_count.' months'"
+                :shareText="'Join my KeenPocket savings pocket: '.$pocket->title.' (₦'.number_format($pocket->amount_per_hand).'/hand).'"
+                :shareUrl="route('pockets.show', $pocket->id)" />
+        </div>
+    </div>
+
+    {{-- Stat chips --}}
+    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div class="rounded-[1.5rem] bg-rose-50 border-2 border-rose-100 p-4">
+            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">My goal</div>
+            <div class="text-lg sm:text-xl font-extrabold text-rose-600">{{ $isMember && $target > 0 ? $progress.'%' : '—' }}</div>
+        </div>
+        <div class="rounded-[1.5rem] bg-amber-50 border-2 border-amber-100 p-4">
+            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">Members</div>
+            <div class="text-lg sm:text-xl font-extrabold text-amber-600">{{ $activeMembers }}</div>
+        </div>
+        <div class="rounded-[1.5rem] bg-sky-50 border-2 border-sky-100 p-4">
+            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">Per hand</div>
+            <div class="text-lg sm:text-xl font-extrabold text-sky-600">₦{{ number_format($pocket->amount_per_hand) }}</div>
+        </div>
+    </div>
+
+    {{-- 3-column hub --}}
+    <div class="grid lg:grid-cols-12 gap-6 mb-6 items-start">
+        {{-- LEFT: organiser + payout + tip --}}
+        <div class="lg:col-span-3 space-y-6">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 text-center">
+                <div class="rounded-full ring-4 ring-brand-light inline-block"><x-avatar :user="$owner ?? $pocket->title" :size="72" /></div>
+                <div class="mt-2 font-extrabold text-lg">{{ optional($owner)->name ?? 'Organiser' }}</div>
+                <div class="text-xs text-brand-dark font-bold uppercase tracking-wide">Organiser</div>
+                <div class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand-light px-3 py-1 text-xs font-bold text-brand-dark">
+                    <span class="uppercase tracking-wide text-[10px] text-slate-500">Reputation</span>
+                    <span>{{ $reputation['band'] ?? 'New' }}</span>
+                    @if (!empty($adminRating['count']))<span class="text-amber-500">★ {{ number_format($adminRating['average'], 1) }}</span>@endif
+                </div>
+                @if ($pocket->nuban || $pocket->bank)
+                    <div class="mt-4 text-left border-t border-slate-100 pt-3">
+                        <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1.5">Pay contributions to</div>
+                        <div class="flex items-center gap-2 rounded-xl bg-slate-50 p-2.5">
+                            <span class="text-lg shrink-0">🏦</span>
+                            <div class="min-w-0">
+                                <div class="text-sm font-bold truncate">{{ $pocket->bank ?: ($pocket->account_name ?: $pocket->title) }}</div>
+                                @if ($pocket->nuban)<div class="text-xs text-slate-500 font-mono">{{ $pocket->nuban }}</div>@endif
+                            </div>
+                            @if ($pocket->nuban)<button type="button" onclick="kpCopy('{{ $pocket->nuban }}', this)" title="Copy account number" class="ml-auto text-slate-400 hover:text-brand-dark">📋</button>@endif
+                        </div>
                     </div>
                 @endif
-                <div class="mt-2">
-                    <x-share-card cardTitle="Join my pocket" :cardBig="$pocket->title"
-                        :cardSub="'₦'.number_format($pocket->amount_per_hand).'/hand · '.$pocket->month_count.' months'"
-                        :shareText="'Join my KeenPocket savings pocket: '.$pocket->title.' (₦'.number_format($pocket->amount_per_hand).'/hand).'"
-                        :shareUrl="route('pockets.show', $pocket->id)" />
-                </div>
+                @if ($isOwner)
+                    <a href="{{ route('pockets.manage', $pocket->id) }}" class="inline-block mt-3 text-xs font-bold text-brand-dark hover:underline">Manage pocket →</a>
+                @elseif ($owner)
+                    <a href="{{ route('users.show', $owner->id) }}" class="inline-block mt-3 text-xs font-bold text-brand-dark hover:underline">View organiser →</a>
+                @endif
+            </div>
+
+            {{-- Mr K tip --}}
+            <div class="rounded-[1.5rem] card-depth-brand bg-brand text-white p-5">
+                <p class="font-bold leading-snug">"{{ $activeMembers }} member{{ $activeMembers === 1 ? '' : 's' }} saving together. Pay on time and watch your goal fill up!"</p>
+                <p class="text-xs opacity-80 mt-2">— Mr. K</p>
             </div>
         </div>
 
-        @if ($isMember && $target > 0)
-            <div class="mt-5 border-t border-slate-100 pt-4">
-                <x-progress-bar :percent="$progress" label="My contribution goal" :current="$contributed" :target="$target" />
-            </div>
-        @endif
-
-        @if ($charity)
-            <div class="mt-4 border-t border-slate-100 pt-4">
-                @if ($charity['goal_type'] === 'amount' && $charity['target_amount'] > 0)
-                    <x-progress-bar :percent="$charity['percent']" label="🤲 Donations" :current="$charity['raised']" :target="$charity['target_amount']" />
-                @else
-                    <div class="flex justify-between text-sm"><span class="text-slate-500">🤲 Donations raised</span><span class="font-medium">₦{{ number_format($charity['raised']) }}</span></div>
-                    <div class="h-2.5 rounded-full bg-slate-100 mt-1 overflow-hidden"><div class="h-full bg-amber-400" style="width: {{ $charity['raised'] > 0 ? 100 : 0 }}%"></div></div>
+        {{-- CENTER: contribution card --}}
+        <div class="lg:col-span-6">
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-6 relative overflow-hidden">
+                @if ($isMember && $target > 0 && $contributed >= $target)
+                    <div class="absolute top-5 right-5 -rotate-[8deg] select-none border-[3px] border-emerald-500 text-emerald-600 font-extrabold uppercase tracking-widest rounded-lg px-3 py-1.5 text-sm opacity-90">Done ✓</div>
                 @endif
-                <p class="text-xs text-slate-500 mt-1">You've donated <span class="font-semibold text-brand-dark">₦{{ number_format($charity['my_total']) }}</span> · Group total ₦{{ number_format($charity['group_total']) }}</p>
-            </div>
-        @endif
-
-        @if ($isMember && ($pocket->nuban || $pocket->bank))
-            <div class="mt-4 border-t border-slate-100 pt-4 flex items-center flex-wrap gap-1.5 text-sm">
-                <span class="text-slate-400">Pay contributions to:</span>
-                <span class="font-medium">{{ $pocket->account_name ?: $pocket->title }}</span>
-                @if ($pocket->bank)<span class="text-slate-400">· {{ $pocket->bank }}</span>@endif
-                @if ($pocket->nuban)
-                    <span class="text-slate-400">·</span><span class="font-mono">{{ $pocket->nuban }}</span>
-                    <button type="button" onclick="kpCopy('{{ $pocket->nuban }}', this)" title="Copy account number" class="text-base text-slate-400 hover:text-brand-dark leading-none">📋</button>
-                @endif
-            </div>
-        @endif
-
-        @if (!$isMember && !$isOwner && $hasPending)
-            <div class="mt-5 border-t border-slate-100 pt-4 text-sm text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
-                ⏳ Your join request is pending @if($pocket->guarantor_required) — your guarantor must recommend you, then the admin will accept.@else the admin's approval.@endif
-            </div>
-        @elseif (!$isMember && !$isOwner)
-            @if (!$pocket->status)
-                <div class="mt-5 border-t border-slate-100 pt-4 text-sm text-slate-500">🔒 This pocket is invitation-only. Ask the admin to invite you.</div>
-            @else
-                <form method="POST" action="{{ route('pockets.join', $pocket->id) }}" class="mt-5 border-t border-slate-100 pt-4 space-y-3">
-                    @csrf
-                    <div>
-                        <label class="block text-xs font-medium mb-1">Hands</label>
-                        <input type="number" name="hand_count" value="1" min="1" class="w-24 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                <div class="flex items-start justify-between gap-3">
+                    <span class="inline-block text-xs font-bold uppercase tracking-wide rounded-full {{ $pocket->status ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }} px-3 py-1">{{ $statusLabel }}</span>
+                    <div class="text-right">
+                        <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">{{ $isMember && $target > 0 ? 'My target' : 'Per hand' }}</div>
+                        <div class="text-lg font-extrabold text-brand-dark">₦{{ number_format($isMember && $target > 0 ? $target : $pocket->amount_per_hand) }}</div>
                     </div>
-                    @if ($pocket->guarantor_required)
-                        <div>
-                            <label class="block text-xs font-medium mb-1">Guarantor <span class="text-slate-400 font-normal">(phone or email of someone who'll vouch for you)</span></label>
-                            <input name="guarantor_contact" class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand" placeholder="guarantor@example.com">
+                </div>
+                <h3 class="text-2xl font-extrabold mt-3">{{ $pocket->title }}</h3>
+                <p class="text-xs text-slate-400 mt-1">{{ $pocket->month_count }} months · {{ $pocket->year }} @if(!is_null($handsLeft))· {{ $handsLeft }} hand(s) left @endif</p>
+
+                @if ($isMember && $target > 0)
+                    <div class="flex items-end justify-between mt-5">
+                        <div><span class="text-3xl font-extrabold">₦{{ number_format($contributed) }}</span> <span class="text-slate-400 text-sm">contributed</span></div>
+                        <div class="text-2xl font-extrabold text-brand-dark">{{ $progress }}%</div>
+                    </div>
+                    <div class="h-4 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full bg-brand rounded-full" style="width: {{ min(100, $progress) }}%"></div></div>
+                @endif
+
+                {{-- member tiles --}}
+                <div class="flex flex-wrap gap-2 mt-4">
+                    @foreach ($members->where('status', 1)->take(12) as $m)
+                        @php $init = strtoupper(mb_substr(trim($m->name), 0, 1)); @endphp
+                        <span class="h-9 w-9 rounded-xl bg-brand-light text-brand-dark flex items-center justify-center text-xs font-bold" title="{{ $m->name }}">{{ $init ?: '?' }}</span>
+                    @endforeach
+                    @if ($activeMembers > 12)<span class="h-9 w-9 rounded-xl bg-slate-100 text-slate-500 text-[11px] font-bold flex items-center justify-center">+{{ $activeMembers - 12 }}</span>@endif
+                </div>
+
+                @if ($isMember && ($pocket->nuban || $pocket->bank))
+                    <div class="text-xs text-slate-400 mt-4">Pay to <span class="font-medium text-slate-600">{{ $pocket->account_name ?: $pocket->title }}</span>@if($pocket->bank) · {{ $pocket->bank }}@endif @if($pocket->nuban)· <span class="font-mono">{{ $pocket->nuban }}</span>@endif</div>
+                @endif
+
+                @if ($isMember)
+                    <a href="{{ route('invoices.create', $pocket->id) }}" class="block text-center mt-5 w-full rounded-2xl bg-brand hover:bg-brand-dark text-white font-extrabold text-lg py-3.5">🤲 Record a contribution</a>
+                @elseif ($isOwner)
+                    <a href="{{ route('pockets.manage', $pocket->id) }}" class="block text-center mt-5 w-full rounded-2xl bg-brand hover:bg-brand-dark text-white font-extrabold text-lg py-3.5">Manage pocket</a>
+                @endif
+            </div>
+        </div>
+
+        {{-- RIGHT: approvals + disputes summary --}}
+        <div class="lg:col-span-3 space-y-6">
+            @if ($isOwner)
+                <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
+                    <h3 class="font-extrabold text-sm uppercase tracking-wide text-slate-500 mb-3">Payments to approve
+                        @if ($pendingApprovals->isNotEmpty())<span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{{ $pendingApprovals->count() }}</span>@endif
+                    </h3>
+                    @forelse ($pendingApprovals as $inv)
+                        <div class="py-2 border-b border-slate-100 last:border-0 text-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium truncate">{{ $inv->name }}</span>
+                                <span class="font-bold">₦{{ number_format($inv->amount) }}</span>
+                            </div>
+                            <div class="flex gap-2 mt-1.5">
+                                <form method="POST" action="{{ route('invoices.markPaid', $inv->id) }}">@csrf<button class="text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1">Mark paid</button></form>
+                                <form method="POST" action="{{ route('invoices.decline', $inv->id) }}" onsubmit="return confirm('Decline this payment request?')">@csrf<button class="text-xs rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 px-3 py-1">Decline</button></form>
+                            </div>
                         </div>
-                    @endif
-                    @if ($pocket->rules)
-                        <div class="rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-600 px-3 py-2.5 whitespace-pre-line"><span class="font-semibold">Group rules:</span> {{ $pocket->rules }}</div>
-                    @endif
-                    <x-terms-notice variant="join" />
-                    <button class="rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Request to join</button>
-                </form>
+                    @empty
+                        <p class="text-sm text-slate-500">No payments awaiting approval. 🎉</p>
+                    @endforelse
+                </div>
             @endif
-        @endif
+
+            {{-- My progress: contributed + donations --}}
+            @if (($isMember && $target > 0) || $charity)
+                <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
+                    <h3 class="font-extrabold text-sm uppercase tracking-wide text-slate-500 mb-4">My progress</h3>
+                    <div class="flex flex-wrap justify-around gap-4">
+                        @if ($isMember && $target > 0)
+                            <div class="text-center">
+                                <x-progress-ring :percent="$progress" :label="$progress.'%'" sublabel="contributed" :size="92" />
+                                <div class="text-xs text-slate-400 mt-1">₦{{ number_format($contributed) }} / ₦{{ number_format($target) }}</div>
+                            </div>
+                        @endif
+                        @if ($charity)
+                            @php $dpct = (int) ($charity['percent'] ?? 0); @endphp
+                            <div class="text-center">
+                                <x-progress-ring :percent="$dpct" :label="$dpct.'%'" sublabel="donations" :size="92" color="#f59e0b" />
+                                <div class="text-xs text-slate-400 mt-1">₦{{ number_format($charity['raised']) }} @if(!empty($charity['target_amount']))/ ₦{{ number_format($charity['target_amount']) }} @endif</div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if ($canDispute && count($disputes))
+                <a href="#disputes" class="block bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5 hover:border-brand">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-sm uppercase tracking-wide text-slate-500">Disputes</h3>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">{{ count($disputes) }}</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">{{ count($disputes) }} case(s) — open the disputes section below.</p>
+                </a>
+            @endif
+        </div>
     </div>
+
+    {{-- Secondary content: main + sidebar --}}
+    <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
 
     {{-- Group rules + owner tools --}}
     @if ($pocket->rules || $isOwner)
-        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="font-semibold">📋 Group rules</h3>
                 @if ($isOwner)
@@ -169,153 +266,50 @@
         @endif
     @endif
 
-    {{-- Owner: members' payments awaiting approval --}}
-    @if ($isOwner)
-        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-            <h3 class="font-semibold mb-3">Payments to approve
-                @if ($pendingApprovals->isNotEmpty())<span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{{ $pendingApprovals->count() }}</span>@endif
-            </h3>
-            @forelse ($pendingApprovals as $inv)
-                <div class="py-2 flex items-center justify-between text-sm border-b border-slate-100 last:border-0">
-                    <span><span class="font-medium">{{ $inv->name }}</span> <span class="text-xs text-slate-400">· {{ $inv->invoice_no }}</span></span>
-                    <span class="flex items-center gap-3">
-                        <span class="font-medium">₦{{ number_format($inv->amount) }}</span>
-                        <form method="POST" action="{{ route('invoices.markPaid', $inv->id) }}">
-                            @csrf
-                            <button class="text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1">Mark paid</button>
-                        </form>
-                        <form method="POST" action="{{ route('invoices.decline', $inv->id) }}" onsubmit="return confirm('Decline this payment request?')">
-                            @csrf
-                            <button class="text-xs rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 px-3 py-1">Decline</button>
-                        </form>
-                    </span>
-                </div>
-            @empty
-                <p class="text-sm text-slate-500">No payments awaiting approval. 🎉</p>
-            @endforelse
-        </div>
-    @endif
-
-    <div class="grid lg:grid-cols-2 gap-6">
-        {{-- Members --}}
-        @php $showHands = $isOwner || $pocket->members_visible; @endphp
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold">Members ({{ $members->where('status', 1)->count() }})</h3>
-                @unless ($showHands)<span class="text-xs text-slate-400">hands are private</span>@endunless
-            </div>
-            <ul class="divide-y divide-slate-100">
-                @forelse ($members as $m)
-                    @php $mine = $m->user_id == auth()->id(); @endphp
-                    <li class="py-2 flex items-center justify-between text-sm">
-                        <span>{{ $m->name }}@if($mine) <span class="text-xs text-brand-dark">(you)</span>@endif</span>
-                        <span class="text-slate-400">
-                            @if ($showHands || $mine){{ (int) $m->hand_count }} hand(s) · @endif{{ $m->status ? 'active' : 'pending' }}
-                        </span>
-                    </li>
-                @empty
-                    <li class="py-2 text-sm text-slate-500">No members yet.</li>
-                @endforelse
-            </ul>
-        </div>
-
-        {{-- My invoices --}}
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold">My invoices</h3>
-                @if ($isMember)
-                    <a href="{{ route('invoices.create', $pocket->id) }}" class="text-sm bg-brand hover:bg-brand-dark text-white rounded-lg px-3 py-1.5">+ Contribution</a>
-                @endif
-            </div>
-            <ul class="divide-y divide-slate-100">
-                @forelse ($invoices as $inv)
-                    <li class="py-3">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-slate-600">{{ $inv->invoice_no }}</span>
-                            <span class="flex items-center gap-2">
-                                <span>₦{{ number_format($inv->amount) }}</span>
-                                <span class="text-xs px-2 py-0.5 rounded-full {{ $inv->payment_status === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">{{ $inv->payment_status }}</span>
-                            </span>
-                        </div>
-                        @if ($inv->payment_status !== 'Paid')
-                            <div class="flex gap-2 mt-2">
-                                @if ($walletEnabled)
-                                    <form method="POST" action="{{ route('invoices.payWallet', $inv->id) }}">
-                                        @csrf
-                                        <button class="text-xs rounded-md bg-brand hover:bg-brand-dark text-white px-3 py-1">Pay from wallet</button>
-                                    </form>
-                                @endif
-                                @if ($isOwner)
-                                    <form method="POST" action="{{ route('invoices.markPaid', $inv->id) }}">
-                                        @csrf
-                                        <button class="text-xs rounded-md border border-slate-300 hover:bg-slate-50 px-3 py-1">Mark as paid</button>
-                                    </form>
-                                @endif
-                            </div>
-                        @endif
-                    </li>
-                @empty
-                    <li class="py-2 text-sm text-slate-500">No invoices yet.</li>
-                @endforelse
-            </ul>
-        </div>
-    </div>
-
-    @if ($isMember)
-        @php $chosenAcct = $myAccounts->firstWhere('id', (int) optional($mySlot)->bank_account_id); @endphp
-        <div class="mt-6">
-            @if ($myAccounts->isEmpty())
-                <a href="{{ route('settings') }}" class="btn-soft text-sm">💳 Add a payout account</a>
-            @else
-                <button type="button" onclick="document.getElementById('pocketAcctModal').classList.remove('hidden')" class="btn-soft text-sm">
-                    💳 {{ $chosenAcct ? $chosenAcct->bank.' · '.$chosenAcct->nuban : 'Set payout account' }}
-                </button>
+    {{-- My invoices --}}
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold">My invoices</h3>
+            @if ($isMember)
+                <a href="{{ route('invoices.create', $pocket->id) }}" class="text-sm bg-brand hover:bg-brand-dark text-white rounded-lg px-3 py-1.5">+ Contribution</a>
             @endif
         </div>
-
-        @if ($myAccounts->isNotEmpty())
-            <div id="pocketAcctModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-                 onclick="if(event.target===this)this.classList.add('hidden')">
-                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100">
-                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
-                        <span class="font-semibold">Your payout account</span>
-                        <button type="button" onclick="document.getElementById('pocketAcctModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+        <ul class="divide-y divide-slate-100">
+            @forelse ($invoices as $inv)
+                <li class="py-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-slate-600">{{ $inv->invoice_no }}</span>
+                        <span class="flex items-center gap-2">
+                            <span>₦{{ number_format($inv->amount) }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full {{ $inv->payment_status === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">{{ $inv->payment_status }}</span>
+                        </span>
                     </div>
-                    <form method="POST" action="{{ route('pockets.setAccount', $pocket->id) }}" class="p-5 space-y-4">
-                        @csrf
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Where you'll receive cashback/payout</label>
-                            <select name="bank_account_id" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
-                                <option value="">— choose account —</option>
-                                @foreach ($myAccounts as $acc)
-                                    <option value="{{ $acc->id }}" {{ (int) optional($mySlot)->bank_account_id === $acc->id ? 'selected' : '' }}>{{ $acc->account_name }} · {{ $acc->bank }} · {{ $acc->nuban }}</option>
-                                @endforeach
-                            </select>
+                    @if ($inv->payment_status !== 'Paid')
+                        <div class="flex gap-2 mt-2">
+                            @if ($walletEnabled)
+                                <form method="POST" action="{{ route('invoices.payWallet', $inv->id) }}">
+                                    @csrf
+                                    <button class="text-xs rounded-md bg-brand hover:bg-brand-dark text-white px-3 py-1">Pay from wallet</button>
+                                </form>
+                            @endif
+                            @if ($isOwner)
+                                <form method="POST" action="{{ route('invoices.markPaid', $inv->id) }}">
+                                    @csrf
+                                    <button class="text-xs rounded-md border border-slate-300 hover:bg-slate-50 px-3 py-1">Mark as paid</button>
+                                </form>
+                            @endif
                         </div>
-                        <p class="text-xs text-slate-400">Manage your saved accounts in <a href="{{ route('settings') }}" class="text-brand-dark hover:underline">settings</a>.</p>
-                        <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Save account</button>
-                    </form>
-                </div>
-            </div>
-        @endif
-    @endif
-
-    <div class="mt-6">
-        <x-mini-leaderboard :rows="$contributors" title="Top contributors" />
+                    @endif
+                </li>
+            @empty
+                <li class="py-2 text-sm text-slate-500">No invoices yet.</li>
+            @endforelse
+        </ul>
     </div>
-
-    @if ($canChat)
-        <x-group-chat type="pocket" :id="$pocket->id" :messages="$messages" :canPost="true" />
-    @endif
-
-    @if ($canDispute)
-        <x-disputes type="pocket" :id="$pocket->id" :disputes="$disputes" :isAdmin="$isOwner" :canRaise="true" />
-    @endif
 
     {{-- Shopping list (group buying) --}}
     @php $canSuggest = $isOwner || ($pocket->open_purchasing_item && $isMember); @endphp
-    <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+    <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="font-semibold">🛒 Shopping list</h3>
             <span class="flex items-center gap-2">
@@ -385,7 +379,7 @@
     {{-- Charity drive (Sadaqah / fi-sabilillah) --}}
     @if ($charity)
         @php $c = $charity; @endphp
-        <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
             <div class="flex items-center justify-between mb-1">
                 <h3 class="font-semibold">🤲 {{ $c['project']->title }}</h3>
                 @if ($isOwner)<a href="{{ route('charity.setup', $pocket->id) }}" class="text-sm text-brand-dark hover:underline">Edit drive →</a>@endif
@@ -450,11 +444,97 @@
             @endisset
         </div>
     @elseif ($charityEnabled && $isOwner)
-        <div class="bg-white rounded-xl border border-dashed border-slate-300 p-5 mt-6 text-center">
+        <div class="bg-white rounded-[1.5rem] border-2 border-dashed border-slate-300 p-5 text-center">
             <h3 class="font-semibold mb-1">🤲 Add a charity drive</h3>
             <p class="text-sm text-slate-500 mb-3">Collect Sadaqah for orphans &amp; the needy alongside contributions. Individual donations stay private (fi-sabilillah).</p>
             <a href="{{ route('charity.setup', $pocket->id) }}" class="inline-block rounded-lg bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2.5">Set up charity</a>
         </div>
     @endif
+
+    </div>{{-- /main column --}}
+
+    {{-- Sidebar --}}
+    <aside class="space-y-6">
+        {{-- Members --}}
+        @php $showHands = $isOwner || $pocket->members_visible; @endphp
+        <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">Members ({{ $members->where('status', 1)->count() }})</h3>
+                @unless ($showHands)<span class="text-xs text-slate-400">hands are private</span>@endunless
+            </div>
+            <ul class="divide-y divide-slate-100">
+                @forelse ($members as $m)
+                    @php $mine = $m->user_id == auth()->id(); @endphp
+                    <li class="py-2 flex items-center justify-between text-sm">
+                        <span>{{ $m->name }}@if($mine) <span class="text-xs text-brand-dark">(you)</span>@endif</span>
+                        <span class="text-slate-400">
+                            @if ($showHands || $mine){{ (int) $m->hand_count }} hand(s) · @endif{{ $m->status ? 'active' : 'pending' }}
+                        </span>
+                    </li>
+                @empty
+                    <li class="py-2 text-sm text-slate-500">No members yet.</li>
+                @endforelse
+            </ul>
+        </div>
+
+        {{-- Top contributors --}}
+        <x-mini-leaderboard :rows="$contributors" title="Top contributors" />
+
+        {{-- Payout account (member) --}}
+        @if ($isMember)
+            @php $chosenAcct = $myAccounts->firstWhere('id', (int) optional($mySlot)->bank_account_id); @endphp
+            <div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
+                <h3 class="font-semibold mb-3">💳 My payout account</h3>
+                @if ($myAccounts->isEmpty())
+                    <a href="{{ route('settings') }}" class="btn-soft text-sm">Add a payout account</a>
+                @else
+                    <button type="button" onclick="document.getElementById('pocketAcctModal').classList.remove('hidden')" class="btn-soft text-sm">
+                        {{ $chosenAcct ? $chosenAcct->bank.' · '.$chosenAcct->nuban : 'Set payout account' }}
+                    </button>
+                @endif
+            </div>
+        @endif
+    </aside>
+    </div>{{-- /hub grid --}}
+
+    {{-- Disputes (full width) --}}
+    @if ($canDispute)
+        <div id="disputes" class="scroll-mt-24">
+            <x-disputes type="pocket" :id="$pocket->id" :disputes="$disputes" :isAdmin="$isOwner" :canRaise="true" />
+        </div>
+    @endif
+
+    {{-- Group chat (floating) --}}
+    @if ($canChat)
+        <x-group-chat type="pocket" :id="$pocket->id" :messages="$messages" :canPost="true" />
+    @endif
+
+    {{-- Payout account modal --}}
+    @if ($isMember && $myAccounts->isNotEmpty())
+            <div id="pocketAcctModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+                 onclick="if(event.target===this)this.classList.add('hidden')">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100">
+                        <img src="{{ asset('images/keenpocket-icon.svg') }}" class="h-7 w-7 rounded-md" alt="KeenPocket">
+                        <span class="font-semibold">Your payout account</span>
+                        <button type="button" onclick="document.getElementById('pocketAcctModal').classList.add('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <form method="POST" action="{{ route('pockets.setAccount', $pocket->id) }}" class="p-5 space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Where you'll receive cashback/payout</label>
+                            <select name="bank_account_id" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-brand focus:ring-brand">
+                                <option value="">— choose account —</option>
+                                @foreach ($myAccounts as $acc)
+                                    <option value="{{ $acc->id }}" {{ (int) optional($mySlot)->bank_account_id === $acc->id ? 'selected' : '' }}>{{ $acc->account_name }} · {{ $acc->bank }} · {{ $acc->nuban }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <p class="text-xs text-slate-400">Manage your saved accounts in <a href="{{ route('settings') }}" class="text-brand-dark hover:underline">settings</a>.</p>
+                        <button class="w-full rounded-lg bg-brand hover:bg-brand-dark text-white font-medium py-2.5">Save account</button>
+                    </form>
+                </div>
+            </div>
+        @endif
 @endif
 @endsection

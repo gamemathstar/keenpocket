@@ -1,5 +1,5 @@
 @props(['rows', 'title' => 'Top contributors'])
-<div class="bg-white border border-slate-200 rounded-2xl p-5">
+<div class="bg-white rounded-[1.5rem] card-depth border-2 border-slate-100 p-5">
     <h3 class="font-semibold mb-3">🏆 {{ $title }}</h3>
     @if (count($rows))
         <ul class="divide-y divide-slate-100">

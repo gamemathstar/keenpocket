@@ -1,0 +1,354 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Explore Adashi | KeenPocket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#006590",
+                        "outline-variant": "#bdc8d2",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#88ceff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdf92",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "primary": "#006590",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#00405d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fec700",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#241a00",
+                        "on-background": "#191c1e",
+                        "primary-fixed": "#c8e6ff",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-container": "#ff8079",
+                        "tertiary": "#bb1522",
+                        "primary-fixed-dim": "#88ceff",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#001e2e",
+                        "secondary": "#755b00",
+                        "primary-container": "#1cb0f6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .candy-button {
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #bdc8d2; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Persistent SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-container-low border-r-4 border-surface-variant shadow-[4px_0px_0px_0px_rgba(0,101,144,0.1)] z-50">
+<div class="flex flex-col gap-4 p-6 h-full">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-[0_4px_0_0_#004c6e]">
+<span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+</div>
+<div>
+<h1 class="font-display text-headline-md text-primary leading-tight">Adashi Wallet</h1>
+<p class="text-xs font-label-bold text-on-surface-variant opacity-70">Managing your savings</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold">My Groups</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-[0_4px_0_0_#004c6e] transition-all scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="explore" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-bold text-label-bold">Explore</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-bold text-label-bold">Contributions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<button class="candy-button mt-4 w-full bg-secondary-container text-on-secondary-container font-label-bold py-3 rounded-xl shadow-[0_4px_0_0_#6e5400] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+                New Group
+            </button>
+<div class="mt-auto border-t-2 border-surface-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-bold text-label-bold">Log out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 h-screen overflow-y-auto custom-scrollbar relative">
+<!-- Top App Bar (Small) -->
+<header class="w-full sticky top-0 z-40 flex justify-between items-center px-10 py-4 bg-surface border-b-4 border-surface-variant shadow-sm">
+<div class="flex items-center gap-4">
+<span class="font-display text-headline-md text-primary">KeenPocket</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container-high p-2 rounded-full transition-colors">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container-high p-2 rounded-full transition-colors">help</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB91JEqoL5gNPPLlcRmD5d5koVr6l4oOerwSCVnNMUf4i667Rww9dUd8eXcJ8G5nXHWyzLfrOvKGaqUKc2cQ-3m2U9BHv4S0arX4EhSwUVhWggp4AXoNKKYCUH_EWz8iPt4ySPO9PPmZ9Fkz10qVgR2ufWfjDTGluIDwRYjqxWLbomLroosrnqwFO0wF4wuRQfTbAuJHSFm-j3-0H78srwAEOvTautKuC6tbG1QB3RDD2a3UQbQvIHN6PH2ukqvnJt1xBp4MHRbnM">
+</div>
+</div>
+</header>
+<!-- Focused Hero Section -->
+<div class="px-10 pt-10 pb-20">
+<div class="max-w-container-max mx-auto">
+<!-- Breadcrumbs/Context -->
+<div class="flex items-center gap-2 mb-8 text-on-surface-variant font-label-bold opacity-70">
+<span>Explore</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span>Lagos Wealth Circle</span>
+</div>
+<div class="grid grid-cols-12 gap-10">
+<!-- Left Column: Organiser Profile -->
+<div class="col-span-12 lg:col-span-5 space-y-8">
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-8 shadow-[0_7px_0_0_#e0e3e5] border-2 border-surface-variant relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-primary-container text-on-primary-container text-xs px-3 py-1 rounded-full font-label-bold">TRUSTED</span>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-3xl overflow-hidden border-4 border-primary-container mb-4 shadow-lg">
+<img alt="Tunde Afolayan" class="w-full h-full object-cover" data-alt="A professional headshot of a charismatic middle-aged Nigerian man with a warm smile, wearing a sharp business casual outfit. He stands in a bright, modern office with soft daylight filtering through. The style is crisp and friendly, using a high-key lighting scheme with primary blue and white accents that reflect a trustworthy and successful brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlCAtT2d0A-5MsmUbny-uBoI4I42F2cBFTLZrZ_u-WN4NHwdU1ZC5BCH-KsIj9k9ggOTeYj4m6YaDmXtpmVzs0np2w4WFCxXHS7-mc9CHxCEF-oAzd9tZVHCK_s-82e__AntQOdK7W1dwgvsLs5tSBMBf7fX_4h_QXRSqv3yeayWv-JdE43pa2GUBHUZ2cfDkJ4ouYuPdxRTiUbNtViRp-jacArUdbEohv8sPg4c0lc6BxYdpAvar7_3QYTqrLWO2iaMjIswqkEHs">
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Tunde Afolayan</h2>
+<p class="text-primary font-body-lg text-body-lg mb-6">Lagos Wealth Circle Organiser</p>
+<!-- Reputation Stats -->
+<div class="grid grid-cols-3 gap-4 w-full mb-8">
+<div class="bg-surface p-3 rounded-2xl border-b-4 border-surface-variant">
+<p class="text-[20px] font-bold text-primary">4.9</p>
+<p class="text-[10px] uppercase tracking-wider font-label-bold text-on-surface-variant">Rating</p>
+</div>
+<div class="bg-surface p-3 rounded-2xl border-b-4 border-surface-variant">
+<p class="text-[20px] font-bold text-primary">24</p>
+<p class="text-[10px] uppercase tracking-wider font-label-bold text-on-surface-variant">Circles</p>
+</div>
+<div class="bg-surface p-3 rounded-2xl border-b-4 border-surface-variant">
+<p class="text-[20px] font-bold text-primary">100%</p>
+<p class="text-[10px] uppercase tracking-wider font-label-bold text-on-surface-variant">Punctual</p>
+</div>
+</div>
+<button class="candy-button w-full bg-primary text-on-primary font-headline-md text-headline-md py-5 rounded-[1.25rem] shadow-[0_6px_0_0_#004c6e] flex items-center justify-center gap-3">
+                                    Join Circle
+                                    <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+<p class="mt-4 text-xs text-on-surface-variant font-medium">Limited spots available. Requires ₦10,000 deposit.</p>
+</div>
+</div>
+<!-- Mascot Interaction -->
+<div class="flex items-start gap-4 p-6 bg-secondary-fixed text-on-secondary-fixed-variant rounded-2xl border-b-4 border-secondary shadow-sm">
+<div class="w-16 h-16 flex-shrink-0 bg-white rounded-full flex items-center justify-center shadow-inner overflow-hidden border-2 border-secondary">
+<img alt="Mr. K Mascot" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdr1r6RhS8pzV5fU7JoZFrT4eXmqQ5gaoFwlzZsN2FrdI_9W1oip3z5g3ALK3cyPnipreYKLmsG6UGeZdfCk2cpKGamIlGpI1ohm-VB8kHZSnj7VIdtp9_sYWrkPco1UDEnvMQVk3kwuECDQOAhU0Mip4DIS5DgSfrsUVBmGn68MC01Q0hXlGoLTotkEe3a08MDGoyyCD1tNW2nk_ttKxq6X90lfIsJhNtEfyqwtZ8SFjpMYBzjkohvKczLxTRKQrSdDfQ8QLwOUw">
+</div>
+<div class="space-y-1">
+<h4 class="font-label-bold text-label-bold">Mr. K says:</h4>
+<p class="font-body-md text-body-md leading-tight">"Tunde is one of our top-tier savers! This circle has successfully completed 12 cycles without a single delay."</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Group Stats & Rules -->
+<div class="col-span-12 lg:col-span-7 space-y-8">
+<!-- Group Stats Card -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-8 shadow-[0_7px_0_0_#e0e3e5] border-2 border-surface-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">insights</span>
+                                Circle Vital Stats
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="relative p-6 rounded-2xl bg-primary-container/10 border-2 border-primary-container border-dashed">
+<span class="material-symbols-outlined text-primary mb-2">person_add</span>
+<p class="text-headline-md font-headline-md text-on-primary-container">8/10</p>
+<p class="text-on-surface-variant font-label-bold">Members</p>
+</div>
+<div class="relative p-6 rounded-2xl bg-secondary-container/10 border-2 border-secondary-container border-dashed">
+<span class="material-symbols-outlined text-secondary mb-2">payments</span>
+<p class="text-headline-md font-headline-md text-on-secondary-container">₦10k</p>
+<p class="text-on-surface-variant font-label-bold">Per Cycle</p>
+</div>
+<div class="relative p-6 rounded-2xl bg-tertiary-container/10 border-2 border-tertiary-container border-dashed">
+<span class="material-symbols-outlined text-tertiary mb-2">calendar_month</span>
+<p class="text-headline-md font-headline-md text-on-tertiary-container">30 Days</p>
+<p class="text-on-surface-variant font-label-bold">Cycle Length</p>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex justify-between items-end mb-2">
+<p class="font-label-bold text-on-surface-variant">Next Payout Progress</p>
+<p class="font-headline-md text-primary">80%</p>
+</div>
+<div class="h-4 w-full bg-surface-container-high rounded-full overflow-hidden border-2 border-surface-variant">
+<div class="h-full bg-primary-container rounded-full w-[80%] shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]"></div>
+</div>
+</div>
+</div>
+<!-- Rules Checklist -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] p-8 shadow-[0_7px_0_0_#e0e3e5] border-2 border-surface-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">gavel</span>
+                                Circle Rules
+                            </h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-4 p-4 rounded-xl bg-surface hover:bg-surface-container-high transition-colors">
+<div class="bg-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Automated Daily Contributions</p>
+<p class="text-sm text-on-surface-variant">Funds are automatically debited at 6:00 AM daily to ensure punctuality.</p>
+</div>
+</li>
+<li class="flex items-start gap-4 p-4 rounded-xl bg-surface hover:bg-surface-container-high transition-colors">
+<div class="bg-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">End-of-Cycle Withdrawals</p>
+<p class="text-sm text-on-surface-variant">Lump sums are only accessible after the full 30-day rotation is complete.</p>
+</div>
+</li>
+<li class="flex items-start gap-4 p-4 rounded-xl bg-surface hover:bg-surface-container-high transition-colors">
+<div class="bg-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Strict Verification Required</p>
+<p class="text-sm text-on-surface-variant">All members must have a Level 3 BVN verified profile to participate.</p>
+</div>
+</li>
+<li class="flex items-start gap-4 p-4 rounded-xl bg-surface hover:bg-surface-container-high transition-colors">
+<div class="bg-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white">
+<span class="material-symbols-outlined text-[18px]">group_work</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Collaborative Dispute Resolution</p>
+<p class="text-sm text-on-surface-variant">Any issues are voted on by the circle; majority rules on penalty appeals.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Background Decorative Element -->
+<div class="absolute top-0 right-0 -z-10 opacity-20 pointer-events-none">
+
+</div>
+</main>
+<!-- Floating Micro-Interaction Script -->
+<script>
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.boxShadow = 'none';
+            });
+            button.addEventListener('mouseup', () => {
+                const shadowColor = button.classList.contains('bg-primary') ? '#004c6e' : '#6e5400';
+                button.style.boxShadow = `0 4px 0 0 ${shadowColor}`;
+            });
+        });
+        
+        // Tab switching simulation (visual only)
+        const navItems = document.querySelectorAll('aside nav a');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                navItems.forEach(nav => {
+                    nav.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_0_0_#004c6e]', 'scale-[1.02]');
+                    nav.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                    const icon = nav.querySelector('.material-symbols-outlined');
+                    if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                item.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_0_0_#004c6e]', 'scale-[1.02]');
+                item.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                const activeIcon = item.querySelector('.material-symbols-outlined');
+                if(activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

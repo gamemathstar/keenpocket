@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>NairaSave | Public Pocket View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdf92",
+                        "outline-variant": "#bdc8d2",
+                        "outline": "#6e7881",
+                        "on-secondary-fixed-variant": "#594400",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1cb0f6",
+                        "on-secondary-container": "#6e5400",
+                        "tertiary-container": "#ff8079",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary": "#bb1522",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed": "#c8e6ff",
+                        "primary": "#006590",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "on-primary-container": "#00405d",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "surface-tint": "#006590",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#fec700",
+                        "on-surface-variant": "#3e4850",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#7e000f",
+                        "surface-dim": "#d8dadc",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#755b00",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-secondary-fixed": "#241a00",
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed": "#001e2e",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#88ceff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#410004"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .candy-button {
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .bento-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 7px 0 0 #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+        }
+        .input-candy {
+            border: 2px solid #bdc8d2;
+            border-radius: 1rem;
+            transition: border-color 0.2s ease;
+        }
+        .input-candy:focus {
+            border-color: #1cb0f6;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation (Shell Implementation) -->
+<header class="flex justify-between items-center px-margin-desktop py-4 w-full z-40 bg-surface fixed top-0 left-0 right-0">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-black text-primary">NairaSave</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">search</span>
+<span class="text-on-surface-variant font-label-bold text-label-bold">Find Groups</span>
+</div>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-12 px-margin-mobile md:px-margin-desktop max-w-[1200px] mx-auto">
+<!-- Hero Header -->
+<section class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
+<div class="relative w-40 h-40 flex-shrink-0">
+<img class="w-full h-full rounded-[2.5rem] object-cover border-4 border-white shadow-xl" data-alt="A professional and friendly portrait of a young African financial organizer. He is smiling warmly in a bright, modern office with soft daylight. The image has a clean, premium light-mode aesthetic with vibrant blue accents, reflecting a trustworthy and optimistic personality for a fintech community platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCctw6UV-w3XaD8MK3lfFEWpaeapvm5lLq_jA1OH0V-59AnE85nJVp1lLvTaNk2W_oj7MNu2ERs_gXhQIUMjRzTOk_eI8_APdXSVUg6nE0aDt8XAd17TR-dMW7K0WD_RIhiv-sFLDEl48Qywfc2bojmtkreoPmHxsIc_5ZFEcWW4cktdUnde0BsdhCizZXeriJnSyi5doEiUFQtdge02NF-RTzWlCdK8gcs_DGaQVB5OZBjwje4kn6mDU5gLyb32TwuGOwObvURajI">
+<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full flex items-center gap-1 shadow-md border-2 border-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-bold text-label-bold">KYC Verified</span>
+</div>
+</div>
+<div class="text-center md:text-left flex-grow">
+<div class="flex flex-wrap justify-center md:justify-start items-center gap-3 mb-2">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Lagos Techies Savings Circle</h1>
+<div class="flex items-center gap-1 bg-primary-container/20 text-on-primary-container px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-bold text-label-bold">4.9 (124 ratings)</span>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4">Organized by <span class="text-primary font-bold">Chidi "Pocket" Okafor</span></p>
+<p class="font-body-md text-body-md text-outline max-w-2xl">A community-driven rotating savings group focused on consistent wealth building for early-career developers and designers in the Lagos ecosystem. 100% payout track record since 2021.</p>
+</div>
+</section>
+<!-- Stats Sub-header (Bento Grid Style) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="bento-card p-6 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-2">payments</span>
+<span class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-bold">Per Hand</span>
+<span class="font-headline-md text-headline-md text-on-surface">₦50,000</span>
+</div>
+<div class="bento-card p-6 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-secondary-container text-4xl mb-2">group</span>
+<span class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-bold">Remaining Hands</span>
+<span class="font-headline-md text-headline-md text-on-surface">3 of 12</span>
+</div>
+<div class="bento-card p-6 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-tertiary-container text-4xl mb-2">event_repeat</span>
+<span class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-bold">Frequency</span>
+<span class="font-headline-md text-headline-md text-on-surface">Monthly</span>
+</div>
+</section>
+<!-- Main Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Rules & Security -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Group Rules -->
+<div class="bento-card p-8">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">gavel</span>
+                        Group Rules
+                    </h2>
+<ul class="space-y-6">
+<li class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-primary shrink-0">1</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Prompt Payment Guarantee</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Payments must be made by the 2nd of every month. 5% late fee applies after 48 hours.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-primary shrink-0">2</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Verified Guarantor Required</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Each member must provide a guarantor with a KYC-verified NairaSave account and Tier 3 banking status.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-primary shrink-0">3</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Strict Rotation Cycle</p>
+<p class="font-body-md text-body-md text-on-surface-variant">The rotation order is finalized upon group closing. Emergency order changes require a 75% group vote.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Security Section -->
+<div class="bento-card p-8 bg-surface-bright border-dashed border-2 border-primary-container/30">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+                        Security &amp; Trust
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="text-center md:text-left">
+<span class="material-symbols-outlined text-primary mb-2">account_balance</span>
+<p class="font-label-bold text-label-bold">Secure Escrow</p>
+<p class="text-xs font-body-md text-on-surface-variant">All funds held in CBN-regulated escrow accounts.</p>
+</div>
+<div class="text-center md:text-left">
+<span class="material-symbols-outlined text-primary mb-2">policy</span>
+<p class="font-label-bold text-label-bold">Legal Framework</p>
+<p class="text-xs font-body-md text-on-surface-variant">Member agreements are legally binding under Nigerian law.</p>
+</div>
+<div class="text-center md:text-left">
+<span class="material-symbols-outlined text-primary mb-2">history_edu</span>
+<p class="font-label-bold text-label-bold">Verified History</p>
+<p class="text-xs font-body-md text-on-surface-variant">Organizer has completed 15+ cycles without default.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Join Form -->
+<div class="lg:col-span-5 sticky top-28">
+<div class="bento-card p-8 border-2 border-primary">
+<div class="flex justify-between items-start mb-6">
+<h2 class="font-headline-md text-headline-md">Request to Join</h2>
+<span class="bg-primary text-white font-label-bold text-xs px-2 py-1 rounded">Open</span>
+</div>
+<form class="space-y-6">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-2">Number of Hands</label>
+<div class="grid grid-cols-3 gap-3">
+<button class="py-3 px-4 input-candy border-2 border-primary bg-primary-container/10 text-primary font-bold" type="button">1</button>
+<button class="py-3 px-4 input-candy hover:border-primary transition-all" type="button">2</button>
+<button class="py-3 px-4 input-candy hover:border-primary transition-all" type="button">3</button>
+</div>
+<p class="mt-2 text-xs text-on-surface-variant">Maximum of 3 hands per individual member.</p>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-2">Guarantor Username</label>
+<input class="w-full p-4 input-candy font-body-md bg-surface" placeholder="@username" type="text">
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-2">Personal Note (Optional)</label>
+<textarea class="w-full p-4 input-candy font-body-md bg-surface" placeholder="Tell Chidi why you want to join..." rows="3"></textarea>
+</div>
+<div class="pt-4">
+<button class="candy-button w-full py-4 bg-primary text-white font-headline-md rounded-2xl shadow-[0_4px_0_0_#004c6e] hover:shadow-[0_2px_0_0_#004c6e] hover:translate-y-[2px]" type="submit">
+                                Send Join Request
+                            </button>
+</div>
+</form>
+<div class="mt-6 p-4 bg-surface-container-low rounded-xl flex gap-3 items-center">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A smiling mascot character known as Mr. K, a friendly financial assistant. He is a 3D-styled, playful character with large expressive eyes and a welcoming posture. The setting is bright and cheerful with high-energy colors like vibrant yellow and blue. The lighting is soft and professional, making the character look reliable and approachable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtNj5OmqiiaUdOGmXTP_2iBcRxRC3lzllgfMd4RlWP2caE6A6RUQQ8rAkANy15_NNLhQE3_akLjf64hJFe5hwKnvdhb874rG9zOYK1R-P-gqIYdYDDpfv-NinmRu5NFHyGwN7IWyoiMPzeH_7fzL1D-g7uceZJ08HuINtiLQvv9kJ3YMm5x8tLeIHRUcA2GRyMt877L1ubu930XP86Fmaw0NpZEpyxyaHcXj-IC_RHK2I76ROqt3XrmaBr0OvcgR2iKoXIQ4UNq6w">
+</div>
+<p class="text-xs font-body-md text-on-surface-variant">
+<strong>Mr. K says:</strong> Joining a verified group is the fastest way to hit your 2024 goals! Chidi usually responds within 4 hours.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Mobile Navigation (Hidden on Tablet/Desktop as per mandate) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface px-6 py-4 flex justify-around items-center shadow-[0_-1px_10px_rgba(0,0,0,0.05)] z-50">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-bold">Dashboard</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group_work</span>
+<span class="text-[10px] font-label-bold">Groups</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-label-bold">Savings</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-label-bold">Settings</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for join form selection
+        const handsButtons = document.querySelectorAll('button[type="button"]');
+        handsButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                handsButtons.forEach(b => {
+                    b.classList.remove('bg-primary-container/10', 'text-primary', 'border-primary', 'font-bold');
+                });
+                btn.classList.add('bg-primary-container/10', 'text-primary', 'border-primary', 'font-bold');
+            });
+        });
+
+        // Form submission prevent default
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Join request sent successfully! Chidi will review your application.');
+        });
+    </script>
+</body></html>

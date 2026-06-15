@@ -1,0 +1,447 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>NairaSave - Pocket Detail Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdf92",
+                        "outline-variant": "#bdc8d2",
+                        "outline": "#6e7881",
+                        "on-secondary-fixed-variant": "#594400",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1cb0f6",
+                        "on-secondary-container": "#6e5400",
+                        "tertiary-container": "#ff8079",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary": "#bb1522",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed": "#c8e6ff",
+                        "primary": "#006590",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "on-primary-container": "#00405d",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "surface-tint": "#006590",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#fec700",
+                        "on-surface-variant": "#3e4850",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#7e000f",
+                        "surface-dim": "#d8dadc",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#755b00",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "on-secondary-fixed": "#241a00",
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed": "#001e2e",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#88ceff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#410004"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "body-lg": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; background-color: #f7f9fb; }
+        .candy-button {
+            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        .chunky-border {
+            border-bottom: 7px solid #e0e3e5;
+        }
+        .chunky-border-primary {
+            border-bottom: 7px solid #004c6e;
+        }
+        .circular-progress {
+            background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
+                        conic-gradient(#1cb0f6 65%, #e6e8ea 0);
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-72 fixed left-0 top-0 bg-surface-container-low border-r-2 border-outline-variant flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-4 pt-4">
+<h1 class="text-headline-md font-headline-md font-black text-primary">NairaSave</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Community Finance</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-label-bold text-label-bold transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group_work</span>
+<span class="font-label-bold text-label-bold">Groups</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold text-label-bold">Savings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-bold text-label-bold">Marketplace</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t-2 border-outline-variant pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold text-label-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="w-[calc(100%-18rem)] ml-72 sticky top-0 bg-surface flex justify-between items-center px-10 py-4 z-40">
+<div class="flex items-center gap-4">
+<button class="md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-md text-headline-md font-black text-primary">Pocket Details</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative bg-surface-container px-4 py-2 rounded-full flex items-center gap-2 w-64">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full" placeholder="Search members..." type="text">
+</div>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUtm9MmxZ6WNk27INtyIQX4soTPGmcG3ulKT00sU-3eP_LbnB7UqKSpgsHEVMA5Qdms5yJVn32NNJZG9eyyY3NYPsVQ5LyOz432Z3uPB8nwniWhf6aetxAiEPztWP3N54frartHxjsuZtg0FGa5oI-9uVPvYyDNcbgbTOhAXuIXWuCRapMlAnC7yd5YnGnOqPcejpRDJBL0roSrCEp4DHj5r_ckrDPZmXQylHLnxEkrMwAYtEsm-C43LcJB0X9R77Nf4ufK1HY-rc">
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-72 p-10 min-h-screen bg-surface-bright grid grid-cols-12 gap-8">
+<!-- Left Rail: Pocket Identity -->
+<section class="col-span-3 flex flex-col gap-6">
+<div class="bg-white p-6 rounded-3xl chunky-border flex flex-col gap-4 shadow-[0_20px_30px_rgba(28,176,246,0.1)]">
+<div class="w-16 h-16 bg-primary-container rounded-2xl flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Lagos Home Fund</h3>
+<p class="text-body-md text-on-surface-variant">Community-led property saving</p>
+</div>
+<div class="flex flex-col gap-3 pt-2">
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl">
+<span class="text-label-bold font-label-bold text-on-surface-variant">Target</span>
+<span class="text-label-bold font-label-bold text-primary">₦2,500,000</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl">
+<span class="text-label-bold font-label-bold text-on-surface-variant">₦ / Hand</span>
+<span class="text-label-bold font-label-bold text-on-surface">₦50,000</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl">
+<span class="text-label-bold font-label-bold text-on-surface-variant">Duration</span>
+<span class="text-label-bold font-label-bold text-on-surface">12 Months</span>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-4 border-t border-outline-variant">
+<img alt="Organizer" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA80ZMeWYIfM-OmcMq5WRVVA5qJenMs8PE224LsJjT5NUmjDZNqxjsv7t_pxBWSzqrxs3ZjXbEsgMCrFa3mVUo6MgCI4_hH7cFrEgaO8zC5CHZR9JJkzpvM6ngirxRNqpM03ClxVVup8oZLI49qmPdMDCjyBEIbXS79EQGbYF0HnWVvsFKYi6EdQzPvkAAwo8hAOs0FCjpi6EQYKWWTrnRT05ii3mtgRdCuN8jE7p2veFHyhc58jieYFJamdpEKfgbmMlKvs7iR_i4">
+<div>
+<p class="text-label-bold font-label-bold">Ade Oke</p>
+<p class="text-[12px] text-on-surface-variant">Pocket Organizer</p>
+</div>
+</div>
+<button class="candy-button mt-4 bg-white border-2 border-outline-variant text-on-surface font-label-bold py-3 rounded-xl flex items-center justify-center gap-2 chunky-border hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">share</span>
+                    Share Pocket
+                </button>
+</div>
+<div class="bg-secondary-container p-6 rounded-3xl chunky-border flex flex-col gap-2 relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Mr. K Says:</h4>
+<p class="text-body-md text-on-secondary-fixed-variant leading-tight">"You're only 3 contributions away from your next badge!"</p>
+</div>
+<img alt="Mascot Mr. K" class="absolute -right-2 -bottom-2 w-24 h-24 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTgjQf1S8PcVs5buX85p8JcOp9omuJRNe7ROQGweKK0kGS677bjIF5bZ_Ud9kL6eX9cAvf6VtBLNhygyCXvSQ-szEIlIYqBZlMXUuoHFuCstysByaUM8nneIyFRSKt_xW_133KJ7C_yOyMeARk2LncrYW4LmYylrHLT4MOPG3i6znSlGoZ7NsuQ4WESQQk1yKQErD0G5gJoBf-IBDcvNWUSpMVkO96WaXnKLyNBrRZda37ypvLZZNx7ak825cpBnziRfXpl06ebEs">
+</div>
+</section>
+<!-- Main Area: Progress & Lists -->
+<section class="col-span-6 flex flex-col gap-8">
+<!-- Progress Card -->
+<div class="bg-white p-8 rounded-[2rem] chunky-border-primary shadow-[0_20px_40px_rgba(28,176,246,0.15)] flex items-center gap-10">
+<div class="relative flex-shrink-0">
+<div class="w-40 h-40 rounded-full circular-progress flex items-center justify-center">
+<div class="text-center">
+<span class="block font-black text-headline-lg text-primary">65%</span>
+<span class="text-[12px] font-label-bold text-on-surface-variant uppercase tracking-wider">Goal</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">My progress</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<p class="text-[12px] font-label-bold text-on-surface-variant mb-1">CONTRIBUTED</p>
+<p class="font-headline-md text-headline-md text-on-surface">₦325,000</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<p class="text-[12px] font-label-bold text-on-surface-variant mb-1">FREQUENCY</p>
+<p class="font-headline-md text-headline-md text-on-surface">Monthly</p>
+</div>
+</div>
+<button class="candy-button bg-primary-container text-white py-4 rounded-2xl font-headline-md chunky-border-primary mt-2">
+                        Contribute Now
+                    </button>
+</div>
+</div>
+<!-- Contribution List -->
+<div class="bg-white p-8 rounded-[2rem] chunky-border flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">My contributions</h3>
+<button class="text-primary font-label-bold hover:underline">View History</button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-2xl border-2 border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-bold text-label-bold">October Hand</p>
+<p class="text-[12px] text-on-surface-variant">Oct 12, 2023 • 10:45 AM</p>
+</div>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">₦50,000</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-2xl border-2 border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-bold text-label-bold">September Hand</p>
+<p class="text-[12px] text-on-surface-variant">Sep 15, 2023 • 09:12 AM</p>
+</div>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">₦50,000</span>
+</div>
+</div>
+</div>
+<!-- Group Shopping -->
+<div class="bg-surface-container p-8 rounded-[2rem] chunky-border flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Group shopping suggestions</h3>
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[12px] font-label-bold">BETA</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-2xl flex flex-col gap-3 group cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary">
+<div class="h-32 bg-surface-container-low rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A detailed digital render of a modern portable solar panel system designed for home use, resting on a bright wooden deck. The style is clean, optimistic, and high-energy with a soft blue and orange color palette reflecting the NairaSave brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl8lpmccbiVhroVWeo2vb4HFPIYFu4NC1OJUmYDCXuenlZ5PiosBkX_FNMsT6-6FtG3YDCaDsWegispKZOWTUjAEXMIyYzge2rdi5M7EruxkFhUog6cpJsu4-5TyMoeofpKOYpJ6o0uckQvrdgqZWn8fCpcWb_Ft8bYMllo3imRUvEhq5VtN4NMzSh0RLpTnl1YZhFgqOWtvghdVB7R6QEub2JXpg6zErLJ9GLk38sGH9ZKVF2Ov4OClYfaPR7R0B_HxtEEMtc8HY">
+</div>
+<div>
+<p class="font-label-bold text-label-bold">Solar Mini-Kit</p>
+<p class="text-[12px] text-on-surface-variant">Group Price: ₦120k</p>
+</div>
+<button class="bg-primary-container/10 text-primary py-2 rounded-lg font-label-bold group-hover:bg-primary-container group-hover:text-white transition-colors">Vote for Item</button>
+</div>
+<div class="bg-white p-4 rounded-2xl flex flex-col gap-3 group cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary">
+<div class="h-32 bg-surface-container-low rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A sleek white smart refrigerator in a bright, modern kitchen setting. Soft sunlight streams through a window, highlighting the chunky, tactile design of the appliance. The image uses a vibrant, playful color scheme consistent with the Duolingo energy style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhRZ1z-ptHPh-BO30KKJkBlyf3UNvDV84tA7_oruaOewPFl8rhG10EXdTeuH9T4E50Y_HfIK9YXylZG0b-ABLn5l1V3ni9YWZZ8SNtUs8ej91J4eIsi6685h2XxDFPwgPW24XNhWC-bFCb__8wkhihBi3PW2ABgAAowBQIFOtxVwjwWXEtbjOx1nFumFQcD4nJ9yeHQw42d9Fb3O34VF0eTSjRdRZN8s78m3_A-GhrQmDSahxPORZsIFbfTA2hpq2Hnpdnh7NFOCY">
+</div>
+<div>
+<p class="font-label-bold text-label-bold">Eco Smart Fridge</p>
+<p class="text-[12px] text-on-surface-variant">Group Price: ₦450k</p>
+</div>
+<button class="bg-primary-container/10 text-primary py-2 rounded-lg font-label-bold group-hover:bg-primary-container group-hover:text-white transition-colors">Vote for Item</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Rail: Approvals & Members -->
+<section class="col-span-3 flex flex-col gap-6">
+<!-- Pending Approvals -->
+<div class="bg-white p-6 rounded-3xl chunky-border flex flex-col gap-4">
+<h3 class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest text-[12px]">Pending Approvals</h3>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+<img alt="Member" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd_9MrQ9e_YNuQOqfAy3sXz43KEUrEvAiwe0A56ZK5r_cvxIqnBaArhdt8zshX0Ym1qkIe3r2y1odYpkbqXcfIIwnWqvPSq_HbqJwBJBe1RSlsOS0-C9AebZvnwbTruIzKO7ZvzvxJqmj94BV2cNMEWvrQPwFq3qfZTs2Upm5P_7WcWHY0NhMKB6mwAnnBKi2bKu55Crql0IGiUX5rHHIfLgvwSqL_mn-KMK3fq1xFZcQMqHb7g4ytQ-a-hOq9ZDjFBKF3ZGtUzGA">
+<div class="flex-1">
+<p class="text-label-bold font-label-bold text-sm">Bayo M.</p>
+<p class="text-[10px] text-on-surface-variant">New Join Request</p>
+</div>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">check</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Members Roster -->
+<div class="bg-white p-6 rounded-3xl chunky-border flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest text-[12px]">Members (12)</h3>
+<button class="material-symbols-outlined text-primary">person_add</button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnumedDtyqto2Ik1B3BLT8zevx_BfCtHou9-cBRVax3IpHybo-lxWYs3h0_3ohcYCJLFWQ6OpZaayljiQtzyLV5pKaGyGrk4yvlTcsxGU2HK9kYescqK8XvlB8A9i7lBtZwxgtzQD6FradDmq3RVSIh03Apf3pfy305Zvt4DoPrM0A4uLr7w0YMveN-nqtv77jIapK0UIGs_wCUTAcOvltTvFtvpt74lO5u0vx4HzF-ekZZdeshYtlO83vddTnEb_U60Lu8GLq_YQ">
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1">
+<p class="text-label-bold font-label-bold">Ade Oke</p>
+<span class="text-[10px] bg-primary-container/20 text-primary px-2 py-0.5 rounded-full font-bold">ORGANIZER</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7v-ToNP1OpB_6U44VId6j-9kZH-KUB_3xxkpON5_oosBlBr4bAnoOOM-ff0_BVgJmIG1cocoTz0QcCMCkjNNTm--NNBZPGEigDQ4qwz0e-XmBOgDzcsAj05IZTfJ6S15Vr91jpSR_329lichkocUSWL4fabtq7fPkHmMPk-tEeHQPwTXy7vgmJy0v0ZZQvDQj2xUS9iUxsKJqOG-BfnSi09e8MKMAWeylUdimWzW1i9fTX8kLfEgmGDZksod49pl3YcCVmqTmVx4">
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1">
+<p class="text-label-bold font-label-bold">Chidi N.</p>
+<span class="text-[10px] bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded-full font-bold">MEMBER</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTrOiKjSvNbxT5mFL2anVj-y72Scxg5oz-LHWKqa7-MPnzg20TofOEhYRv-pDHR6dnX8zDxXKJifivNGNhuJbXAZrw_8vFLq9RBP4r2TquFGdM_9B8nsUY7pTLhyh_pk0gEgpOqT13G81zN0vzXuSjJmGbRlazDIpXaaioO_13Aw5-Q1wlZYpcLqn8d59u_cCh50kqUzgcEu-TpCrFapHxqwUem7nW6p80fm8uDrngyj1yChyxlvIwZaHNDO47hMH-mi_E-8RR9aM">
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-yellow-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1">
+<p class="text-label-bold font-label-bold">Funmi A.</p>
+<span class="text-[10px] bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded-full font-bold">MEMBER</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Contributors -->
+<div class="bg-primary-container p-6 rounded-3xl chunky-border-primary flex flex-col gap-4 text-white">
+<h3 class="font-label-bold text-label-bold uppercase tracking-widest text-[12px]">Top Contributors</h3>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="font-black text-2xl italic opacity-50">1</span>
+<img alt="Ade" class="w-8 h-8 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD09Fg4p-wSkTButNihArgOtUbZhqrQVVnSLxqrDNFKihZkCwfY4HPNSNVfMnR59ug1LxQw6Aq2BU2l5yqU6tLfyn_2qBAzc5zo4JAHbwu9nxV87mr1qCdWBqldGrgu2UhscffgIWDH4LcwLmTvSyLQMtnb_Qg_DqGdJf7_R-Z7ouKBV9KYqD0OBopcF2bY2uNx0NZWAZEONE75qUYuETMknrNmP0uegjLPWfCUJctlnNNR1kJEXPXcaCMxcsbIk3-1PbecA8Ffuhs">
+<p class="flex-1 font-label-bold">Ade Oke</p>
+<p class="font-headline-md">₦850k</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-black text-2xl italic opacity-50">2</span>
+<img alt="Chidi" class="w-8 h-8 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnQn5UoQIE1W8LYq9wnqgAKK8RUxXRzqQUp_qwqu2QO2sUo2p3o2Cbk0qv8idykgJBGz32FIe-wzkKiuC8rAkFDYKMGT6Z7sStarrEoxXyBxueHPLMj4CeuUSpDe0D3CVL6hNDIVWD-_x1HhK65dxOeyxJ2HfkQVG6wf19jmh79190Zo3WkfBb5T8ekLfn7jU21_bZQW4gvGevEKebwIC4fve5ehAcfUcGq1joHW8lGT_QxUxh4VQeMi0IPSRqCj4HyKsi19d-Q7E">
+<p class="flex-1 font-label-bold">Chidi N.</p>
+<p class="font-headline-md">₦720k</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Group Rules -->
+<section class="col-span-12 mb-10">
+<div class="bg-white p-8 rounded-[2rem] chunky-border flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">gavel</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Group Rules</h3>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<div class="flex gap-4">
+<div class="w-10 h-10 flex-shrink-0 bg-surface-container-low rounded-full flex items-center justify-center font-black text-primary">1</div>
+<p class="text-body-md text-on-surface-variant">All contributions must be made by the 15th of every month to avoid late fees.</p>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 flex-shrink-0 bg-surface-container-low rounded-full flex items-center justify-center font-black text-primary">2</div>
+<p class="text-body-md text-on-surface-variant">Early withdrawal is only permitted in group-voted emergencies with a 5% fee.</p>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 flex-shrink-0 bg-surface-container-low rounded-full flex items-center justify-center font-black text-primary">3</div>
+<p class="text-body-md text-on-surface-variant">Shopping suggestions require at least 60% member approval to be finalized.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('.candy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translateY(4px)';
+                button.style.borderBottomWidth = '0px';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translateY(0px)';
+                button.style.borderBottomWidth = '7px';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0px)';
+                button.style.borderBottomWidth = '7px';
+            });
+        });
+    </script>
+</body></html>

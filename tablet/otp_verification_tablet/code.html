@@ -1,0 +1,231 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OTP Verification - KeenPocket</title>
+<!-- Font Import -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,800;0,900;1,400&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "on-secondary-fixed": "#241a00",
+                  "error": "#ba1a1a",
+                  "surface-dim": "#d8dadc",
+                  "surface-tint": "#006590",
+                  "primary": "#006590",
+                  "secondary-fixed-dim": "#f4bf00",
+                  "on-secondary-fixed-variant": "#594400",
+                  "tertiary-fixed": "#ffdad7",
+                  "surface-container-highest": "#e0e3e5",
+                  "secondary-container": "#fec700",
+                  "background": "#f7f9fb",
+                  "on-tertiary-container": "#7e000f",
+                  "inverse-surface": "#2d3133",
+                  "tertiary": "#bb1522",
+                  "secondary-fixed": "#ffdf92",
+                  "on-secondary": "#ffffff",
+                  "on-tertiary": "#ffffff",
+                  "on-background": "#191c1e",
+                  "secondary": "#755b00",
+                  "outline": "#6e7881",
+                  "error-container": "#ffdad6",
+                  "on-primary-fixed": "#001e2e",
+                  "on-error": "#ffffff",
+                  "primary-fixed": "#c8e6ff",
+                  "surface-variant": "#e0e3e5",
+                  "on-primary-container": "#00405d",
+                  "inverse-primary": "#88ceff",
+                  "tertiary-container": "#ff8079",
+                  "surface": "#f7f9fb",
+                  "primary-fixed-dim": "#88ceff",
+                  "on-surface": "#191c1e",
+                  "surface-container-low": "#f2f4f6",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-container": "#eceef0",
+                  "surface-container-high": "#e6e8ea",
+                  "on-primary-fixed-variant": "#004c6e",
+                  "outline-variant": "#bdc8d2",
+                  "surface-bright": "#f7f9fb",
+                  "on-secondary-container": "#6e5400",
+                  "on-primary": "#ffffff",
+                  "on-error-container": "#93000a",
+                  "primary-container": "#1cb0f6",
+                  "inverse-on-surface": "#eff1f3",
+                  "on-surface-variant": "#3e4850",
+                  "on-tertiary-fixed": "#410004",
+                  "tertiary-fixed-dim": "#ffb3ae",
+                  "on-tertiary-fixed-variant": "#930014"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "unit": "4px",
+                  "container-max": "1200px",
+                  "margin-desktop": "40px",
+                  "margin-mobile": "20px",
+                  "gutter": "16px"
+          },
+          "fontFamily": {
+                  "display": ["Nunito Sans"],
+                  "headline-md": ["Nunito Sans"],
+                  "headline-lg": ["Nunito Sans"],
+                  "body-lg": ["Nunito Sans"],
+                  "body-md": ["Nunito Sans"],
+                  "label-bold": ["Nunito Sans"],
+                  "headline-lg-mobile": ["Nunito Sans"]
+          },
+          "fontSize": {
+                  "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                  "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                  "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    
+    /* Candy Button Logic */
+    .candy-button {
+      position: relative;
+      transition: transform 0.1s;
+    }
+    .candy-button:hover {
+      transform: translateY(1px);
+    }
+    .candy-button:active {
+      transform: translateY(4px);
+    }
+    .candy-button:active .button-shadow {
+      height: 0;
+    }
+
+    /* Input Focus State from Design System */
+    .otp-input:focus {
+      outline: none;
+      border-color: #006590;
+      box-shadow: 0 0 10px rgba(28, 176, 246, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top App Bar (Shared Component Strategy) -->
+<header class="w-full top-0 bg-background dark:bg-background z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-display text-headline-lg text-primary dark:text-primary-fixed-dim tracking-tight">KeenPocket</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity p-2 rounded-full">help</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-8">
+<div class="w-full max-w-xl mx-auto flex flex-col items-center">
+<!-- Maintenance Banner -->
+<div class="w-full bg-secondary-container text-on-secondary-container p-4 rounded-xl border-b-[4px] border-secondary mb-8 flex items-center gap-4 animate-pulse">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-bold text-label-bold">SMS verification is currently under maintenance. Please use Email instead.</span>
+</div>
+<!-- Verification Card -->
+<div class="bg-surface-container-lowest w-full rounded-[1.5rem] p-8 md:p-12 border-b-[7px] border-surface-container-highest shadow-[0_20px_30px_-10px_rgba(0,101,144,0.1)] flex flex-col items-center text-center">
+<!-- Mascot/Lock Icon -->
+<div class="relative mb-6">
+<div class="w-24 h-24 bg-primary-fixed rounded-full flex items-center justify-center border-b-[4px] border-primary-fixed-dim">
+<span class="material-symbols-outlined text-[48px] text-primary" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<!-- Mr. K "Thinking" interaction as per style guidance -->
+<div class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-xl border-b-[4px] border-surface-container-highest p-1 overflow-hidden">
+<img alt="Mr. K mascot" class="w-full h-full object-contain" data-alt="A cute, friendly animated owl mascot with large expressive eyes looking thoughtful with a wing on its chin. The mascot is rendered in a clean, vibrant vector style with soft gradients and bold outlines, sitting on a warm white background to match the tactile playful design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQQJwEkF4q0ZLsKeU3Ja9DQCRi3T-jb5MDle9SLXBF2YnHLLmKLFIFWd5XJaIv2Zt2i_xLsLhCjNCrxPEvEvc9cwtPQoSXLq_uwMG2TBhs26uM9OYWnoZOh1CrkIFoycicc72NotW1KRK2aFsSYUPa_Aex7MHbITDri502ORkmShcvNBv5lX-CxcPFgDFh6rPUXw77AoLjbJ37NjGXeyAYiJhDHSeFhmynSirKx9Bqcexnx_HQ8hYM-oyqx2RvDsaSmXTtMH3iSPM">
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Verify it's you</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mb-8">
+          We've sent a 6-digit verification code to your registered email address. Please enter it below.
+        </p>
+<!-- OTP Input Group -->
+<div class="flex gap-2 md:gap-4 mb-8" id="otp-container">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+<input class="otp-input w-12 h-14 md:w-16 md:h-20 text-center font-display text-headline-md border-2 border-outline-variant rounded-xl focus:border-primary bg-surface transition-all" maxlength="1" type="text">
+</div>
+<div class="mb-8">
+<span class="text-on-surface-variant">Didn't receive a code? </span>
+<button class="text-primary font-label-bold hover:underline transition-all">Resend Code</button>
+</div>
+<!-- Verify Button (Candy Style) -->
+<button class="candy-button group w-full relative h-[60px] cursor-pointer">
+<div class="button-shadow absolute inset-0 bg-on-primary-fixed-variant rounded-xl translate-y-[4px]"></div>
+<div class="relative bg-primary-container h-full rounded-xl flex items-center justify-center border-b-[4px] border-on-primary-fixed-variant group-active:border-0 transition-all">
+<span class="text-on-primary font-label-bold tracking-widest">VERIFY</span>
+</div>
+</button>
+<button class="mt-6 text-on-surface-variant font-label-bold hover:text-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">sync</span>
+          Try another way
+        </button>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component Strategy) -->
+<footer class="w-full bottom-0 bg-transparent py-8 text-center">
+<div class="flex flex-col md:flex-row justify-center items-center gap-6 w-full px-margin-mobile">
+<div class="font-body-md text-body-md text-on-surface-variant">© 2024 KeenPocket. Join the flock.</div>
+<div class="flex gap-4">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Terms</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Support</a>
+</div>
+</div>
+</footer>
+<script>
+    // Interaction for OTP inputs
+    const inputs = document.querySelectorAll('.otp-input');
+    
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Add slight tactile movement to maintenance banner on interaction
+    const banner = document.querySelector('.bg-secondary-container');
+    banner.addEventListener('mousedown', () => {
+      banner.style.transform = 'translateY(2px)';
+      banner.style.borderBottomWidth = '2px';
+    });
+    banner.addEventListener('mouseup', () => {
+      banner.style.transform = 'translateY(0)';
+      banner.style.borderBottomWidth = '4px';
+    });
+  </script>
+</body></html>

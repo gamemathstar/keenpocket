@@ -47,6 +47,23 @@ class NewFeaturesTest extends TestCase
         $this->assertSame(50, (int) $target->fresh()->keens);
     }
 
+    public function test_super_admin_user_list_shows_balance_and_grants_by_email()
+    {
+        $admin = $this->makeUser(['is_super_admin' => true]);
+        $target = $this->makeUser(['email' => 'topup.target@example.com', 'keens' => 20]);
+
+        // The user list shows the Keens balance.
+        $this->actingAs($admin)->get('/super-admin')->assertOk()->assertSee('🪙');
+
+        // The inline form grants by email (its hidden contact field).
+        $this->actingAs($admin)->post('/super-admin/keens', [
+            'contact' => 'topup.target@example.com',
+            'amount' => 30,
+        ])->assertRedirect();
+
+        $this->assertSame(50, (int) $target->fresh()->keens);
+    }
+
     public function test_non_super_admin_cannot_top_up()
     {
         $user = $this->makeUser();

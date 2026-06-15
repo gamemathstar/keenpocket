@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payouts &amp; Bank Hub | KeenPocket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#bb1522",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#ffdf92",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#3e4850",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#f4bf00",
+                        "outline-variant": "#bdc8d2",
+                        "on-secondary-container": "#6e5400",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-tint": "#006590",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-container": "#7e000f",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "on-secondary-fixed-variant": "#594400",
+                        "inverse-primary": "#88ceff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#ff8079",
+                        "secondary": "#755b00",
+                        "tertiary-fixed": "#ffdad7",
+                        "primary": "#006590",
+                        "on-secondary-fixed": "#241a00",
+                        "secondary-container": "#fec700",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#410004",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#6e7881",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#00405d",
+                        "primary-fixed": "#c8e6ff",
+                        "on-primary-fixed-variant": "#004c6e",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#930014",
+                        "on-primary-fixed": "#001e2e",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#88ceff",
+                        "surface-bright": "#f7f9fb",
+                        "primary-container": "#1cb0f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Nunito Sans"],
+                        "headline-lg-mobile": ["Nunito Sans"],
+                        "headline-lg": ["Nunito Sans"],
+                        "display": ["Nunito Sans"],
+                        "body-md": ["Nunito Sans"],
+                        "headline-md": ["Nunito Sans"],
+                        "label-bold": ["Nunito Sans"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Nunito Sans', sans-serif; }
+        .candy-button {
+            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 4px 0 #004c6e;
+        }
+        .candy-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #004c6e;
+        }
+        .candy-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #004c6e;
+        }
+        .candy-card {
+            border-bottom: 7px solid #e0e3e5;
+            transition: border-color 0.2s ease;
+        }
+        .candy-card:focus-within {
+            border-bottom-color: #1cb0f6;
+        }
+        .inner-recessed {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar (Left Rail) -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col p-6 z-50 bg-surface-container-lowest border-r-2 border-surface-variant shadow-sm">
+<div class="flex items-center gap-4 mb-10">
+<div class="w-12 h-12 bg-primary-container rounded-xl flex items-center justify-center overflow-hidden">
+<img alt="KeenPocket Mascot" data-alt="A friendly, high-energy 3D cartoon mascot characterized by large expressive eyes and a vibrant blue and yellow color palette. The mascot is designed in a playful, tactile style reminiscent of modern educational apps, set against a clean studio background with soft primary-colored rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLkwCPngdMex-jMrNSHCT4pLizINYY_sYG0oomd5HCeTorjKKfj_Tz_L-TJlUNd1WNlCnCaKHYkE3TrMU49k2ABRSdD-3aZD7hcaGys9eIHQYHaytIb9AT-rT-Dzzykr0t0TKveOcwCeDfkwfLxKXxi7OfsLYzckyqjwVNkSvAC6086LGxNrErFmvFyu9tuBBodrCzrgkmhx5p4kJdBOb7nDH0yspHqdAJ4TuKCKSNsMxFQK2K7DqyvyNhNHNpby8CcIMER4kAYcM"/>
+</div>
+<div>
+<h1 class="font-display text-headline-lg text-primary leading-none">KeenPocket</h1>
+<p class="font-label-bold text-on-surface-variant text-xs">Manage your wealth</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-bold">Pockets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="font-label-bold">Adashi Groups</span>
+</a>
+<!-- Active State: Wallet -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-bold">Wallet</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low rounded-xl transition-all active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold">Settings</span>
+</a>
+</nav>
+<button class="candy-button mt-auto w-full bg-primary text-on-primary py-4 rounded-2xl font-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+            New Pocket
+        </button>
+</aside>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin-desktop h-20 w-[calc(100%-16rem)] ml-64 fixed top-0 bg-surface border-b-2 border-surface-variant z-40">
+<h2 class="font-headline-md text-headline-md text-primary">Payouts &amp; Bank Hub</h2>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-low transition-colors flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-low transition-colors flex items-center justify-center text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary-container" data-alt="A professional and friendly headshot of a diverse user for a tech profile. The person is smiling warmly in a bright, modern office setting with soft, natural lighting coming from a nearby window. The photography style is clean and crisp with a shallow depth of field, highlighting the individual's approachable and confident personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMn1vEmtydV7Pd9f8vT6dc6g5Egz7kMhv0WEN7YTWLnZ6CUxi0MAQv6Y667qNDkH0LFAozGvimSd7Smoi2yIPMETBvb8UrL3IEDDr1xbCKXV4x2H6wh5Ms46S_TuCqfq_EKKYWc80yvfwHeut50fJ1sUCRa70nQUdNBpIXE7Bsr8nFaTmE2j_PbVWy5_LDMVXTFIeaLxfKxSf3vUJCNAjv2VUnDVIPE3O7EthJR-mdgP-JMXBDn_qwbWQMhvhaGQbtNFWIuZoq2CY"/>
+<span class="font-label-bold text-on-surface">Alex Rivera</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-24 p-margin-desktop">
+<div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Form & History -->
+<div class="lg:col-span-7 space-y-gutter">
+<!-- My Payout Account Form -->
+<section class="bg-surface-container-lowest p-8 rounded-3xl candy-card">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 bg-primary-fixed rounded-lg">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+</div>
+<h3 class="font-headline-md text-on-surface">My Payout Account</h3>
+</div>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-bold text-on-surface-variant block">Select Receiving Bank</label>
+<div class="relative">
+<select class="w-full h-14 pl-4 pr-10 rounded-2xl border-2 border-outline-variant bg-surface-container-low appearance-none focus:outline-none focus:border-primary-container transition-colors font-body-lg">
+<option>Zenith Bank PLC</option>
+<option>Access Bank</option>
+<option>Guaranty Trust Bank</option>
+<option>Kuda Bank</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-4 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-on-surface-variant block">NUBAN Account Number</label>
+<input class="w-full h-14 px-4 rounded-2xl border-2 border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary-container transition-colors font-body-lg" placeholder="e.g. 2093847562" type="text"/>
+</div>
+<button class="candy-button w-full bg-primary-container text-on-primary-container py-4 rounded-2xl font-label-bold text-lg" type="button">
+                            Update Payout Details
+                        </button>
+</form>
+</section>
+<!-- Payouts Received List -->
+<section class="bg-surface-container-lowest p-8 rounded-3xl candy-card">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-secondary-fixed rounded-lg">
+<span class="material-symbols-outlined text-secondary">history</span>
+</div>
+<h3 class="font-headline-md text-on-surface">Payouts Received</h3>
+</div>
+<button class="text-primary font-label-bold hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- History Item: Success -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<p class="font-body-lg text-on-surface">₦45,000.00</p>
+<p class="text-xs text-on-surface-variant">Oct 24, 2023 • Zenith Bank</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full font-label-bold text-xs uppercase tracking-wider">Successful</span>
+</div>
+<!-- History Item: Pending -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined">pending</span>
+</div>
+<div>
+<p class="font-body-lg text-on-surface">₦12,500.00</p>
+<p class="text-xs text-on-surface-variant">Oct 26, 2023 • Access Bank</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full font-label-bold text-xs uppercase tracking-wider">Pending</span>
+</div>
+<!-- History Item: Failed -->
+<div class="flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined">error</span>
+</div>
+<div>
+<p class="font-body-lg text-on-surface">₦8,000.00</p>
+<p class="text-xs text-on-surface-variant">Oct 19, 2023 • GTBank</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-label-bold text-xs uppercase tracking-wider">Failed</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Pocket Collection Details -->
+<div class="lg:col-span-5 space-y-gutter">
+<div class="sticky top-24 space-y-gutter">
+<section class="bg-surface-container-lowest p-8 rounded-3xl candy-card">
+<div class="flex items-center gap-3 mb-8">
+<div class="p-2 bg-tertiary-fixed rounded-lg">
+<span class="material-symbols-outlined text-tertiary">savings</span>
+</div>
+<h3 class="font-headline-md text-on-surface">Pocket Collections</h3>
+</div>
+<div class="space-y-6">
+<!-- Pocket Card 1 -->
+<div class="p-6 rounded-2xl bg-surface-container border-2 border-surface-variant relative overflow-hidden group">
+<div class="absolute right-0 top-0 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[80px]">emergency_share</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="font-label-bold text-on-surface-variant uppercase text-xs tracking-widest mb-1">Emergency Fund</p>
+<h4 class="font-headline-md text-on-surface">₦250,400.00</h4>
+</div>
+<div class="bg-surface-container-lowest px-3 py-1 rounded-full text-xs font-label-bold shadow-sm">
+                                        Zenith Bank
+                                    </div>
+</div>
+<div class="mt-6">
+<div class="flex justify-between text-xs font-label-bold text-on-surface-variant mb-2">
+<span>Collection Progress</span>
+<span>65%</span>
+</div>
+<div class="w-full h-4 bg-surface-variant rounded-full inner-recessed">
+<div class="h-full bg-primary-container rounded-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Pocket Card 2 -->
+<div class="p-6 rounded-2xl bg-surface-container border-2 border-surface-variant relative overflow-hidden group">
+<div class="absolute right-0 top-0 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[80px]">school</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="font-label-bold text-on-surface-variant uppercase text-xs tracking-widest mb-1">Education Pocket</p>
+<h4 class="font-headline-md text-on-surface">₦1,200,000.00</h4>
+</div>
+<div class="bg-surface-container-lowest px-3 py-1 rounded-full text-xs font-label-bold shadow-sm">
+                                        Access Bank
+                                    </div>
+</div>
+<div class="mt-6">
+<div class="flex justify-between text-xs font-label-bold text-on-surface-variant mb-2">
+<span>Target: ₦2.5M</span>
+<span>48%</span>
+</div>
+<div class="w-full h-4 bg-surface-variant rounded-full inner-recessed">
+<div class="h-full bg-secondary-container rounded-full w-[48%]"></div>
+</div>
+</div>
+</div>
+<!-- Help / Mascot Prompt -->
+<div class="mt-8 flex gap-4 p-6 bg-primary-fixed rounded-2xl items-center">
+<div class="w-16 h-16 shrink-0 bg-white rounded-xl shadow-sm flex items-center justify-center">
+<img alt="Mascot Tip" data-alt="A 3D character icon of a bright yellow lightbulb mascot with a smiling face and small waving arms, styled in a tactile, glossy clay-morphism aesthetic. It is positioned as if offering a friendly tip, set against a soft blue gradient background that matches a clean, modern fintech UI color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6zi1LuVNH-cZqvVc756AJ50lJe09KyqgCYKy2po9CytJuRX0ZW4uBepxrmqACY6C69wGwqPB3WQilJsFlLNckuKz9OyP6UgcdwYZzs_tn6O1ySrkvTqXq-wTe3gpvHwtRUropekiW4hbAw80JtspgWsM9JByxdG1OiDtjqz6h7Hehsv0orjlJBpfcH5h2J0qx9mCzzsfUpiCCj9nEH2kaWeIPLmbbt6XsCwGqWQu2FBliKaX_AknCCXyY_KVG3e7eqUr-iEd6TgE"/>
+</div>
+<div>
+<p class="font-label-bold text-on-primary-fixed-variant leading-snug">Mr. K says: "Switching banks is easy! Your next payout will follow your updated choice instantly."</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Summary Card -->
+<div class="bg-inverse-surface p-8 rounded-3xl text-inverse-on-surface flex items-center justify-between shadow-lg">
+<div>
+<p class="font-label-bold opacity-80 uppercase text-xs">Total Collected This Month</p>
+<h4 class="font-display text-headline-md">₦1,450,400.00</h4>
+</div>
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Only on main dashboard/wallet screens as per logic) -->
+<button class="fixed bottom-10 right-10 w-16 h-16 bg-primary-container text-on-primary-container rounded-full shadow-xl flex items-center justify-center candy-button z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<script>
+        // Micro-interaction for form focus
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Hover animation for list items
+        const historyItems = document.querySelectorAll('.group');
+        historyItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateX(8px)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0px)';
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Register - KeenPocket</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#241a00",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#006590",
+                    "primary": "#006590",
+                    "secondary-fixed-dim": "#f4bf00",
+                    "on-secondary-fixed-variant": "#594400",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-container": "#fec700",
+                    "background": "#f7f9fb",
+                    "on-tertiary-container": "#7e000f",
+                    "inverse-surface": "#2d3133",
+                    "tertiary": "#bb1522",
+                    "secondary-fixed": "#ffdf92",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "secondary": "#755b00",
+                    "outline": "#6e7881",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2e",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#c8e6ff",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#00405d",
+                    "inverse-primary": "#88ceff",
+                    "tertiary-container": "#ff8079",
+                    "surface": "#f7f9fb",
+                    "primary-fixed-dim": "#88ceff",
+                    "on-surface": "#191c1e",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "outline-variant": "#bdc8d2",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-container": "#6e5400",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#1cb0f6",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-surface-variant": "#3e4850",
+                    "on-tertiary-fixed": "#410004",
+                    "tertiary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#930014"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "container-max": "1200px",
+                    "margin-desktop": "40px",
+                    "margin-mobile": "20px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "display": ["Nunito Sans"],
+                    "headline-md": ["Nunito Sans"],
+                    "headline-lg": ["Nunito Sans"],
+                    "body-lg": ["Nunito Sans"],
+                    "body-md": ["Nunito Sans"],
+                    "label-bold": ["Nunito Sans"],
+                    "headline-lg-mobile": ["Nunito Sans"]
+            },
+            "fontSize": {
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "800"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .candy-button-shadow {
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
+        }
+        .candy-button-shadow:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .candy-card-shadow {
+            box-shadow: 0 7px 0 0 #e0e3e5;
+        }
+
+        .soft-glow {
+            box-shadow: 0 25px 50px -12px rgba(0, 101, 144, 0.1);
+        }
+        
+        /* Specific bottom border for primary candy button */
+        .primary-candy {
+            border-bottom: 4px solid #004c6e;
+        }
+        .primary-candy:active {
+            border-bottom: 0px solid transparent;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen flex flex-col items-center justify-center p-6">
+<!-- Top Navigation Placeholder (Hidden for Transactional Screen as per Shell Visibility Rule) -->
+<header class="w-full top-0 bg-background dark:bg-background flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto absolute">
+<div class="font-display text-headline-lg text-primary dark:text-primary-fixed-dim tracking-tight">KeenPocket</div>
+<button class="text-on-surface-variant material-symbols-outlined hover:opacity-80 transition-opacity">help</button>
+</header>
+<main class="w-full max-w-2xl mt-20 mb-12 flex flex-col items-center">
+<!-- Mascot Section -->
+<div class="mb-8 transform transition-transform hover:scale-105 duration-300 cursor-pointer">
+<img alt="Mr. K Mascot" class="w-64 h-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp7lXKC8U7rTsRc5ygI4YTGbU7bz3iQR6qbQTMDjivU5FXlgp69RMXsvaflfUNKpHoK1ev831UTS6hVAiJ31nYGCP7hWeQb3EqqgYLRDE1mqFjmn8qTsX_4kxhZ8QXswCPt6XWlrorvA7mmqNk0mpPvhM8xX_chT5_xLn9D64ANgO3DK64Mi6a_z55PNSawW6Qagngg926WUO3nQJfddojFFdNdZe-Jjda_0BMq0_Zyyc1jv5Z6UFI9PWVqMSG7TKWbQdZeCa-ei0">
+</div>
+<!-- Registration Card -->
+<div class="w-full bg-surface-container-lowest rounded-[1.5rem] p-8 md:p-12 candy-card-shadow soft-glow">
+<div class="text-center mb-8">
+<h1 class="font-display text-display text-primary mb-2">Create Account</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Ready to join the flock? Let's get started!</p>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Full Name -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Full name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">person</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 transition-colors outline-none font-body-md text-on-surface" placeholder="Alex Taylor" type="text">
+</div>
+</div>
+<!-- Email (Error State) -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error">mail</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-error rounded-xl focus:ring-0 transition-colors outline-none font-body-md text-error" type="email" value="alex@pocket.com">
+</div>
+<p class="text-error font-label-bold text-label-bold px-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">error</span>
+                        Email already in use
+                    </p>
+</div>
+<!-- Phone Number -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Phone number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">phone</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 transition-colors outline-none font-body-md text-on-surface" placeholder="+1 (555) 000-0000" type="tel">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Password -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 transition-colors outline-none font-body-md text-on-surface" placeholder="••••••••" type="password">
+</div>
+</div>
+<!-- Confirm Password -->
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Confirm password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock_reset</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-outline-variant rounded-xl focus:border-primary focus:ring-0 transition-colors outline-none font-body-md text-on-surface" placeholder="••••••••" type="password">
+</div>
+</div>
+</div>
+<!-- Terms -->
+<label class="flex items-center gap-3 cursor-pointer group mt-2">
+<div class="relative flex items-center">
+<input class="peer h-6 w-6 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary focus:ring-0 transition-all cursor-pointer" type="checkbox">
+<span class="material-symbols-outlined absolute text-white scale-0 peer-checked:scale-100 transition-transform left-1/2 -translate-x-1/2 text-[18px]">check</span>
+</div>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">
+                        I agree to the <a class="text-primary font-label-bold hover:underline" href="#">Terms of Service</a> and Privacy Policy.
+                    </span>
+</label>
+<!-- Create Account Button -->
+<button class="w-full bg-primary-container text-white py-4 rounded-xl font-headline-md text-headline-md primary-candy candy-button-shadow mt-4" type="submit">
+                    Create account
+                </button>
+</form>
+</div>
+<!-- Footer Link -->
+<div class="mt-8 text-center">
+<p class="font-body-md text-on-surface-variant">
+                Already have an account? 
+                <a class="text-primary font-label-bold hover:underline ml-1" href="#">Log in</a>
+</p>
+</div>
+</main>
+<footer class="w-full py-8 text-center mt-auto">
+<div class="flex flex-col md:flex-row justify-center items-center gap-4 text-on-surface-variant font-body-md">
+<span>© 2024 KeenPocket. Join the flock.</span>
+<div class="flex gap-4">
+<a class="hover:text-primary transition-colors cursor-pointer" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors cursor-pointer" href="#">Terms</a>
+<a class="hover:text-primary transition-colors cursor-pointer" href="#">Support</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple input interaction effects
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.01]');
+                input.parentElement.parentElement.style.transition = 'all 0.2s ease';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body></html>
