@@ -31,22 +31,6 @@
         </div>
     </div>
 
-    {{-- Stat chips --}}
-    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-        <div class="rounded-[1.5rem] bg-rose-50 border-2 border-rose-100 p-4">
-            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">My goal</div>
-            <div class="text-lg sm:text-xl font-extrabold text-rose-600">{{ $isMember && $target > 0 ? $progress.'%' : '—' }}</div>
-        </div>
-        <div class="rounded-[1.5rem] bg-amber-50 border-2 border-amber-100 p-4">
-            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">Members</div>
-            <div class="text-lg sm:text-xl font-extrabold text-amber-600">{{ $activeMembers }}</div>
-        </div>
-        <div class="rounded-[1.5rem] bg-sky-50 border-2 border-sky-100 p-4">
-            <div class="text-[11px] sm:text-xs text-slate-500 font-bold">Per hand</div>
-            <div class="text-lg sm:text-xl font-extrabold text-sky-600">₦{{ number_format($pocket->amount_per_hand) }}</div>
-        </div>
-    </div>
-
     {{-- 3-column hub --}}
     <div class="grid lg:grid-cols-12 gap-6 mb-6 items-start">
         {{-- LEFT: organiser + payout + tip --}}
