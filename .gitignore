@@ -26,3 +26,6 @@ yarn-error.log
 # Firebase service account
 keen-pocket-*.json
 *firebase*credentials*.json
+
+# Mobile UI design exports (Google Stitch screens & assets)
+/ui-designs
