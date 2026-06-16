@@ -23,10 +23,11 @@
 - **Phase K — Wallet, Payouts & Bank Accounts**
 - **Phase L — Notifications**
 - **Phase M — Discover, Search & Insights**
-- **Phase N — Gamification, Leaderboard & Referrals**
+- **Phase N — Gamification, Leaderboard & Friends/Invites**
 - **Phase O — Profile & Settings**
 - **Phase P — School Fee Management**
 - **Phase Q — Administration (Super Admin, Admin Health)**
+- **Phase R — Legal, Consent & Account Lifecycle** (Terms, Privacy)
 - **Phase Z — Final Deliverables** (nav map, dependencies, IA, component inventory, tablet & UX recommendations, clarifications)
 
 ---
@@ -91,7 +92,7 @@ Around these sit: an in-app **wallet**, automated **payouts** to bank accounts, 
 
 A top app bar carries: screen title (left), and a cluster on the right — 🔔 notifications (with red unread count bubble, "9+" cap), 🪙 **Keens balance pill** (amber), 🌓 dark-mode toggle, ⚙️ settings, avatar. A search affordance ("Search pockets & adashi…") is reachable from Home/Discover.
 
-Everything **not** on the 5 tabs (Wallet, Payouts, Referrals, Vouches, Insights, Leaderboard, Notifications, Settings, School, Admin, Super Admin) lives behind the **Profile tab** as a grouped menu, and behind contextual entry points. Replicate the web's two collapsible groups conceptually: a **"Pocket" group** (My Pockets, Adashi) and a **"Profile" group** (Profile, Wallet, Payouts & Bank, Referrals, Vouches, Insights, Admin health). School (🏫 My School / 🎒 My Children) and 🛡️ Super Admin appear **only** when the user is entitled (feature flag + permission).
+Everything **not** on the 5 tabs (Wallet, Payouts, Friends & Invites, Vouches, Insights, Leaderboard, Notifications, Settings, School, Admin, Super Admin) lives behind the **Profile tab** as a grouped menu, and behind contextual entry points. Replicate the web's two collapsible groups conceptually: a **"Pocket" group** (My Pockets, Adashi) and a **"Profile" group** (Profile, Wallet, Payouts & Bank, **Friends & Invites** 👥, Vouches, Insights, Admin health). School (🏫 My School / 🎒 My Children) and 🛡️ Super Admin appear **only** when the user is entitled (feature flag + permission). Note: the legacy **Referrals** destination now redirects into **Friends & Invites** — friend-management and referral invites share one screen (see Phase N).
 
 **Tablets / iPad — adaptive:** replace the bottom bar with a **persistent left navigation rail/sidebar** (collapsible) showing the full menu tree, and use a **two-pane (list–detail / master-detail) layout** for list-heavy areas (e.g. Pockets list on the left, selected pocket detail on the right; Notifications list + reading pane; Settings sections + panel). Float action buttons (chat 💬) bottom-right.
 
@@ -116,7 +117,7 @@ Every screen you generate MUST define all of these (omit only when truly impossi
 5. **Success** — toast (app icon + message) and, for milestone actions, the confetti + mascot celebration overlay.
 6. **Offline** — top banner "You're offline — showing saved data"; disable/queue write actions; show last-synced timestamp.
 7. **Permission-restricted** — when the user lacks the role (e.g. non-admin viewing an admin tool, non-member viewing members-only data): show a calm locked state explaining who can access it and the path to gain access (request to join, get verified, contact organiser) — never a dead end.
-8. **Feature-disabled (flagged-off)** — many features are env-flag gated (wallet, payments, payouts, KYC, OTP, gamification, charity, chat, school, referrals, referral rewards). When off, show a **"coming soon"** placeholder card (emoji + heading + explanation) instead of broken UI.
+8. **Feature-disabled (flagged-off)** — many features are env-/config-flag gated. Each now has its own backend config file: `wallet`, `payments`, `payouts`, `kyc`, `otp`, `sms`, `whatsapp`, `gamification`, `charity`, `chat`, `disputes`, `guarantor`, `discovery`, `school`, `referrals` (+ referral rewards). When off, show a **"coming soon"** placeholder card (emoji + heading + explanation) instead of broken UI. Friends & Invites is always-on (no money rail).
 
 ---
 # PHASE B — AUTHENTICATION & ONBOARDING
@@ -139,7 +140,9 @@ Every screen you generate MUST define all of these (omit only when truly impossi
 
 **B5. OTP verification** (only when `OTP_ENABLED`) — phone display, **6-digit** code input (auto-advance boxes), resend with **60s cooldown** timer, purpose-aware copy (verify signup / passwordless login / reset). Lockout after 5 failed attempts; expiry 10 min. If flag off, this screen is skipped entirely.
 
-**B6. Forgot / reset password** — request code to phone → verify → set new password. Reuses OTP component.
+**B6. Forgot password (email link)** — the live default flow (Laravel password broker). Enter **email** → "If that email is registered, a reset link is on its way" (privacy-preserving, always-success copy) → user taps the emailed link → **B6b Reset password** screen (token-bound): new **password** (≥6) + **confirm**, submit → success → back to Login ("Your password has been reset — please sign in"). Works only for accounts with a real email (not unclaimed phone placeholders).
+
+**B7. Forgot password (phone OTP)** — alternative when `OTP_ENABLED`: request code to phone → verify (reuses B5 OTP component) → set new password. Offer this path when the user has no email on file.
 
 **Tablet layout.** Centered auth card (max ~480px) on a brand-gradient canvas with Mr K + friends illustration occupying the other half (split-screen). Onboarding uses larger illustrations with side-by-side text.
 
@@ -149,9 +152,9 @@ Every screen you generate MUST define all of these (omit only when truly impossi
 >
 > "Design a mobile authentication flow for **KeenPocket**, a playful Nigerian group-savings fintech. Brand color #1cb0f6 (sky-blue), Nunito font (extrabold headings), generous rounded corners (1.1–1.4rem), candy-style 3D buttons (flat #1899d6 bottom shadow that compresses on press), soft brand-tinted shadows, friendly mascot 'Mr K'.
 >
-> Generate these screens: (1) **Splash** — centered KeenPocket wordmark + waving Mr K mascot on a #f8fafc background with a subtle brand glow. (2) **Onboarding** — a 3-slide swipeable carousel with large Mr K illustrations, an extrabold headline + one-line subtext per slide ('Save together', 'Take turns with Adashi', 'Build streaks & trust'), page dots, a text 'Skip', and a primary 'Get started' button. (3) **Login** — a centered white card (rounded-2xl, 7px chunky bottom border, brand shadow) with one input 'Email, phone, or username', a password field with show/hide eye, a 'Remember me' checkbox, a full-width brand 'Log in' button, and links 'Create account' and 'Forgot password?'. (4) **Register** — fields Full name, Email, Phone number, Password, Confirm password, a terms checkbox, and a 'Create account' button; show inline validation states. (5) **OTP verification** — phone number shown, six separate digit boxes, a 60-second 'Resend code' countdown, and a 'Verify' button.
+> Generate these screens: (1) **Splash** — centered KeenPocket wordmark + waving Mr K mascot on a #f8fafc background with a subtle brand glow. (2) **Onboarding** — a 3-slide swipeable carousel with large Mr K illustrations, an extrabold headline + one-line subtext per slide ('Save together', 'Take turns with Adashi', 'Build streaks & trust'), page dots, a text 'Skip', and a primary 'Get started' button. (3) **Login** — a centered white card (rounded-2xl, 7px chunky bottom border, brand shadow) with one input 'Email, phone, or username', a password field with show/hide eye, a 'Remember me' checkbox, a full-width brand 'Log in' button, and links 'Create account' and 'Forgot password?'; a small 'By continuing you agree to our Terms & Privacy' line linking to the legal screens. (4) **Register** — fields Full name, Email, Phone number, Password, Confirm password, a terms checkbox (linking Terms & Privacy), and a 'Create account' button; show inline validation states. (5) **OTP verification** — phone number shown, six separate digit boxes, a 60-second 'Resend code' countdown, and a 'Verify' button. (6) **Forgot password** — a single 'Email' field, a 'Send reset link' button, and a calm confirmation state 'If that email is registered, a reset link is on its way 📧' with a 'Back to login' link. (7) **Reset password** — reached from the emailed link: 'New password' + 'Confirm password' fields with show/hide, a strength hint, and a 'Reset password' button → success toast → Login.
 >
-> Include all states: default, loading (skeleton on the card), inline field-error (red #fef2f2 block listing issues), success (toast with app icon + confetti burst and cheering Mr K on first signup), offline banner, and a 'feature unavailable' variant of the OTP screen (since OTP can be switched off). On tablets/iPad, use a split-screen: auth card on one side, full-bleed Mr K-and-friends illustration on a brand gradient on the other. Ensure 44pt touch targets, AA contrast, and dark-mode variants (bg #0f172a, surface #1e293b)."
+> Include all states: default, loading (skeleton on the card), inline field-error (red #fef2f2 block listing issues), success (toast with app icon + confetti burst and cheering Mr K on first signup; gentle success for password reset), offline banner, and a 'feature unavailable' variant of the OTP screen (since OTP can be switched off). On tablets/iPad, use a split-screen: auth card on one side, full-bleed Mr K-and-friends illustration on a brand gradient on the other. Ensure 44pt touch targets, AA contrast, and dark-mode variants (bg #0f172a, surface #1e293b)."
 
 ---
 
@@ -527,7 +530,7 @@ Trust is KeenPocket's moat. Four interlocking systems decide whether strangers w
 
 ---
 
-# PHASE N — GAMIFICATION, LEADERBOARD & REFERRALS
+# PHASE N — GAMIFICATION, LEADERBOARD & FRIENDS/INVITES
 
 ## N-1. Gamification (`GAMIFICATION_ENABLED`)
 **Overview.** Streaks (weeks with ≥1 verified contribution; reset Monday), **streak freezes** (start 2; bridge a missed week), and **badges** (earned vs locked) with thresholds: **Reliable Payer** (≥90% reliability, ≥3 invoices), **Top Organizer** (≥4.5 avg, ≥3 ratings), **Recruiter** (≥3 referrals), **Big Saver** (≥₦100k contributed). **Keens** coin economy (start 50; spent to create groups when enabled).
@@ -539,24 +542,36 @@ Trust is KeenPocket's moat. Four interlocking systems decide whether strangers w
 
 **N-b Badges grid** (on profile) — earned 🏅 vs locked 🔒 with descriptions.
 
-## N-3. Referrals (`REFERRALS_ENABLED`)
-**Overview.** Invite link + code; **Referral** tracks referrer→referred, status pending/qualified/rewarded. Qualify on register or first group-join (`REFERRAL_QUALIFY_ON`). Rewards only if `REFERRAL_REWARD_ENABLED`. WhatsApp share with templated message.
+## N-3. Friends & Invites (`REFERRALS_ENABLED` for the invite block)
+**Overview.** A combined **social + growth** screen (nav label **"Friends & Invites" 👥**) that merges two capabilities the web now serves from one page (`/friends`; the old `/referrals` route redirects here):
 
-**Screens.** **N-c Referrals** — gradient hero "Bring your circle along 🎁", invite link (copy) + code badge + **WhatsApp share**, impact stats (invited / qualified / rewarded), invited-people list with per-person status. Empty → "No invites yet — share your link."
+1. **Friends (mutual social graph).** A `Friendship` has a requester (`user_id`), recipient (`friend_id`), and **status pending/accepted**. Flow: requester adds a friend by **phone / email / username** → recipient gets a "New friend request" notification → recipient **Accepts** (→ accepted) or **Declines** (deletes). The requester can **Cancel** a still-pending request; either side can **Remove** an accepted friend. Smart rule: if you "add" someone who already requested you, it auto-accepts instead of duplicating. Notifications: *Friend Request*, *Friend Accepted*.
+2. **Invite to KeenPocket (referrals).** Invite link + referral code + **WhatsApp share**; **Referral** tracks referrer→referred with status pending/qualified/rewarded (qualify on register or first group-join, `REFERRAL_QUALIFY_ON`; rewards only if `REFERRAL_REWARD_ENABLED`). Impact stats (invited / qualified / rewarded) and an invitees list.
 
-**Tablet layout.** Leaderboard centered with a wider podium top-3. Referrals: link+share left, stats+list right.
+**Roles/permissions.** All self-service; you only act on requests addressed to/from you. Validation: contact must resolve to an existing user (else "No KeenPocket user found with that phone, email or username"); can't friend yourself.
 
-> **Google Stitch prompt — Gamification, Leaderboard & Referrals**
+**Screens.** **N-c Friends & Invites** — one screen, sections:
+- **Add a friend** form (single contact field: phone/email/username) + helper "they'll need to accept before you're connected."
+- **Requests for you** (incoming) — avatar+name, **Accept** / **Decline**; count badge.
+- **Your friends** — avatar+name list with **Remove** (confirm); empty "No friends yet — send a request above."
+- **Pending requests** (outgoing) — "waiting for them to accept" + **Cancel**.
+- **Invite them 🎁** (referrals) — gradient block: invite link (copy) + code badge + **WhatsApp share** + impact stats + invitees list. Hidden/disabled when `REFERRALS_ENABLED` is off.
+
+**Edge cases.** Already friends / request already pending (info toast, no dup); contact not found (inline error); incoming + outgoing empty (collapse those sections); referral block off → show only the friends sections.
+
+**Tablet layout.** Leaderboard centered with a wider podium top-3. Friends & Invites: **two columns** — friends + requests (left), invite/referral block (right).
+
+> **Google Stitch prompt — Gamification, Leaderboard & Friends/Invites**
 >
-> "Design KeenPocket's **motivation & growth** screens (Nigerian savings fintech; brand #1cb0f6, Nunito extrabold, very playful, 🔥🪙🏅🏆🎁, Mr K, confetti). Generate:
+> "Design KeenPocket's **motivation, social & growth** screens (Nigerian savings fintech; brand #1cb0f6, Nunito extrabold, very playful, 🔥🪙🏅🏆👥🎁, Mr K, confetti). Generate:
 >
 > (1) **Leaderboard** — a segmented control 'This week / All time', a privacy note 'Ranked by contributions — amounts stay private · Resets Monday', a top-3 podium (🥇🥈🥉 with avatars), then ranked rows (rank number, avatar, name, 'X pts' = contribution count); highlight the current user's row in brand-light and pin a 'Your rank #42 · 7 contributions' bar at the bottom when they're outside the top 20. Empty: 'No rankings yet'.
 >
 > (2) **Badges grid** — a grid of badge tiles: earned ones in full color with 🏅 and a label ('Reliable Payer', 'Top Organizer', 'Recruiter', 'Big Saver'), locked ones greyed with 🔒 and the unlock condition as a tooltip/subtext. Include a streak header card: a big 🔥 '5-week streak' with 🧊 'freezes: 2'.
 >
-> (3) **Referrals** — a gradient hero 'Bring your circle along 🎁' with Mr K; a copyable invite link field + a monospace referral-code chip; a prominent green 'Share on WhatsApp' button; an impact row of three stats 'Invited 8 / Qualified 3 / Rewarded 1'; and a list of invited people with per-person status pills (Pending/Qualified/Rewarded). Empty: 'No invites yet — share your link above.'
+> (3) **Friends & Invites** — a single scroll titled 'Friends & invites 👥' with: an 'Add a friend' card (one input 'Phone, email or username' + an 'Add' button + helper 'they'll need to accept'); a 'Requests for you' section of incoming request rows (avatar, name, 'Accept' brand button / 'Decline' soft button) with a count chip; a 'Your friends' list (avatar, name, a subtle 'Remove' with confirm); a collapsible 'Pending requests' section (outgoing — 'waiting for them to accept · Cancel'); and below them an 'Invite them 🎁' gradient block with Mr K: a copyable invite link, a monospace referral-code chip, a green 'Share on WhatsApp' button, an impact row 'Invited 8 / Qualified 3 / Rewarded 1', and an invitees list with status pills (Pending/Qualified/Rewarded).
 >
-> States: loading skeletons, empty, error/retry, offline, success (confetti + cheering Mr K when a badge unlocks or a referral qualifies), permission n/a, and disabled variants (gamification off hides badges/streaks; referral rewards off shows tracking only — hide reward amounts). Tablet: leaderboard centered with a larger podium; referrals as link/share left + stats/list right. Dark mode + AA contrast; never show monetary contribution amounts on the leaderboard."
+> States: loading skeletons, empty (friends 'No friends yet — send a request above', invites 'No invites yet — share your link'), error/retry (inline 'No KeenPocket user found with that phone, email or username'), offline, success (toast 'Friend request sent' / confetti + cheering Mr K when a badge unlocks, a friend accepts, or a referral qualifies), permission n/a, and disabled variants (gamification off hides badges/streaks; referrals off hides the invite block; referral rewards off shows tracking only — hide reward amounts). Tablet: leaderboard centered with a larger podium; Friends & Invites as two columns (friends + requests left, invite block right). Dark mode + AA contrast; never show monetary contribution amounts on the leaderboard."
 
 ---
 
@@ -645,6 +660,32 @@ Trust is KeenPocket's moat. Four interlocking systems decide whether strangers w
 
 ---
 
+# PHASE R — LEGAL, CONSENT & ACCOUNT LIFECYCLE
+
+**Feature overview.** The product ships static **legal** surfaces — **Terms of Service** (`/terms`) and **Privacy Policy** (`/privacy`) — rendered in a minimal legal layout. On mobile these are mandatory (Apple/Google store review requires accessible Terms + Privacy and in-app consent), and they are linked from the auth screens (signup consent) and from Settings. Consent is captured at registration via the **terms checkbox** (already in Phase B and on every create-group form as the amber terms-notice).
+
+**Roles/permissions.** Public, read-only — available signed-out (reachable from Login/Register) and signed-in (from Settings). No data entry.
+
+### Screens
+
+**R1. Terms of Service** — long-form scrollable legal document with a sticky header (title + close/back), section headings, last-updated date, and a back-to-top affordance. Reachable signed-out.
+
+**R2. Privacy Policy** — same pattern; should clearly cover what KeenPocket stores (it keeps **records, not custody of money**), KYC handling (only last-4 of BVN/NIN stored), notification channels, and NDPR (Nigeria Data Protection) language.
+
+**R3. Consent touchpoints (not new screens — states on existing ones)** — Register's terms checkbox + "By continuing you agree to our Terms & Privacy" line (Phase B); the amber **terms-notice** on every Create Pocket / Create Adashi / Add-member / join form.
+
+**R4. Account lifecycle (recommended, see Phase Z9 gap)** — **Log out** lives in Settings (exists). **Account deletion / data export** are *store requirements* but **not yet in the backend** — design a Settings "Delete my account" entry with a confirm + consequences sheet and flag it as a backend dependency.
+
+**Tablet layout.** Legal docs render in a centered, max-width readable column (≤720px) with comfortable line length; optional left-hand section table-of-contents rail on wide screens.
+
+**Accessibility.** Real text (never images of text), proper heading hierarchy, large tap targets on links, respects dynamic type, high contrast.
+
+> **Google Stitch prompt — Legal, Consent & Account Lifecycle**
+>
+> "Design KeenPocket's **legal & consent** screens (Nigerian savings fintech; brand #1cb0f6, Nunito, clean and trustworthy, minimal chrome, Mr K absent here — this is serious content). Generate: (1) **Terms of Service** — a scrollable long-form document screen with a sticky top bar (back chevron + 'Terms of Service' title), a muted 'Last updated 15 June 2026' line, clearly styled section headings and body paragraphs in a readable single column, and a floating 'back to top' button. (2) **Privacy Policy** — the same document layout, with callout cards for key promises ('We keep records — we never hold your money', 'We store only the last 4 digits of your BVN/NIN', 'You control SMS/WhatsApp/push'). (3) **Consent moment** — show how the Register screen surfaces consent: a checked 'I agree to the Terms & Privacy' checkbox with the two words as brand links, plus a sticky disclaimer line. (4) **Delete account** (Settings entry) — a red-tinted 'Delete my account' row that opens a confirmation sheet listing consequences ('your pockets/adashi memberships, history and wallet records will be removed') with a typed-confirm and a destructive 'Delete' button. States: default, loading (skeleton text lines), error/retry (failed to load doc), offline (show cached legal text — bundle it in-app), and a success state for account-deletion request. On tablet/iPad: render legal docs in a centered ≤720px column with a left section-navigation rail. Dark mode + AA contrast; use real selectable text."
+
+---
+
 # PHASE Z — FINAL DELIVERABLES
 
 ## Z1. Complete Navigation Map
@@ -685,9 +726,10 @@ KeenPocket (mobile)
       ├─ My profile (reputation, badges, ratings, KYC)
       ├─ Public profile (others)
       ├─ Wallet · Payouts & Bank · Bank accounts
-      ├─ Referrals · Vouches (guarantor inbox) · Insights
+      ├─ Friends & Invites 👥 (friend requests + referral invites) · Vouches (guarantor inbox) · Insights
       ├─ Leaderboard · Notifications 🔔
-      ├─ Settings (avatar, prefs, password, accounts, dark mode, logout)
+      ├─ Settings (avatar, prefs, password, accounts, dark mode, logout) → Terms · Privacy
+      ├─ Legal (Terms of Service · Privacy Policy)
       ├─ 🏫 School (My School / My Children)  [if entitled]
       └─ 🛡️ Super Admin · 🩺 Admin Health     [if entitled]
 ```
@@ -717,16 +759,18 @@ INVOICES  MEMBERS  CHARITY  INVOICES ROTATION PAYOUTS
 
 Cross-cutting (attach to Pocket AND Adashi):
   CHAT · DISPUTES · RATINGS → REPUTATION · NOTIFICATIONS
-Engagement loop:
-  CONTRIBUTIONS → STREAKS/BADGES → LEADERBOARD ; REFERRALS → new USERS
+Engagement & social loop:
+  CONTRIBUTIONS → STREAKS/BADGES → LEADERBOARD ; FRIENDS ⇄ INVITES/REFERRALS → new USERS
 Trust gates:
   KYC → Discover visibility ; GUARANTOR → Pocket join ; REPUTATION/RATINGS → join confidence
+Compliance:
+  TERMS/PRIVACY (legal) ← consent at Register & create-group forms
 ```
 
 **Key dependencies & feature flags (live vs stub):**
-- **Live by default:** Pockets, Adashi, Invoices/Contributions (manual mark-paid), Charity, Chat, Gamification, Referrals (tracking), School, Discover/Search/Insights, Disputes, Ratings/Reputation, Guarantors.
-- **Off by default (design the "coming soon" state):** Wallet, Payments (gateway), Payouts (auto-disburse), KYC, OTP, Referral **rewards**.
-- Wallet top-up depends on Payments; Adashi auto-disburse depends on Payouts; Discover gating depends on KYC; group creation cost depends on the Keens economy toggle.
+- **Live by default:** Pockets, Adashi, Invoices/Contributions (manual mark-paid), Charity, Chat, Disputes, Guarantors, Gamification, **Friends & Invites** (friend graph + referral tracking), School, Discover/Search/Insights, Ratings/Reputation, Legal (Terms/Privacy), Email password-reset.
+- **Off by default (design the "coming soon" state):** Wallet, Payments (gateway), Payouts (auto-disburse), KYC, OTP (& phone password-reset), SMS, WhatsApp, Referral **rewards**.
+- Each gated feature now has its own backend config file (`disputes`, `guarantor`, `discovery`, `sms`, `whatsapp`, plus the earlier set) — treat each as an independent toggle. Wallet top-up depends on Payments; Adashi auto-disburse depends on Payouts; Discover gating depends on KYC; group creation cost depends on the Keens economy toggle.
 
 ## Z3. Mobile Information Architecture (summary)
 
@@ -830,10 +874,13 @@ Trust gates:
 10. **Legacy/non-product modules:** The repo contains legacy polling-agent/electoral tooling (States/LGAs/Wards/Polling Units, `/agents`, Firebase upload) that is **local-only and not part of the savings product** — confirmed excluded from mobile. Flagging so it isn't mistakenly designed.
 11. **Data viz depth:** Insights is minimal (6 stats). Do we want richer charts/exports (PDF statements) on mobile?
 12. **Accessibility & compliance targets:** Confirm WCAG level, and any Nigerian financial/data-protection (NDPR) requirements affecting KYC storage and consent screens.
+13. **Account deletion & data export (store blocker):** Apple & Google require an in-app **delete account** path; there is **no backend endpoint yet**. Phase R designs the UI — confirm the deletion/anonymisation policy (what happens to a user's pockets/adashi memberships, invoices, wallet records) and whether data export is needed.
+14. **Friends ↔ groups integration:** The new **Friends** graph is currently standalone (add/accept/remove + referral invites). Should it integrate with savings flows — e.g. "invite a friend to this pocket/adashi", suggest friends in the add-member form, or show mutual friends as a trust signal on profiles/join surfaces? Confirm desired depth.
+15. **Password reset channel:** Email reset is live (broker); phone-OTP reset depends on `OTP_ENABLED`. Confirm which is primary at launch, and the fallback for accounts that have only a phone (unclaimed placeholders can't receive an email link).
 
 ---
 
-*End of brief. Phases A–Q provide paste-ready Google Stitch prompts per feature module; Phase Z provides the connective architecture, component system, tablet guidance, and the open questions to resolve with product before a full build.*
+*End of brief. Phases A–R provide paste-ready Google Stitch prompts per feature module; Phase Z provides the connective architecture, component system, tablet guidance, and the open questions to resolve with product before a full build.*
 
 
 
